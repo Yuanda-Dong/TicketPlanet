@@ -32,6 +32,7 @@ Our backend is implemented on [Railway](https://railway.app) using a [Flask](htt
 
 ### Run Flask Server Locally 
 - first make sure to run `export FLASK_APP=main.py` in your terminal
+- Make sure you are in the project source directory not the backend folder
 - To run the Flask server locally but still access the railway DB you need to use the command: `railway run flask run`
 
 ### Deploy to Railway
