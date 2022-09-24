@@ -4,3 +4,4 @@ lib/
 pyvenv.cfg
 .env
 migrations/
+__pycache__/
