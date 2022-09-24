@@ -1,2 +1,5 @@
 Week 1
 Group formed. I created the Jira and GitHub accounts. I included main user stories into Jira backlog and we had our first group meeting, during the meetings we discussed the potential novel features, confirmed with the team on the tools and languages that we are going to use for the project. We discussed the tasks for each member till next meeting.
+
+Week 2
+I had a meeting with frontend teams and Lingyu, during the meeting we decided the UI prototype. I started the landing page UI development and finished the navbar and title section. We discussed each individual's task for project proposal during the second group meeting, and I did some research on the similar systems to search for their drawbacks.
