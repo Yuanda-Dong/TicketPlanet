@@ -1,6 +1,6 @@
 ---
 title: Railway Backend
-description: This is the backend for our COMP9900 Project, enabled by [Flask](https://flask.palletsprojects.com/en/1.1.x/) and [Railway](https://railway.app)
+description: This is the backend for our COMP9900 Project, enabled by Flask and Railway
 tags:
   - python
   - flask
@@ -22,6 +22,7 @@ Our backend is implemented on [Railway](https://railway.app) using a [Flask](htt
 ## 💁‍♀️ How to use
 ### Environment Set Up
 - (Optional) create a Python3 virtual environment in your desired backend location
+- Clone repo into the environment
 - Sign up to [Railway](https://railway.app) using your github 
 - Install the [Railway CLI](https://docs.railway.app/develop/cli) on your OS
 - Link the Project - you can find this link on the project page in Railway under 'Set up your project locally'
