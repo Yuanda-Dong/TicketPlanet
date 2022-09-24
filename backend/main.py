@@ -2,32 +2,19 @@ from flask import Flask, jsonify, render_template,request
 import os
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from models.shared import db
+from models.cars import CarsModel
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
-db = SQLAlchemy(app)
+db.init_app(app)
 migrate = Migrate(app, db)
 
 
-class CarsModel(db.Model):
-    __tablename__ = 'cars'
-
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String())
-    model = db.Column(db.String())
-    doors = db.Column(db.Integer())
-
-    def __init__(self, name, model, doors):
-        self.name = name
-        self.model = model
-        self.doors = doors
-
-    def __repr__(self):
-        return f"<Car {self.name}>"
 
 @app.route('/')
 def index():
-    return jsonify({"Choo Choo": "Welcome to your Flask app 🚅"})
+    return jsonify({"Choo Choo": "This is the home page🚅"})
     
 @app.route('/cars', methods=['POST', 'GET'])
 def handle_cars():
