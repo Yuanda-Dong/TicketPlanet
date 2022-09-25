@@ -5,6 +5,7 @@ from flask_migrate import Migrate
 from models.shared import db
 from models.cars import CarsModel
 from models.host import HostModel
+from models.user import UserModel
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
@@ -16,6 +17,10 @@ migrate = Migrate(app, db)
 @app.route('/')
 def index():
     return jsonify({"Choo Choo": "This is the home page🚅"})
+    
+# @app.route('/login/google')
+# def google_login():
+
     
 @app.route('/cars', methods=['POST', 'GET'])
 def handle_cars():
