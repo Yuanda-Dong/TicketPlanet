@@ -1,3 +1,13 @@
 Week 1 
 Met with the team to organise backend and frontend teams as well as discuss new novel features. 
 Will lead backend up. I set up the JIRA account as well as planned backend tech stack. 
+
+Week 2
+- Completed the backend basic infrastructure set up, this includes being able to host the backend on server on Railway.app 
+as well as adding a cloud postgres DB (railway.app). 
+- Set up the flask & sqlalchemy api and ORM framework to allow integrations
+with the backend and also allow migrations. 
+- Wrote the README.md for the backend team to use the system
+- Began implementing basic data models 
+- Began Oauth 2.0 integration 
+- 80% completed the system architecture diagram 
