@@ -1,2 +1,5 @@
 Week 1 
 Met with the team to discuss new novel features and organise backend and frontend teams. 
+
+Week 2
+I had a meeting with frontend teams, we decided the UI prototype during the group meeting. We discussed each individual's task for project proposal during the second group meeting. 
