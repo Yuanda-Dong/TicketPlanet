@@ -11,3 +11,8 @@ with the backend and also allow migrations.
 - Began implementing basic data models 
 - Began Oauth 2.0 integration 
 - 80% completed the system architecture diagram 
+
+Week 3
+- Completed the background in the proposal
+- Completed the system architecture diagram and description for proposal 
+- Held meeting with team members to outline work responsibilities 
