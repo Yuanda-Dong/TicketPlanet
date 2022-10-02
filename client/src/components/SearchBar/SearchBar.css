@@ -1,0 +1,42 @@
+  .search_container {
+    /* position: absolute; */
+    width: 70%;
+    height: 70px;
+    /* bottom: -50px; */
+    display: flex;
+    background-color: white;
+    border: 3px solid #3c4b69;
+    border-radius: 5px;
+  }
+  
+  .search_container .search_box {
+    display: flex;
+    align-items: center;
+    flex: 1;
+  }
+  
+  .search_container .search_box .search,
+  .search_box fieldset {
+    flex: 1;
+    border: none;
+  }
+  
+  .search_container .search_box input {
+    font-size: 18px;
+    background-color: transparent;
+    color: #7b7b7b;
+    outline: none;
+    margin-left: 20px;
+  }
+  
+  .search_container .search_box .search_button {
+    width: 100px;
+    margin: 0 20px;
+    background-color: #576f9d;
+  }
+  
+  .search_container .search_box .search .MuiOutlinedInput-root {
+    display: flex;
+    flex-direction: row-reverse;
+  }
+  

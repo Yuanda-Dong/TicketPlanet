@@ -7,13 +7,14 @@ import MenuItem from '@mui/material/MenuItem';
 import MenuIcon from '@mui/icons-material/Menu';
 import Button from '@mui/material/Button';
 // import ButtonGroup from '@mui/material/ButtonGroup';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import './NavBar.css';
 import UserMenu from './UserMenu';
-
+import SearchBar from '../SearchBar/SearchBar';
 const pages = ['Products', 'Pricing', 'Blog'];
 
-const NavBar = () => {
+const NavBar = (props) => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
 
   const handleOpenNavMenu = (event) => {
@@ -38,6 +39,8 @@ const NavBar = () => {
           >
             <MenuIcon />
           </IconButton>
+          
+          
           <Menu
             id="menu-appbar"
             anchorEl={anchorElNav}
@@ -66,13 +69,22 @@ const NavBar = () => {
         <Link to="/">
           <Typography className="logo">LOGO</Typography>
         </Link>
-        <Box className="page_nav" sx={{ display: { xs: 'none', md: 'flex' } }}>
+        
+
+        {
+          props.search==1 ? <SearchBar></SearchBar> :<Box className="page_nav" sx={{ display: { xs: 'none', md: 'flex' } }}>
           {pages.map((page) => (
             <Button key={page} onClick={handleCloseNavMenu} sx={{ my: 2, color: 'inherit', display: 'block' }}>
               {page}
             </Button>
           ))}
         </Box>
+        }
+
+        
+
+
+
         {true ? (
           <div className="button_group">
             <Button variant="outlined" className="login">
@@ -89,4 +101,9 @@ const NavBar = () => {
     </div>
   );
 };
+
+NavBar.propTypes = {
+  search: PropTypes.number,
+};
+
 export default NavBar;

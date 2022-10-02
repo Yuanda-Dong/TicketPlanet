@@ -5,8 +5,8 @@ import Header from '../../components/Header/Header';
 const Landing = () => {
   return (
     <>
-      <Navbar />
-      <Header />
+      <Navbar/>
+      <Header/>
     </>
   );
 };

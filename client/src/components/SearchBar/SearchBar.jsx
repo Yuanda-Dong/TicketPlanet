@@ -6,14 +6,12 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useNavigate } from 'react-router-dom';
-import './Header.css';
+import './SearchBar.css';
 
-const Header = () => {
+const SearchBar = () => {
   const navigate = useNavigate();
   const [value, setValue] = useState(null);
   return (
-    <div className="header">
-      <h1 className="title">The title text</h1>
       <div className="search_container">
         <div className="search_box">
           <input className="search" placeholder="Search by events, name, location and more" type="text" />
@@ -35,8 +33,7 @@ const Header = () => {
           </Button>
         </div>
       </div>
-    </div>
   );
 };
 
-export default Header;
+export default SearchBar;
