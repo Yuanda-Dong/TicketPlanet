@@ -3,3 +3,6 @@ Group formed. Determine the responsibilities of each member. Together with the t
 
 Week 2
 We discussed each individual's task for project proposal during the group meeting, and discussed the novel functionality. I organize the user stories that have been discussed.
+
+Week 3
+Complete the User Stories and Sprints section of the proposal with Naixin Li, and organize jira. Organize the proposal format.
