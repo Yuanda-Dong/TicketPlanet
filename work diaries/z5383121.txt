@@ -1,1 +1,14 @@
-Created my diary
+Week 1 
+
+We formed a group of 5 during the lab, and decieded to go with the event management project. 
+Discussed responsibilities of each member, I'll code front-end using React. 
+Set up Jira. 
+
+Week 2
+Set up Github repo. 
+Had a meeting with the front-end team to choose UI protoype on Figma. 
+Researched existing systems on event management to come up with novel features. 
+
+Week 3
+Drew story boards using draw.io for the proposal. 
+Compared our system with Ticketek, Eventbrite and TicketMaster for the proposal. 
