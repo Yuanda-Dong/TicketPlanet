@@ -30,7 +30,7 @@
 }
 
 .app_bar .wrapper .button_group .login {
-  color: inherit;
+  color: white;
   border-color: inherit;
 }
 
@@ -39,10 +39,14 @@
 }
 
 .app_bar .wrapper .button_group .signup {
-  color: inherit;
+  color: white;
   background-color: #576f9d;
 }
 
 .app_bar .wrapper .button_group .signup:hover {
   background-color: #707b90;
+}
+
+.app_bar .link {
+  text-decoration: none;
 }

@@ -6,12 +6,12 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import MenuIcon from '@mui/icons-material/Menu';
 import Button from '@mui/material/Button';
-// import ButtonGroup from '@mui/material/ButtonGroup';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import './NavBar.css';
 import UserMenu from './UserMenu';
 import SearchBar from '../SearchBar/SearchBar';
+
 const pages = ['Products', 'Pricing', 'Blog'];
 
 const NavBar = (props) => {
@@ -39,8 +39,7 @@ const NavBar = (props) => {
           >
             <MenuIcon />
           </IconButton>
-          
-          
+
           <Menu
             id="menu-appbar"
             anchorEl={anchorElNav}
@@ -66,33 +65,35 @@ const NavBar = (props) => {
             ))}
           </Menu>
         </Box>
-        <Link to="/">
+        <Link className="link" to="/">
           <Typography className="logo">LOGO</Typography>
         </Link>
-        
 
-        {
-          props.search==1 ? <SearchBar></SearchBar> :<Box className="page_nav" sx={{ display: { xs: 'none', md: 'flex' } }}>
-          {pages.map((page) => (
-            <Button key={page} onClick={handleCloseNavMenu} sx={{ my: 2, color: 'inherit', display: 'block' }}>
-              {page}
-            </Button>
-          ))}
-        </Box>
-        }
-
-        
-
-
+        {props.search == 1 ? (
+          <SearchBar />
+        ) : (
+          // 'yoyo'
+          <Box className="page_nav" sx={{ display: { xs: 'none', md: 'flex' } }}>
+            {pages.map((page) => (
+              <Button key={page} onClick={handleCloseNavMenu} sx={{ my: 2, color: 'inherit', display: 'block' }}>
+                {page}
+              </Button>
+            ))}
+          </Box>
+        )}
 
         {true ? (
           <div className="button_group">
-            <Button variant="outlined" className="login">
-              Log in
-            </Button>
-            <Button variant="contained" className="signup">
-              Sign Up
-            </Button>
+            <Link className="link" to={'/signin'}>
+              <Button variant="outlined" className="login">
+                Log in
+              </Button>
+            </Link>
+            <Link className="link" to={'/signup'}>
+              <Button variant="contained" className="signup">
+                Sign Up
+              </Button>
+            </Link>
           </div>
         ) : (
           <UserMenu />
