@@ -15,3 +15,10 @@ class HostModel(db.Model):
 
     def __repr__(self):
         return f"<{self.name}>"
+
+
+# Event: event_id, title, host, start dateTime, end dateTime, description, photo, video(optional), categories, location attendants:[Users], reviews
+
+# Ticket: event_id, types, price, #of_tickets, 
+
+# reviews: review_id, replies:[review_id], user, content, datetime

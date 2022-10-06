@@ -7,6 +7,9 @@ class UserModel(db.Model):
     email = db.Column(db.String())
     gender = db.Column(db.String()) #MFO
     postCode = db.Column(db.String())
+    # preference?
+    # ? google_account: Boolean
+
 
     def __init__(self, name, address, artist):
         self.name = name
