@@ -19,7 +19,7 @@ export default function SignInSide() {
 
   const signUp = (e) => {
     e.preventDefault();
-    navigate('/register');
+    navigate('/signup');
   };
 
   const handleSubmit = (event) => {
