@@ -2,6 +2,7 @@ import './App.css';
 import Landing from './pages/Landing/Landing';
 import SearchPage from './pages/SearchPage/SearchPage';
 import SignInSide from './pages/Signin';
+import SignUp from './pages/SignUp';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 // import Navbar from './components/Navbar/NavBar';
 
@@ -14,6 +15,7 @@ function App() {
           <Route index element={<Landing />} />
           <Route path="search" element={<SearchPage />} />
           <Route path="signin" element={<SignInSide />} />
+          <Route path="signup" element={<SignUp />} />
         </Route>
       </Routes>
     </BrowserRouter>
