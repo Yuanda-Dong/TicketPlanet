@@ -12,6 +12,7 @@ import Typography from '@mui/material/Typography';
 import SignUpForm from '../components/SignUp/SignUpForm';
 import { useNavigate } from 'react-router-dom';
 import NavBar from '../components/Navbar/NavBar';
+import GoogleIcon from '@mui/icons-material/Google';
 
 const steps = ['Register your account', 'Enter your details', 'Choose your preferences'];
 
@@ -102,7 +103,12 @@ export default function SignUp() {
         </Paper>
         {activeStep === 0 && (
           <Box>
-            <Grid container justifyContent="flex-end">
+            <Grid container justifyContent="space-between" alignItems="center">
+              <Grid item>
+                <Button startIcon={<GoogleIcon />} variant="outlined">
+                  Sign in with Google
+                </Button>
+              </Grid>
               <Grid item>
                 <Link variant="body2" onClick={navSignIn}>
                   Already have an account? Sign in

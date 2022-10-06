@@ -12,6 +12,7 @@ import Typography from '@mui/material/Typography';
 import ForgotPassword from '../components/ForgotPassword';
 import { useNavigate } from 'react-router-dom';
 import NavBar from '../components/Navbar/NavBar';
+import GoogleIcon from '@mui/icons-material/Google';
 
 export default function SignInSide() {
   const navigate = useNavigate();
@@ -102,6 +103,9 @@ export default function SignInSide() {
               </Grid>
             </Grid>
           </Box>
+          <Button startIcon={<GoogleIcon />} sx={{ margin: '50px 0' }} variant="outlined">
+            Sign in with Google
+          </Button>
         </Box>
       </Grid>
     </Grid>
