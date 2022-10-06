@@ -1,51 +1,22 @@
-from flask import Flask, jsonify, render_template,request
+from fastapi import FastAPI
 import os
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
-from models.shared import db
-from models.cars import CarsModel
-from models.host import HostModel
-from models.user import UserModel
+from pymongo import MongoClient
+from routes.book_r import router as book_router
 
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
-db.init_app(app)
-migrate = Migrate(app, db)
+app = FastAPI()
 
-
-
-@app.route('/')
-def index():
-    return jsonify({"Choo Choo": "This is the home page🚅"})
+@app.get("/")
+async def root():
+    return {"message": "Welcome to the PyMongo tutorial!"}
     
-# @app.route('/login/google')
-# def google_login():
+@app.on_event("startup")
+def startup_db_client():
+    app.mongodb_client = MongoClient(os.getenv("MONGO_URL"))
+    app.database = app.mongodb_client['test']
+    print("Connected to the MongoDB database!")
 
-    
-@app.route('/cars', methods=['POST', 'GET'])
-def handle_cars():
-    if request.method == 'POST':
-        if request.is_json:
-            data = request.get_json()
-            new_car = CarsModel(name=data['name'], model=data['model'], doors=data['doors'])
-            db.session.add(new_car)
-            db.session.commit()
-            return {"message": f"car {new_car.name} has been created successfully."}
-        else:
-            return {"error": "The request payload is not in JSON format"}
+@app.on_event("shutdown")
+def shutdown_db_client():
+    app.mongodb_client.close()
 
-    elif request.method == 'GET':
-        cars = CarsModel.query.all()
-        results = [
-            {
-                "name": car.name,
-                "model": car.model,
-                "doors": car.doors
-            } for car in cars]
-
-        return {"count": len(results), "cars": results}
-
-
-if __name__ == '__main__':
-    app.run(debug=True, port=os.getenv("PORT", default=5000))
-
+app.include_router(book_router, tags=["books"], prefix="/book")

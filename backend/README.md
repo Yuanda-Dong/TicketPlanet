@@ -10,14 +10,14 @@ tags:
 
 # COMP9900 Project Backend
 
-Our backend is implemented on [Railway](https://railway.app) using a [Flask](https://flask.palletsprojects.com/en/1.1.x/) app server and a [Postgres](https://www.postgresql.org) DB. 
+Our backend is implemented on [Railway](https://railway.app) using a [FastAPI](https://fastapi.tiangolo.com/) app server supported by [PyMongo](https://pymongo.readthedocs.io/en/stable/) on a [MongoDB](https://www.mongodb.com/) DB. 
 
 ## ✨ Features
 
 - Python
-- Flask
-- SQLAlchemy
-- Postgres
+- FastAPI
+- PyMongo
+- MongoDB
 
 ## 💁‍♀️ How to use
 ### Environment Set Up
@@ -29,10 +29,10 @@ Our backend is implemented on [Railway](https://railway.app) using a [Flask](htt
     - Use `railway link <project-link>` in your command line to link it 
 - Install Python requirements `pip install -r requirements.txt`
 
-### Run Flask Server Locally 
-- first make sure to run `export FLASK_APP=main.py` in your terminal
+### Run FastAPI Server Locally 
 - Make sure you are in the  backend folder not the project folder
-- To run the Flask server locally but still access the railway DB you need to use the command: `railway run flask run`
+- To run the server locally but still access the railway DB you need to use the command: `railway run python -m uvicorn main:app --reload`
+- Go to (http://localhost:8000/docs)
 
 ### Deploy to Railway
 - Change directory to project source
@@ -42,9 +42,4 @@ Our backend is implemented on [Railway](https://railway.app) using a [Flask](htt
         - Under the Deployments sub-heading, click the 3-dots symbol next to the deployed app 
         - Click 'Remove Deployment' 
         
-### DB Migrations 
-- This is used for when you update the datamodel and want to push that to Postgres 
-- Simply run the commands:
-    - `railway run flask db migrate`
-    - `railway run flask db upgrade`
     
