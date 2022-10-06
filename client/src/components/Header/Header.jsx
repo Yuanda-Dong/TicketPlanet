@@ -10,7 +10,7 @@ import './Header.css';
 
 const Header = () => {
   const navigate = useNavigate();
-  const [value, setValue] = useState(null);
+  const [value, setValue] = useState({ from: null, to: null });
   return (
     <div className="header">
       <h1 className="title">The title text</h1>
@@ -23,14 +23,30 @@ const Header = () => {
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
               className="search"
-              value={value}
+              value={value.from}
               onChange={(newValue) => {
-                setValue(newValue);
+                setValue({ ...value, from: newValue });
               }}
               renderInput={(params) => <TextField className="search_date" {...params} />}
             />
           </LocalizationProvider>
-          <Button startIcon={<SearchIcon />} variant="contained" className="search_button" onClick={() => navigate('/search')}>
+          <span>To</span>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              className="search"
+              value={value.to}
+              onChange={(newValue) => {
+                setValue({ ...value, to: newValue });
+              }}
+              renderInput={(params) => <TextField className="search_date" {...params} />}
+            />
+          </LocalizationProvider>
+          <Button
+            startIcon={<SearchIcon />}
+            variant="contained"
+            className="search_button"
+            onClick={() => navigate('/search')}
+          >
             Search
           </Button>
         </div>
