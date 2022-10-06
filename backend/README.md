@@ -31,7 +31,7 @@ Our backend is implemented on [Railway](https://railway.app) using a [FastAPI](h
 
 ### Run FastAPI Server Locally 
 - Make sure you are in the  backend folder not the project folder
-- To run the Flask server locally but still access the railway DB you need to use the command: `railway run python -m uvicorn main:app --reload`
+- To run the server locally but still access the railway DB you need to use the command: `railway run python -m uvicorn main:app --reload`
 - Go to (http://localhost:8000/docs)
 
 ### Deploy to Railway
