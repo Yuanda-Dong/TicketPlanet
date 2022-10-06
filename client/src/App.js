@@ -3,6 +3,7 @@ import Landing from './pages/Landing/Landing';
 import SearchPage from './pages/SearchPage/SearchPage';
 import SignInSide from './pages/Signin';
 import SignUp from './pages/SignUp';
+import EventDetail from './components/EventDetail/EventDetail';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 // import Navbar from './components/Navbar/NavBar';
 
@@ -16,6 +17,11 @@ function App() {
           <Route path="search" element={<SearchPage />} />
           <Route path="signin" element={<SignInSide />} />
           <Route path="signup" element={<SignUp />} />
+          <Route path="event">
+            <Route path=":id" element={<EventDetail />}>
+              {/* <Route path="purchase" element={<PurchaseTicket />} /> */}
+            </Route>
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>

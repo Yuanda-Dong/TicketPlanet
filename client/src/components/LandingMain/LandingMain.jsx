@@ -4,6 +4,10 @@ import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
+import EventCard from '../EventCard/EventCard';
+import Button from '@mui/material/Button';
+import { Link } from 'react-router-dom';
+
 import './LandingMain.css';
 
 export default function LandingMain() {
@@ -13,17 +17,37 @@ export default function LandingMain() {
     setValue(newValue);
   };
 
+  const events = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
   return (
     <Box className="landing_main_container">
       <TabContext value={value}>
-        <Box>
+        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <TabList className="list" onChange={handleChange} aria-label="lab API tabs example">
             <Tab label="Upcoming Events" value="1" />
             <Tab label="For You" value="2" />
           </TabList>
         </Box>
-        <TabPanel value="1">Item One</TabPanel>
-        <TabPanel value="2">Item Two</TabPanel>
+        <TabPanel value="1">
+          <div className="events-container">
+            {events.map((e) => (
+              <EventCard key={e} />
+            ))}
+          </div>
+
+          <Link className="link" to={'/search'}>
+            <Button variant="contained" className="loadmore">
+              Load More
+            </Button>
+          </Link>
+        </TabPanel>
+        <TabPanel value="2">
+          <div className="events-container">
+            {events.map((e) => (
+              <EventCard key={e} />
+            ))}
+          </div>
+        </TabPanel>
       </TabContext>
     </Box>
   );
