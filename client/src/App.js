@@ -4,7 +4,8 @@ import SearchPage from './pages/SearchPage/SearchPage';
 import SignInSide from './pages/Signin';
 import SignUp from './pages/SignUp';
 import EventDetail from './components/EventDetail/EventDetail';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import {BrowserRouter, Routes, Route} from 'react-router-dom';
+import Payment from "./pages/Payment/Payment";
 // import Navbar from './components/Navbar/NavBar';
 
 function App() {
@@ -19,7 +20,7 @@ function App() {
           <Route path="signup" element={<SignUp />} />
           <Route path="event">
             <Route path=":id" element={<EventDetail />}>
-              {/* <Route path="purchase" element={<PurchaseTicket />} /> */}
+              <Route path="purchase" element={<Payment/>}/>
             </Route>
           </Route>
         </Route>
