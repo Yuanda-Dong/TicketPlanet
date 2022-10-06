@@ -106,7 +106,7 @@ export default function SignUp() {
             <Grid container justifyContent="space-between" alignItems="center">
               <Grid item>
                 <Button startIcon={<GoogleIcon />} variant="outlined">
-                  Sign in with Google
+                  Sign up with Google
                 </Button>
               </Grid>
               <Grid item>
