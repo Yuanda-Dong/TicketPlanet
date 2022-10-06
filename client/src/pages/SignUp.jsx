@@ -36,7 +36,7 @@ export default function SignUp() {
     navigate('/signin');
   };
 
-  const [signupInfo, setSignupInfo] = React.useState({ username: '', email: '', password: '' });
+  const [signupInfo, setSignupInfo] = React.useState({ email: '', password: '' });
   const [profileInfo, setProfileInfo] = React.useState({ gender: '', age: '', postcode: '' });
   const [preference, setPreference] = React.useState([]);
 

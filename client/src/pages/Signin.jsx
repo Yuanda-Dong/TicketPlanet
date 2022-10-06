@@ -25,7 +25,7 @@ export default function SignInSide() {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     console.log({
-      username: data.get('username'),
+      email: data.get('email'),
       password: data.get('password'),
     });
   };
@@ -72,10 +72,10 @@ export default function SignInSide() {
               margin="normal"
               required
               fullWidth
-              id="username"
-              label="Username"
-              name="username"
-              autoComplete="username"
+              id="email"
+              label="Email"
+              name="email"
+              autoComplete="email"
               autoFocus
             />
             <TextField
@@ -88,15 +88,11 @@ export default function SignInSide() {
               id="password"
               autoComplete="current-password"
             />
-            {/* <FormControlLabel control={<Checkbox value="remember" color="primary" />} label="Remember me" /> */}
             <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
               Sign In
             </Button>
             <Grid container>
               <Grid item xs>
-                {/* <Link href="#" variant="body2">
-                    Forgot password?
-                  </Link> */}
                 <ForgotPassword />
               </Grid>
               <Grid item>
@@ -105,7 +101,6 @@ export default function SignInSide() {
                 </Link>
               </Grid>
             </Grid>
-            {/* <Copyright sx={{ mt: 5 }} /> */}
           </Box>
         </Box>
       </Grid>
