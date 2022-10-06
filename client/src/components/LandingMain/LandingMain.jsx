@@ -17,7 +17,7 @@ export default function LandingMain() {
     setValue(newValue);
   };
 
-  const events = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  const events = [1, 2, 3, 4, 5, 6, 7, 8];
 
   return (
     <Box className="landing_main_container">
@@ -31,7 +31,7 @@ export default function LandingMain() {
         <TabPanel value="1">
           <div className="events-container">
             {events.map((e) => (
-              <EventCard key={e} />
+              <EventCard key={e} id={e} />
             ))}
           </div>
 
@@ -44,7 +44,7 @@ export default function LandingMain() {
         <TabPanel value="2">
           <div className="events-container">
             {events.map((e) => (
-              <EventCard key={e} />
+              <EventCard key={e} id={e} />
             ))}
           </div>
         </TabPanel>

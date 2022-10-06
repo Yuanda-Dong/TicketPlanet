@@ -2,7 +2,7 @@ import React from 'react';
 import Button from '@mui/material/Button';
 import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
-import NavBar from '../Navbar/NavBar';
+import NavBar from '../../components/Navbar/NavBar';
 import './EventDetail.css';
 const EventDetail = () => {
   return (
