@@ -1,21 +1,55 @@
-from models.shared import db
+import uuid
+from typing import Optional
+from enum import Enum
+from pydantic import BaseModel, Field, validator, ValidationError
 
-class UserModel(db.Model):
-    __tablename__ = 'users'
+class GenderEnum(str, Enum):
+    male = 'male'
+    female = 'female'
+    nonbinary = 'nonbinary'
 
-    id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String())
-    gender = db.Column(db.String()) #MFO
-    postCode = db.Column(db.String())
-    # preference?
-    # ? google_account: Boolean
+class User(BaseModel):
+    id: str = Field(default_factory=uuid.uuid4, alias="_id")
+    email: str = Field(...)
+    gender: GenderEnum = Field(...)
+    postcode: int = Field(...)
+    # preferences
+    
+    # @validator('postcode')
+    # def postcode_must_be_4_digts(cls, v):
+    #     if len(v) != 4:
+    #         raise ValueError('Postcode is too long, must be 4 digits')
+    #     return v
+
+    class Config:
+        allow_population_by_field_name = True
+        schema_extra = {
+            "example": {
+                "email": "Don.Quixote@gmail.com",
+                "gender": "nonbinary",
+                "postcode": "2000"
+            }
+        }
 
 
-    def __init__(self, name, address, artist):
-        self.name = name
-        self.address = address
-        self.artist = artist
+class UserUpdate(BaseModel):
+    id: Optional[str]
+    email: Optional[str]
+    gender: Optional[GenderEnum]
+    postcode: Optional[int]
+    
+    # @validator('postcode')
+    # def postcode_must_be_4_digts(cls, v):
+    #     if len(v) != 4:
+    #         raise ValueError('Postcode is too long, must be 4 digits')
+    #     return v
 
-    def __repr__(self):
-        return f"<{self.name}>"
-        
+    class Config:
+        allow_population_by_field_name = True
+        schema_extra = {
+            "example": {
+                "email": "jane.doe@icloud.com",
+                "gender": "nonbinary",
+                "postcode": "2000"
+            }
+        }
