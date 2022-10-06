@@ -1,0 +1,28 @@
+.event-card {
+  margin: 10px 20px;
+}
+.event-card:hover {
+  cursor: pointer;
+  /* border: 1px solid #3c4b69; */
+}
+
+.event-card .css-46bh2p-MuiCardContent-root {
+  display: flex;
+  gap: 1em;
+}
+.event-card .css-46bh2p-MuiCardContent-root .date {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5em;
+}
+
+.event-card .css-46bh2p-MuiCardContent-root .date .month {
+  font-size: larger;
+}
+
+.event-card .css-46bh2p-MuiCardContent-root .MuiTypography-root:nth-child(3) {
+  display: flex;
+  align-items: center;
+}

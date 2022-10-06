@@ -1,14 +1,15 @@
 import * as React from 'react';
 import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
-import Button from '@mui/material/Button';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
 import Typography from '@mui/material/Typography';
+
+import './EventCard.css';
 
 export default function EventCard() {
   return (
-    <Card sx={{ maxWidth: 345 }}>
+    <Card sx={{ maxWidth: 345 }} className="event-card">
       <CardMedia
         component="img"
         height="250"
@@ -16,18 +17,27 @@ export default function EventCard() {
         alt="green iguana"
       />
       <CardContent>
-        <Typography gutterBottom variant="h5" component="div">
-          Lizard
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          Lizards are a widespread group of squamate reptiles, with over 6,000
-          species, ranging across all continents except Antarctica
-        </Typography>
+        <div className="date">
+          <span className="month">Nov</span>
+          <span className="day">13</span>
+        </div>
+        <div className="event-info">
+          <Typography gutterBottom variant="h5" component="div">
+            Event Title
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            Event price
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            <LocationOnIcon />
+            Event Location
+          </Typography>
+        </div>
       </CardContent>
-      <CardActions>
+      {/* <CardActions>
         <Button size="small">Share</Button>
         <Button size="small">Learn More</Button>
-      </CardActions>
+      </CardActions> */}
     </Card>
   );
 }
