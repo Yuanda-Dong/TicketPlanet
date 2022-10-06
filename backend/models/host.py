@@ -17,7 +17,7 @@ class HostModel(db.Model):
         return f"<{self.name}>"
 
 
-# Event: event_id, title, host, start dateTime, end dateTime, description, photo, video(optional), categories, location attendants:[Users], reviews
+# Event: event_id, title, host, start dateTime, end dateTime, description, thumbnail (photo shown in card), gallery (optional, list of photos), video(optional), categories, location attendants:[Users], reviews
 
 # Ticket: event_id, types, price, #of_tickets, 
 
