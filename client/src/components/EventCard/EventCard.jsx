@@ -4,12 +4,18 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import Typography from '@mui/material/Typography';
+import { useNavigate } from 'react-router-dom';
 
 import './EventCard.css';
 
-export default function EventCard() {
+export default function EventCard({ id }) {
+  const navigate = useNavigate();
+
+  const viewEvent = (e) => {
+    navigate(`/event/${e.currentTarget.id}`);
+  };
   return (
-    <Card sx={{ maxWidth: 345 }} className="event-card">
+    <Card id={id} sx={{ maxWidth: 345 }} className="event-card" onClick={viewEvent}>
       <CardMedia
         component="img"
         height="250"
