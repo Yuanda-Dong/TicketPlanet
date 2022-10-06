@@ -16,3 +16,29 @@
 .landing_main_container .MuiTabs-root .css-1aquho2-MuiTabs-indicator {
   background-color: #3c4b69;
 }
+
+.landing_main_container .MuiTabPanel-root {
+  width: 80%;
+  margin: auto;
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  /* background-color: #576f9d;
+  border-radius: 5px; */
+}
+
+.landing_main_container .MuiTabPanel-root .events-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  margin: 20px 0;
+}
+
+.landing_main_container .MuiTabPanel-root .loadmore {
+  width: 20vw;
+  color: white;
+  background-color: #576f9d;
+  margin-top: 50px;
+}
