@@ -15,11 +15,11 @@ class User(BaseModel):
     postcode: int = Field(...)
     # preferences
     
-    # @validator('postcode')
-    # def postcode_must_be_4_digts(cls, v):
-    #     if len(v) != 4:
-    #         raise ValueError('Postcode is too long, must be 4 digits')
-    #     return v
+    @validator('postcode')
+    def postcode_must_be_4_digts(cls, v):
+        if len(str(v)) != 4:
+            raise ValueError('Postcode must be 4 digits')
+        return v
 
     class Config:
         allow_population_by_field_name = True
@@ -38,11 +38,11 @@ class UserUpdate(BaseModel):
     gender: Optional[GenderEnum]
     postcode: Optional[int]
     
-    # @validator('postcode')
-    # def postcode_must_be_4_digts(cls, v):
-    #     if len(v) != 4:
-    #         raise ValueError('Postcode is too long, must be 4 digits')
-    #     return v
+    @validator('postcode')
+    def postcode_must_be_4_digts(cls, v):
+        if len(str(v)) != 4:
+            raise ValueError('Postcode must be 4 digits')
+        return v
 
     class Config:
         allow_population_by_field_name = True
