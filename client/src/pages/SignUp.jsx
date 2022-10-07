@@ -13,7 +13,6 @@ import {SignUpForm1, SignUpForm2} from '../components/SignUp/SignUpForm';
 import {useNavigate} from 'react-router-dom';
 import NavBar from '../components/Navbar/NavBar';
 import GoogleIcon from '@mui/icons-material/Google';
-import './Payment/Payment.css'
 
 const steps = ['Register your account', 'Enter your details'];
 
@@ -51,7 +50,6 @@ export default function SignUp() {
   return (
     <div>
       <NavBar />
-      <div className='Sign'>
       <Container component="main" maxWidth="sm" sx={{ mb: 4 }}>
         <Paper variant="outlined" sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}>
           <Typography component="h1" variant="h4" align="center">
@@ -116,7 +114,6 @@ export default function SignUp() {
           </Box>
         )}
       </Container>
-        </div>
     </div>
   );
 }
