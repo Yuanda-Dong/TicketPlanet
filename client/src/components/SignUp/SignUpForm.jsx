@@ -80,6 +80,8 @@ function SignUpForm2({state}) {
                     <FormControlLabel value="male" control={<Radio/>} label="Male"/>
                     <FormControlLabel value="other" control={<Radio/>} label="Other"/>
                 </RadioGroup>
+                </FormControl>
+                <FormControl sx={{mt:1}}>
                 <FormLabel>Age Group</FormLabel>
                 <RadioGroup
                     aria-labelledby="demo-row-radio-buttons-group-label"
@@ -94,7 +96,7 @@ function SignUpForm2({state}) {
                     <FormControlLabel value=">50" control={<Radio/>} label=">50 years"/>
                 </RadioGroup>
             </FormControl>
-            <Grid container spacing={2}>
+            <Grid container spacing={2} mt={1}>
                 <Grid item xs={12}>
                     <TextField
                         required
