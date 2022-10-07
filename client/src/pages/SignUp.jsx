@@ -9,21 +9,19 @@ import StepLabel from '@mui/material/StepLabel';
 import Button from '@mui/material/Button';
 import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
-import SignUpForm from '../components/SignUp/SignUpForm';
-import { useNavigate } from 'react-router-dom';
+import {SignUpForm1, SignUpForm2} from '../components/SignUp/SignUpForm';
+import {useNavigate} from 'react-router-dom';
 import NavBar from '../components/Navbar/NavBar';
 import GoogleIcon from '@mui/icons-material/Google';
 
-const steps = ['Register your account', 'Enter your details', 'Choose your preferences'];
+const steps = ['Register your account', 'Enter your details'];
 
-function getStepContent(step, [state1, state2, state3]) {
+function getStepContent(step, [state1, state2]) {
   switch (step) {
     case 0:
-      return <SignUpForm state={state1} />;
+      return <SignUpForm1 state={state1}/>;
     case 1:
-      return <SignUpForm state={state2} />;
-    case 2:
-      return <SignUpForm state={state3} />;
+      return <SignUpForm2 state={state2}/>;
     default:
       throw new Error('Unknown step');
   }
@@ -39,7 +37,7 @@ export default function SignUp() {
 
   const [signupInfo, setSignupInfo] = React.useState({ email: '', password: '' });
   const [profileInfo, setProfileInfo] = React.useState({ gender: '', age: '', postcode: '' });
-  const [preference, setPreference] = React.useState([]);
+
 
   const handleNext = (e) => {
     setActiveStep(activeStep + 1);
@@ -84,7 +82,6 @@ export default function SignUp() {
                 {getStepContent(activeStep, [
                   [signupInfo, setSignupInfo],
                   [profileInfo, setProfileInfo],
-                  [preference, setPreference],
                 ])}
                 <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                   {activeStep !== 0 && (
@@ -92,7 +89,6 @@ export default function SignUp() {
                       Back
                     </Button>
                   )}
-
                   <Button variant="contained" onClick={handleNext} sx={{ mt: 3, ml: 1 }}>
                     {activeStep === steps.length - 1 ? 'Sign Up' : 'Next'}
                   </Button>
