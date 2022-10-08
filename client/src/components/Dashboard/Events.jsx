@@ -2,7 +2,6 @@ import React from 'react';
 import EventList from '../EventList/EventList';
 import usePagination from './usePagination';
 import Pagination from '@mui/material/Pagination';
-import styled from 'styled-components';
 const Events = () => {
   const events = [1, 2, 3, 4, 5, 6, 7, 8, 9];
   const [page, setPage] = React.useState(1);
