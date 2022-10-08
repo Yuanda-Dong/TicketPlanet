@@ -84,3 +84,7 @@
   flex-direction: column;
   gap: 0.5em;
 }
+
+.event-detail .gallery {
+  width: 100%;
+}
