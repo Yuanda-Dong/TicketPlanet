@@ -71,7 +71,7 @@ const NavBar = (props) => {
           <Typography className="logo">LOGO</Typography>
         </Link>
 
-        {props.search == 1 ? (
+        {props.search === 1 ? (
           <SearchBar />
         ) : (
           // 'yoyo'
