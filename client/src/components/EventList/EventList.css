@@ -1,0 +1,23 @@
+.event-list-item {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+  margin: 10px 0;
+  height: 80px;
+}
+.event-list-item .date {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5em;
+}
+
+.event-list-item.date .month {
+  font-size: larger;
+}
+
+.event-list-item .event-info {
+  flex: 10;
+}

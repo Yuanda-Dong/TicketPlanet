@@ -1,5 +1,5 @@
 import React from 'react';
-import EventCard from '../EventCard/EventCard';
+import EventList from '../EventList/EventList';
 import usePagination from './usePagination';
 import Pagination from '@mui/material/Pagination';
 import styled from 'styled-components';
@@ -16,22 +16,15 @@ const Events = () => {
     // window.scrollTo({ top: 0 });
   };
 
-  const Container = styled.div`
-    /* display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-    grid-gap: 15px; */
-    display: flex;
-    flex-wrap: wrap;
-  `;
-
   return (
     <>
       <h1>Events</h1>
-      <Container>
+      <div style={{ height: '60vh' }}>
         {handleData.currentData().map((e) => (
-          <EventCard key={e} host={true} />
+          // <EventCard key={e} />
+          <EventList key={e} />
         ))}
-      </Container>
+      </div>
       <Pagination count={count} page={page} onChange={handlePageChange} shape="rounded" />
     </>
   );

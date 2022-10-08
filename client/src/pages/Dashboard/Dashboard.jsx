@@ -3,9 +3,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
-import Link from '@mui/material/Link';
 import Navigator from '../../components/Dashboard/Navigator';
-import Content from '../../components/Dashboard/Content';
 import NavBar from '../../components/Navbar/NavBar';
 import { Outlet } from 'react-router-dom';
 
