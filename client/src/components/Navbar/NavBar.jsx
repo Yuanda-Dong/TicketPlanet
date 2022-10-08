@@ -15,6 +15,8 @@ import SearchBar from '../SearchBar/SearchBar';
 const pages = ['Products', 'Pricing', 'Blog'];
 
 const NavBar = (props) => {
+  const dashboard = props.dashboard;
+  const onDrawerToggle = props.onDrawerToggle;
   const [anchorElNav, setAnchorElNav] = React.useState(null);
 
   const handleOpenNavMenu = (event) => {
@@ -34,7 +36,7 @@ const NavBar = (props) => {
             aria-label="account of current user"
             aria-controls="menu-appbar"
             aria-haspopup="true"
-            onClick={handleOpenNavMenu}
+            onClick={dashboard ? onDrawerToggle : handleOpenNavMenu}
             color="inherit"
           >
             <MenuIcon />
@@ -89,7 +91,7 @@ const NavBar = (props) => {
             </Button>
           </Link>
 
-          {true ? (
+          {false ? (
             <>
               <Link className="link" to={'/signin'}>
                 <Button variant="outlined" className="login">
