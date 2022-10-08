@@ -82,22 +82,30 @@ const NavBar = (props) => {
           </Box>
         )}
 
-        {true ? (
-          <div className="button_group">
-            <Link className="link" to={'/signin'}>
-              <Button variant="outlined" className="login">
-                Log in
-              </Button>
-            </Link>
-            <Link className="link" to={'/signup'}>
-              <Button variant="contained" className="signup">
-                Sign Up
-              </Button>
-            </Link>
-          </div>
-        ) : (
-          <UserMenu />
-        )}
+        <div className="button_group">
+          <Link className="link" to={'/create-event'}>
+            <Button variant="outlined" className="create-event">
+              Create Event
+            </Button>
+          </Link>
+
+          {true ? (
+            <>
+              <Link className="link" to={'/signin'}>
+                <Button variant="outlined" className="login">
+                  Log in
+                </Button>
+              </Link>
+              <Link className="link" to={'/signup'}>
+                <Button variant="contained" className="signup">
+                  Sign Up
+                </Button>
+              </Link>
+            </>
+          ) : (
+            <UserMenu />
+          )}
+        </div>
       </div>
     </div>
   );
