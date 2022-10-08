@@ -156,7 +156,7 @@ const drawerWidth = 256;
 
 export default function Dashboard() {
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  const isSmUp = useMediaQuery(theme.breakpoints.up('sm'));
+  const isSmUp = useMediaQuery(theme.breakpoints.up('md'));
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -170,7 +170,7 @@ export default function Dashboard() {
         <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
           <NavBar onDrawerToggle={handleDrawerToggle} dashboard={true} />
           <div style={{ display: 'flex', height: '100%' }}>
-            <Box component="nav" sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}>
+            <Box component="nav" sx={{ width: { md: drawerWidth }, flexShrink: { sm: 0 } }}>
               {isSmUp ? null : (
                 <Navigator
                   PaperProps={{ style: { width: drawerWidth } }}
@@ -180,10 +180,12 @@ export default function Dashboard() {
                 />
               )}
 
-              <Navigator PaperProps={{ style: { width: drawerWidth } }} sx={{ display: { sm: 'block', xs: 'none' } }} />
+              <Navigator
+                PaperProps={{ style: { width: drawerWidth } }}
+                sx={{ display: { md: 'block', sm: 'none', xs: 'none' } }}
+              />
             </Box>
             <Box component="main" sx={{ flex: 1, py: 6, px: 4, bgcolor: '#eaeff1' }}>
-              {/* <Content /> */}
               <Outlet />
             </Box>
           </div>
