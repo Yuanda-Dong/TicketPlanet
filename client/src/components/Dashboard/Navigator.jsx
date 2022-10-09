@@ -11,6 +11,7 @@ import ListItemText from '@mui/material/ListItemText';
 import PeopleIcon from '@mui/icons-material/People';
 import DnsRoundedIcon from '@mui/icons-material/DnsRounded';
 import PermMediaOutlinedIcon from '@mui/icons-material/PhotoSizeSelectActual';
+import { useLocation, matchPath } from 'react-router-dom';
 
 import './Navigator.css';
 
@@ -21,7 +22,6 @@ const categories = [
       {
         id: 'My Events',
         icon: <PeopleIcon />,
-        active: true,
         to: 'events',
       },
       { id: 'Orders', icon: <DnsRoundedIcon />, to: 'orders' },
@@ -40,6 +40,8 @@ const categories = [
 
 export default function Navigator(props) {
   const { ...other } = props;
+  const { pathname } = useLocation();
+  const path = pathname.split('/')[2];
 
   return (
     <Drawer className="drawer" variant="permanent" {...other}>
@@ -51,10 +53,10 @@ export default function Navigator(props) {
               <ListItemText>{id}</ListItemText>
             </ListItem>
 
-            {children.map(({ id: childId, icon, active, to }) => (
-              <Link key={childId} to={to}>
+            {children.map(({ id: childId, icon, to }) => (
+              <Link key={childId} to={to} className="link">
                 <ListItem disablePadding>
-                  <ListItemButton selected={active} className="item">
+                  <ListItemButton selected={to === path} className="item">
                     <ListItemIcon>{icon}</ListItemIcon>
                     <ListItemText>{childId}</ListItemText>
                   </ListItemButton>

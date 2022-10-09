@@ -8,6 +8,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import Dashboard from './pages/Dashboard/Dashboard.jsx';
 import Events from './components/Dashboard/Events';
+import Reports from './components/Dashboard/Reports';
 // import Payment from './pages/Payment/Payment';
 // import Navbar from './components/Navbar/NavBar';
 import Footer from './components/Footer/Footer';
@@ -27,7 +28,8 @@ function App() {
             <Route path=":id" element={<EventDetail />} />
           </Route>
           <Route path="dashboard" element={<Dashboard />}>
-            <Route path=":id" element={<Events />} />
+            <Route path="events" element={<Events />} />
+            <Route path="reports" element={<Reports />} />
           </Route>
           {/* <Route path="payment" element={<Payment />} />
            */}

@@ -36,8 +36,8 @@ const EventList = () => {
       onClose={handleCloseNavMenu}
     >
       {operations.map((operation) => (
-        <Link to={operation.to} style={{ color: 'inherit', textDecoration: 'none' }}>
-          <MenuItem key={operation.id} onClick={handleCloseNavMenu}>
+        <Link key={operation.id} to={operation.to} style={{ color: 'inherit', textDecoration: 'none' }}>
+          <MenuItem onClick={handleCloseNavMenu}>
             <Typography textAlign="center">{operation.id}</Typography>
           </MenuItem>
         </Link>
@@ -52,7 +52,7 @@ const EventList = () => {
           <span className="day">13</span>
         </div>
         <div className="event-info">
-          <Typography gutterBottom variant="body1" component="text.primary">
+          <Typography gutterBottom variant="body1" color="text.primary">
             Event Title
           </Typography>
           <Typography variant="body2" color="text.secondary">
