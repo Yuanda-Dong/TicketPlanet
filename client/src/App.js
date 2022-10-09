@@ -11,6 +11,7 @@ import Events from './components/Dashboard/Events';
 // import Payment from './pages/Payment/Payment';
 // import Navbar from './components/Navbar/NavBar';
 import Footer from './components/Footer/Footer';
+import PostPage from './pages/PostPage/PostPage';
 
 function App() {
   return (
@@ -28,7 +29,9 @@ function App() {
           <Route path="dashboard" element={<Dashboard />}>
             <Route path=":id" element={<Events />} />
           </Route>
-          {/* <Route path="payment" element={<Payment />} /> */}
+          {/* <Route path="payment" element={<Payment />} />
+           */}
+          <Route path="post" element={<PostPage />} />
         </Route>
       </Routes>
       <Footer />

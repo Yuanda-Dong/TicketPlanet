@@ -85,7 +85,7 @@ const NavBar = (props) => {
         )}
 
         <div className="button_group">
-          <Link className="link" to={'/create-event'}>
+          <Link className="link" to={'/post'}>
             <Button variant="outlined" className="create-event">
               Create Event
             </Button>
