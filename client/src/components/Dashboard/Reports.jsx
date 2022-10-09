@@ -1,11 +1,9 @@
-import React from 'react';
-import ReactRichEditor from 'react-rich-text-editor';
+import React, { useState } from 'react';
 
 const Reports = () => {
   return (
     <>
       <div>Reports</div>
-      <ReactRichEditor height={200} />
     </>
   );
 };
