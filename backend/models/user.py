@@ -1,7 +1,9 @@
 import uuid
-from typing import Optional
+from typing import Optional, Union
 from enum import Enum
 from pydantic import BaseModel, Field, validator, ValidationError
+from util.oAuth import oauth2_scheme
+from fastapi import Depends
 
 class GenderEnum(str, Enum):
     male = 'male'
@@ -10,9 +12,12 @@ class GenderEnum(str, Enum):
 
 class User(BaseModel):
     id: str = Field(default_factory=uuid.uuid4, alias="_id")
-    email: str = Field(...)
+    email: Union[str, None] = None
+    first_name: Union[str, None] = None
+    last_name: Union[str, None] = None
     gender: GenderEnum = Field(...)
     postcode: int = Field(...)
+    disabled: Union[bool, None] = None
     # preferences
     
     @validator('postcode')
@@ -26,10 +31,14 @@ class User(BaseModel):
         schema_extra = {
             "example": {
                 "email": "Don.Quixote@gmail.com",
+                "first name": "Don",
+                "last name" : "Quixote",
                 "gender": "nonbinary",
                 "postcode": "2000"
             }
         }
+        
+
 
 
 class UserUpdate(BaseModel):
@@ -48,7 +57,9 @@ class UserUpdate(BaseModel):
         allow_population_by_field_name = True
         schema_extra = {
             "example": {
-                "email": "jane.doe@icloud.com",
+                "email": "Don.Quixote@gmail.com",
+                "first name": "Don",
+                "last name" : "Quixote",
                 "gender": "nonbinary",
                 "postcode": "2000"
             }
