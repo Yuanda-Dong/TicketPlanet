@@ -26,7 +26,7 @@ const UserMenu = () => {
     switch (item) {
       case 'Dashboard':
         setAnchorElUser(null);
-        navigate('/dashboard/jobs');
+        navigate('/dashboard/events');
         break;
       default:
         setAnchorElUser(null);
