@@ -3,6 +3,8 @@ import Button from '@mui/material/Button';
 import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import NavBar from '../../components/Navbar/NavBar';
+import Gallery from '../../components/Gallery/Gallery';
+
 import './EventDetail.css';
 const EventDetail = () => {
   return (
@@ -66,6 +68,10 @@ const EventDetail = () => {
             voluptate dignissimos nemo tempore esse nihil accusamus fugiat ducimus adipisci aut dicta, ratione quisquam
             illo praesentium, dolorem velit libero.
           </p>
+        </div>
+        <div className="gallery">
+          <h2>Gallery</h2>
+          <Gallery />
         </div>
       </div>
     </>

@@ -23,6 +23,11 @@
   gap: 3rem;
 }
 
+.app_bar .wrapper .create-event {
+  color: white;
+  background-color: #4968a3;
+}
+
 .app_bar .wrapper .button_group {
   display: flex;
   gap: 1rem;

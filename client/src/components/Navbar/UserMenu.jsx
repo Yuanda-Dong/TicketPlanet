@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
@@ -6,16 +6,31 @@ import Menu from '@mui/material/Menu';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
+import { useNavigate } from 'react-router-dom';
 
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const settings = ['Profile', 'My Tickets', 'Dashboard', 'Account', 'Logout'];
 
 const UserMenu = () => {
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const navigate = useNavigate();
+  const [anchorElUser, setAnchorElUser] = useState(null);
+  const [userId, setUserId] = useState(123);
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
   };
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+  };
+
+  const handleMenuItem = (e) => {
+    const item = e.target.innerText;
+    switch (item) {
+      case 'Dashboard':
+        setAnchorElUser(null);
+        navigate('/dashboard/jobs');
+        break;
+      default:
+        setAnchorElUser(null);
+    }
   };
 
   return (
@@ -42,7 +57,7 @@ const UserMenu = () => {
         onClose={handleCloseUserMenu}
       >
         {settings.map((setting) => (
-          <MenuItem key={setting} onClick={handleCloseUserMenu}>
+          <MenuItem key={setting} onClick={handleMenuItem}>
             <Typography textAlign="center">{setting}</Typography>
           </MenuItem>
         ))}

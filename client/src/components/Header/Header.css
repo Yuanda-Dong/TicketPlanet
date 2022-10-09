@@ -1,6 +1,8 @@
 .header {
   width: 100vw;
-  background-color: #979797;
+  background-image: url('https://ainslieandgorman.com.au/app/uploads/2022/09/Dancing-at-Lughnasa-Name-only2-1.png');
+  background-repeat: no-repeat;
+  background-size: cover;
   height: 464px;
   position: relative;
   display: flex;

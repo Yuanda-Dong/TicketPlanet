@@ -1,0 +1,20 @@
+.MuiDrawer-root {
+  height: 100%;
+}
+.MuiDrawer-root .MuiPaper-root {
+  background-color: rgb(50, 62, 88);
+}
+
+.MuiBox-root .css-o6d2th-MuiPaper-root-MuiDrawer-paper {
+  top: auto;
+  position: sticky;
+  /* height: 100%; */
+}
+
+.MuiBox-root .category {
+  color: white;
+}
+
+.MuiListItem-root .item {
+  color: rgba(255, 255, 255, 0.7);
+}

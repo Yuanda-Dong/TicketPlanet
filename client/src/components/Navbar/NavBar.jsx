@@ -15,6 +15,8 @@ import SearchBar from '../SearchBar/SearchBar';
 const pages = ['Products', 'Pricing', 'Blog'];
 
 const NavBar = (props) => {
+  const dashboard = props.dashboard;
+  const onDrawerToggle = props.onDrawerToggle;
   const [anchorElNav, setAnchorElNav] = React.useState(null);
 
   const handleOpenNavMenu = (event) => {
@@ -34,7 +36,7 @@ const NavBar = (props) => {
             aria-label="account of current user"
             aria-controls="menu-appbar"
             aria-haspopup="true"
-            onClick={handleOpenNavMenu}
+            onClick={dashboard ? onDrawerToggle : handleOpenNavMenu}
             color="inherit"
           >
             <MenuIcon />
@@ -69,7 +71,7 @@ const NavBar = (props) => {
           <Typography className="logo">LOGO</Typography>
         </Link>
 
-        {props.search == 1 ? (
+        {props.search === 1 ? (
           <SearchBar />
         ) : (
           // 'yoyo'
@@ -82,22 +84,30 @@ const NavBar = (props) => {
           </Box>
         )}
 
-        {true ? (
-          <div className="button_group">
-            <Link className="link" to={'/signin'}>
-              <Button variant="outlined" className="login">
-                Log in
-              </Button>
-            </Link>
-            <Link className="link" to={'/signup'}>
-              <Button variant="contained" className="signup">
-                Sign Up
-              </Button>
-            </Link>
-          </div>
-        ) : (
-          <UserMenu />
-        )}
+        <div className="button_group">
+          <Link className="link" to={'/create-event'}>
+            <Button variant="outlined" className="create-event">
+              Create Event
+            </Button>
+          </Link>
+
+          {false ? (
+            <>
+              <Link className="link" to={'/signin'}>
+                <Button variant="outlined" className="login">
+                  Log in
+                </Button>
+              </Link>
+              <Link className="link" to={'/signup'}>
+                <Button variant="contained" className="signup">
+                  Sign Up
+                </Button>
+              </Link>
+            </>
+          ) : (
+            <UserMenu />
+          )}
+        </div>
       </div>
     </div>
   );
