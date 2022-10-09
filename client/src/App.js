@@ -7,7 +7,7 @@ import EventDetail from './pages/EventDetail/EventDetail';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Payment from './pages/Payment/Payment';
 // import Navbar from './components/Navbar/NavBar';
-
+import PostPage from './pages/PostPage/PostPage';
 function App() {
   return (
     <BrowserRouter>
@@ -22,6 +22,7 @@ function App() {
             <Route path=":id" element={<EventDetail />} />
           </Route>
           <Route path="payment" element={<Payment />} />
+          <Route path="post" element={<PostPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
