@@ -16,7 +16,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-
+import DeleteIcon from '@mui/icons-material/Delete';
 import {EditorState} from 'draft-js';
 import {Editor} from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
@@ -240,31 +240,35 @@ const PostPage = () => {
                                 {tickets.map((e, idx) => (
                                     <Card sx={{minWidth: 250}}>
                                         <CardContent>
-                                            <Typography gutterBottom variant="h5" component="div">
-                                                {e.name}
-                                            </Typography>
-                                            <Typography variant="body2" color="text.secondary">
-                                                Price: ${e.price}
-                                            </Typography>
-                                            <Typography variant="body2" color="text.secondary">
-                                                Available quantity: {e.quantity}
-                                            </Typography>
-                                            <Button
-                                                variant="contained"
-                                                component="label"
-                                                color="error"
-                                                onClick={(event) => removeTicket(event, idx)}
-                                            >
-                                                {' '}
-                                                Remove{' '}
-                                            </Button>
+                                            <Grid container spacing={1}>
+                                                <Grid item xs={9}>
+                                                    <Typography gutterBottom variant="h5" component="div">
+                                                        {e.name}
+                                                    </Typography>
+                                                    <Typography variant="body2" color="text.secondary">
+                                                        Price: ${e.price}
+                                                    </Typography>
+                                                    <Typography variant="body2" color="text.secondary">
+                                                        Available quantity: {e.quantity}
+                                                    </Typography></Grid>
+                                                <Grid item xs={3}>
+                                                    <Button
+                                                        variant="outlined"
+                                                        component="label"
+                                                        color="error"
+                                                        startIcon={<DeleteIcon/>}
+                                                        onClick={(event) => removeTicket(event, idx)}
+                                                    >
+                                                        {' '}
+                                                        Remove{' '}
+                                                    </Button></Grid></Grid>
                                         </CardContent>
                                     </Card>
                                 ))}
                             </div>
 
                             <div>
-                                <Button onClick={handleOpen}>Add Tickets</Button>
+                                <Button fullWidth variant="outlined" onClick={handleOpen}>Add Tickets</Button>
                                 <Modal
                                     open={open}
                                     onClose={handleClose}
@@ -272,30 +276,41 @@ const PostPage = () => {
                                     aria-describedby="modal-modal-description"
                                 >
                                     <Box sx={style}>
-                                        <Typography id="modal-modal-title" variant="h6" component="h2">
-                                            Add Tickets
-                                        </Typography>
-                                        <Typography id="modal-modal-description" sx={{mt: 2}}>
-                                            <TextField id="standard-basic" label="Name: " variant="standard"
-                                                       value={t.name}
-                                                       onChange={setName}/>
-                                            <TextField id="standard-basic" label="Price: " variant="standard"
-                                                       value={t.price}
-                                                       onChange={setPrice}/>
-                                            <TextField
-                                                id="standard-basic"
-                                                label="Quantity: "
-                                                variant="standard"
-                                                value={t.quantity}
-                                                onChange={setQuantity}
-                                            />
-                                        </Typography>
-                                        <Button variant="contained" onClick={add}>
-                                            Add
-                                        </Button>
-                                        <Button variant="contained" color="error" onClick={cancel}>
-                                            Cancel
-                                        </Button>
+                                        <Grid container spacing={2}>
+                                            <Grid item xs={12}>
+                                                <Typography align="center" id="modal-modal-title" variant="h6" component="h2">
+                                                    Add Tickets
+                                                </Typography>
+                                            </Grid>
+                                            <Grid item xs={12}>
+                                                <Typography id="modal-modal-description">
+                                                    <TextField id="standard-basic" label="Name: " variant="standard"
+                                                               value={t.name} margin="normal"
+                                                               onChange={setName}/>
+                                                    <TextField id="standard-basic" label="Price: " variant="standard"
+                                                               value={t.price} margin="normal"
+                                                               onChange={setPrice}/>
+                                                    <TextField
+                                                        id="standard-basic"
+                                                        label="Quantity: "
+                                                        variant="standard"
+                                                        value={t.quantity}
+                                                        margin="normal"
+                                                        onChange={setQuantity}
+                                                    />
+                                                </Typography>
+                                            </Grid>
+                                            <Grid item xs={9} mt={1}>
+                                                <Button variant="contained" onClick={add}>
+                                                    Add
+                                                </Button>
+                                            </Grid>
+                                            <Grid item xs={3} mt={1}>
+                                                <Button variant="contained" color="error" onClick={cancel}>
+                                                    Cancel
+                                                </Button>
+                                            </Grid>
+                                        </Grid>
                                     </Box>
                                 </Modal>
                             </div>
@@ -307,7 +322,7 @@ const PostPage = () => {
                                 label="Thumbnail Image link"
                                 variant="outlined"
                                 value={thumb ? thumb.slice(0, 30) + '...' : ''}
-                                sx={{width: '50%', mr: 2}}
+                                // sx={{width: '50%', mr: 2}}
                                 onChange={handleMedia}
                             />
                         </Grid>
@@ -318,32 +333,32 @@ const PostPage = () => {
                             </Button>
                         </Grid>
                         <Grid item xs={12}>
-                        <div className="gallery">
-                            {gallery.map((e, idx) => (
-                                <div>
-                                    <TextField
-                                        key={idx}
-                                        id="Media upload"
-                                        label={`Gallery link ${idx + 1}`}
-                                        variant="outlined"
-                                        value={e ? e.slice(0, 30) + '...' : ''}
-                                        sx={{width: '25vw', mr: 2}}
-                                        onChange={(event) => handleGallery(event, idx)}
-                                    />
-                                    <Button variant="contained" component="label" color="error"
-                                            onClick={(event) => handleClick(event, idx)}>
-                                        {' '}
-                                        Remove{' '}
-                                    </Button>
-                                </div>
-                            ))}
-                        </div>
+                            <div className="gallery">
+                                {gallery.map((e, idx) => (
+                                    <div>
+                                        <TextField
+                                            key={idx}
+                                            id="Media upload"
+                                            label={`Gallery link ${idx + 1}`}
+                                            variant="outlined"
+                                            value={e ? e.slice(0, 30) + '...' : ''}
+                                            sx={{width: '25vw', mr: 2}}
+                                            onChange={(event) => handleGallery(event, idx)}
+                                        />
+                                        <Button variant="contained" component="label" color="error"
+                                                onClick={(event) => handleClick(event, idx)}>
+                                            {' '}
+                                            Remove{' '}
+                                        </Button>
+                                    </div>
+                                ))}
+                            </div>
                         </Grid>
                         <Grid item xs={12}>
-                        <Button aria-describedby="Media upload" variant="contained" component="label">
-                            Add Gallery Image
-                            <input type="file" hidden accept="image/jpeg, image/jpg" onChange={handleGalleryImage}/>
-                        </Button>
+                            <Button aria-describedby="Media upload" variant="contained" component="label">
+                                Add Gallery Image
+                                <input type="file" hidden accept="image/jpeg, image/jpg" onChange={handleGalleryImage}/>
+                            </Button>
                         </Grid>
                     </Grid>
                 </Paper>
