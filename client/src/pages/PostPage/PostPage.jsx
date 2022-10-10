@@ -156,7 +156,7 @@ const PostPage = () => {
     return (
         <div className="PostPage">
             <NavBar/>
-            <Container component="main" maxWidth="sm" sx={{mb: 0}}>
+            <Container component="main" maxWidth="md" sx={{mb: 0}}>
                 <Paper elevation={3} sx={{my: {xs: 3, md: 6}, p: {xs: 2, md: 3}}}>
                     <Typography component="h1" variant="h4" align="center" sx={{mb: 2}}>
                         Create New Event
