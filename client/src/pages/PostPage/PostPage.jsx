@@ -17,6 +17,7 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import DeleteIcon from '@mui/icons-material/Delete';
+import SendIcon from '@mui/icons-material/Send';
 import {EditorState} from 'draft-js';
 import {Editor} from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
@@ -160,13 +161,13 @@ const PostPage = () => {
                     <Typography component="h1" variant="h4" align="center" sx={{mb: 2}}>
                         Create New Event
                     </Typography>
-                    <Grid container spacing={1} rowSpacing={2}>
+                    <Grid container spacing={3} rowSpacing={2}>
                         <Grid item xs={6}>
-                            <TextField required id="outlined-basic" label="Event Title" variant="outlined"
+                            <TextField fullWidth required id="outlined-basic" label="Event Title" variant="outlined"
                                        sx={{mb: 1}}/>
                         </Grid>
                         <Grid item xs={6}>
-                            <TextField required id="outlined-basic" label="Host Name" variant="outlined"
+                            <TextField fullWidth required id="outlined-basic" label="Host Name" variant="outlined"
                                        sx={{mb: 1}}/>
                         </Grid>
                         <Grid item xs={12}>
@@ -188,10 +189,10 @@ const PostPage = () => {
                             </FormControl>
                         </Grid>
                         <Grid item xs={6}>
-                            <TextField id="outlined-basic" label="Address" variant="outlined" sx={{mb: 1}}/>
+                            <TextField fullWidth id="outlined-basic" label="Address" variant="outlined" sx={{mb: 1}}/>
                         </Grid>
                         <Grid item xs={6}>
-                            <TextField id="outlined-basic" label="Post Code" variant="outlined" sx={{mb: 1}}/>
+                            <TextField fullWidth id="outlined-basic" label="Post Code" variant="outlined" sx={{mb: 1}}/>
                         </Grid>
                         <Grid item xs={6}>
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -202,7 +203,7 @@ const PostPage = () => {
                                     onChange={(newValue) => {
                                         setValue({...value, from: newValue});
                                     }}
-                                    renderInput={(params) => <TextField className="search_date" {...params} />}
+                                    renderInput={(params) => <TextField fullWidth className="search_date" {...params} />}
                                 />
                             </LocalizationProvider>
                         </Grid>
@@ -215,7 +216,7 @@ const PostPage = () => {
                                     onChange={(newValue) => {
                                         setValue({...value, to: newValue});
                                     }}
-                                    renderInput={(params) => <TextField className="search_date" {...params} />}
+                                    renderInput={(params) => <TextField fullWidth className="search_date" {...params} />}
                                 />
                             </LocalizationProvider>
                         </Grid>
@@ -240,7 +241,11 @@ const PostPage = () => {
                                 {tickets.map((e, idx) => (
                                     <Card sx={{minWidth: 250}}>
                                         <CardContent>
-                                            <Grid container spacing={1}>
+                                            <Grid container
+                                                  spacing={1}
+                                                  direction="row"
+                                                  justifyContent="space-between"
+                                                  alignItems="flex-end">
                                                 <Grid item xs={9}>
                                                     <Typography gutterBottom variant="h5" component="div">
                                                         {e.name}
@@ -278,19 +283,21 @@ const PostPage = () => {
                                     <Box sx={style}>
                                         <Grid container spacing={2}>
                                             <Grid item xs={12}>
-                                                <Typography align="center" id="modal-modal-title" variant="h6" component="h2">
+                                                <Typography align="center" id="modal-modal-title" variant="h6"
+                                                            component="h2">
                                                     Add Tickets
                                                 </Typography>
                                             </Grid>
                                             <Grid item xs={12}>
                                                 <Typography id="modal-modal-description">
-                                                    <TextField id="standard-basic" label="Name: " variant="standard"
+                                                    <TextField fullWidth id="standard-basic" label="Name: " variant="standard"
                                                                value={t.name} margin="normal"
                                                                onChange={setName}/>
-                                                    <TextField id="standard-basic" label="Price: " variant="standard"
+                                                    <TextField fullWidth id="standard-basic" label="Price: " variant="standard"
                                                                value={t.price} margin="normal"
                                                                onChange={setPrice}/>
                                                     <TextField
+                                                        fullWidth
                                                         id="standard-basic"
                                                         label="Quantity: "
                                                         variant="standard"
@@ -300,14 +307,14 @@ const PostPage = () => {
                                                     />
                                                 </Typography>
                                             </Grid>
-                                            <Grid item xs={9} mt={1}>
-                                                <Button variant="contained" onClick={add}>
-                                                    Add
-                                                </Button>
-                                            </Grid>
-                                            <Grid item xs={3} mt={1}>
+                                            <Grid item xs={10} mt={1}>
                                                 <Button variant="contained" color="error" onClick={cancel}>
                                                     Cancel
+                                                </Button>
+                                            </Grid>
+                                            <Grid item xs={2} mt={1}>
+                                                <Button variant="contained" onClick={add}>
+                                                    Add
                                                 </Button>
                                             </Grid>
                                         </Grid>
@@ -316,18 +323,18 @@ const PostPage = () => {
                             </div>
                         </Grid>
 
-                        <Grid item xs={6}>
+                        <Grid item xs={12}>
                             <TextField
                                 id="Media upload"
                                 label="Thumbnail Image link"
                                 variant="outlined"
                                 value={thumb ? thumb.slice(0, 30) + '...' : ''}
-                                // sx={{width: '50%', mr: 2}}
+                                fullWidth
                                 onChange={handleMedia}
                             />
                         </Grid>
-                        <Grid item xs={6}>
-                            <Button aria-describedby="Media upload" variant="contained" component="label">
+                        <Grid item xs={12}>
+                            <Button fullWidth aria-describedby="Media upload" variant="contained" component="label" startIcon={<SendIcon />}>
                                 Upload Thumbnail Image
                                 <input type="file" hidden accept="image/jpeg, image/jpg" onChange={handleImage}/>
                             </Button>
@@ -336,26 +343,37 @@ const PostPage = () => {
                             <div className="gallery">
                                 {gallery.map((e, idx) => (
                                     <div>
-                                        <TextField
-                                            key={idx}
-                                            id="Media upload"
-                                            label={`Gallery link ${idx + 1}`}
-                                            variant="outlined"
-                                            value={e ? e.slice(0, 30) + '...' : ''}
-                                            sx={{width: '25vw', mr: 2}}
-                                            onChange={(event) => handleGallery(event, idx)}
-                                        />
-                                        <Button variant="contained" component="label" color="error"
-                                                onClick={(event) => handleClick(event, idx)}>
-                                            {' '}
-                                            Remove{' '}
-                                        </Button>
+                                        <Grid container
+                                              spacing={1}
+                                              direction="row"
+                                              justifyContent="space-between"
+                                              alignItems="center">
+                                            <Grid item xs={9}>
+                                                <TextField
+                                                    fullWidth
+                                                    margin='normal'
+                                                    key={idx}
+                                                    id="Media upload"
+                                                    label={`Gallery link ${idx + 1}`}
+                                                    variant="outlined"
+                                                    value={e ? e.slice(0, 30) + '...' : ''}
+                                                    onChange={(event) => handleGallery(event, idx)}
+                                                /></Grid>
+                                            <Grid item xs={3}>
+                                                <Button variant="outlined" component="label" color="error"
+                                                        startIcon={<DeleteIcon/>}
+                                                        onClick={(event) => handleClick(event, idx)}>
+                                                    {' '}
+                                                    Remove{' '}
+                                                </Button>
+                                            </Grid>
+                                        </Grid>
                                     </div>
                                 ))}
                             </div>
                         </Grid>
                         <Grid item xs={12}>
-                            <Button aria-describedby="Media upload" variant="contained" component="label">
+                            <Button fullWidth aria-describedby="Media upload" variant="contained" component="label" startIcon={<SendIcon />}>
                                 Add Gallery Image
                                 <input type="file" hidden accept="image/jpeg, image/jpg" onChange={handleGalleryImage}/>
                             </Button>
