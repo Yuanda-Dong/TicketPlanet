@@ -95,24 +95,18 @@ def create_user(request: Request, user: UserInDB = Body(...)):
     return created_user
     
 @router.get("/", response_description="Get all users", response_model=List[User])
-def list_users(request: Request, token: str = Depends(oauth2_scheme)):
+def list_users(request: Request, user: User = Depends(get_current_user)):
     users = list(request.app.database["users"].find(limit=100))
     return users
     
 @router.get("/{id}", response_description="Get a single user by id", response_model=User)
-def find_user(id: str, request: Request):
+def find_user(id: str, request: Request, user: User = Depends(get_current_user)):
     if (user := request.app.database["users"].find_one({"_id": id})) is not None:
         return user
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"user with ID {id} not found")
-
-@router.get("/e/{email}", response_description="Get a single user by id", response_model=User)
-def find_user(email: str, request: Request):
-    if (user := get_user(email)) is not None:
-        return user
-    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"user with Email {email} not found: returned this {user}")
     
-@router.put("/{id}", response_description="Update a user", response_model=UserInDB)
-def update_user(id: str, request: Request, user: UserUpdate = Body(...)):
+@router.put("/{id}", response_description="Update a user", response_model=UserInDB, )
+def update_user(id: str, request: Request, user: UserUpdate = Depends(get_current_user)):
     user = {k: v for k, v in user.dict().items() if v is not None}
     if len(user) >= 1:
         update_result = request.app.database["users"].update_one(
