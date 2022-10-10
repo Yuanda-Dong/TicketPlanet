@@ -1,9 +1,6 @@
 from fastapi import FastAPI
-import os
-from pymongo import MongoClient
+from util.app import app
 from routes.user import router as user_router
-
-app = FastAPI()
 
 @app.get("/")
 async def root():
@@ -11,8 +8,6 @@ async def root():
     
 @app.on_event("startup")
 def startup_db_client():
-    app.mongodb_client = MongoClient(os.getenv("MONGO_URL"))
-    app.database = app.mongodb_client['test']
     print("Connected to the MongoDB database!")
 
 @app.on_event("shutdown")
