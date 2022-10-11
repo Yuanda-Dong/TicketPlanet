@@ -13,5 +13,6 @@ def startup_db_client():
 @app.on_event("shutdown")
 def shutdown_db_client():
     app.mongodb_client.close()
+    
 
 app.include_router(user_router, tags=["users"], prefix="/user")
