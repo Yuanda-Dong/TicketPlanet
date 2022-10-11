@@ -13,6 +13,7 @@ import Reports from './components/Dashboard/Reports';
 // import Navbar from './components/Navbar/NavBar';
 import Footer from './components/Footer/Footer';
 import PostPage from './pages/PostPage/PostPage';
+import FindPassword from './pages/FindPassword';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           <Route path="search" element={<SearchPage />} />
           <Route path="signin" element={<SignInSide />} />
           <Route path="signup" element={<SignUp />} />
+          <Route path="find-password" element={<FindPassword />} />
           <Route path="event">
             <Route path=":id" element={<EventDetail />} />
           </Route>
