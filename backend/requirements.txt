@@ -18,7 +18,7 @@ httpcore==0.15.0
 httptools==0.5.0
 httpx==0.23.0
 idna==3.4
-itsdangerous
+itsdangerous==1.1.0
 Jinja2==2.11.3
 Mako==1.2.3
 MarkupSafe==1.1.1
@@ -46,16 +46,16 @@ uvicorn==0.18.3
 uvloop==0.17.0
 watchfiles==0.17.0
 websockets==10.3
-Werkzeug
+Werkzeug==1.0.1
 fastapi_mail
 
-pip~=22.2.2
-Pillow~=8.2.0
-tornado~=6.1
-blinker~=1.5
-decorator~=5.0.9
-aiosmtplib~=1.1.7
-setuptools~=41.2.0
-stripe~=4.2.0
-Flask~=2.1.2
-passlib~=1.7.4
+# pip~=22.2.2
+# Pillow~=8.2.0
+# tornado~=6.1
+# blinker~=1.5
+# decorator~=5.0.9
+# aiosmtplib~=1.1.7
+# setuptools~=41.2.0
+# stripe~=4.2.0
+# Flask~=2.1.2
+# passlib~=1.7.4
