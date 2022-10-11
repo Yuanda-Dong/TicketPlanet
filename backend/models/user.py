@@ -3,7 +3,7 @@ from typing import Optional, Union
 from enum import Enum
 from pydantic import BaseModel, Field, validator, ValidationError
 from util.oAuth import oauth2_scheme
-from fastapi import Depends
+
 
 class GenderEnum(str, Enum):
     male = 'male'
@@ -34,12 +34,26 @@ class User(BaseModel):
                 "first name": "Don",
                 "last name" : "Quixote",
                 "gender": "nonbinary",
-                "postcode": "2000"
+                "postcode": "2000",
+                "disabled:": "true"
             }
         }
         
-
-
+class UserInDB(User):
+    password: str = Field(...)
+    class Config:
+        allow_population_by_field_name = True
+        schema_extra = {
+            "example": {
+                "email": "Don.Quixote@gmail.com",
+                "first name": "Don",
+                "last name" : "Quixote",
+                "gender": "nonbinary",
+                "postcode": "2000",
+                "disabled:": "true",
+                "password": "password"
+            }
+        }
 
 class UserUpdate(BaseModel):
     id: Optional[str]
@@ -64,3 +78,12 @@ class UserUpdate(BaseModel):
                 "postcode": "2000"
             }
         }
+
+
+class ForgetPassword(BaseModel):
+    email: Optional[str]
+
+class ResetPassword(BaseModel):
+    reset_password_token: Optional[str]
+    new_password: str
+    confirm_password: str

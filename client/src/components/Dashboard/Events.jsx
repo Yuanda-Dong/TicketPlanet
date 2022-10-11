@@ -18,7 +18,7 @@ const Events = () => {
   return (
     <>
       <h1>Events</h1>
-      <div style={{ height: '60vh' }}>
+      <div>
         {handleData.currentData().map((e) => (
           // <EventCard key={e} />
           <EventList key={e} />
