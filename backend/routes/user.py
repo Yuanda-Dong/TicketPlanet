@@ -84,28 +84,28 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
     )
     return {"access_token": access_token, "token_type": "bearer"}
 
-@app.get('/google/login')
-async def login(request: Request):
-    redirect_uri = request.url_for('auth')
-    return await oauth.google.authorize_redirect(request, redirect_uri)
+# @app.get('/google/login')
+# async def login(request: Request):
+#     redirect_uri = request.url_for('auth')
+#     return await oauth.google.authorize_redirect(request, redirect_uri)
 
 
-@app.get('/google/auth')
-async def auth(request: Request):
-    try:
-        token = await oauth.google.authorize_access_token(request)
-    except OAuthError as error:
-        return HTMLResponse(f'<h1>{error.error}</h1>')
-    user = token.get('userinfo')
-    if user:
-        request.session['user'] = dict(user)
-    return RedirectResponse(url='/')
+# @app.get('/google/auth')
+# async def auth(request: Request):
+#     try:
+#         token = await oauth.google.authorize_access_token(request)
+#     except OAuthError as error:
+#         return HTMLResponse(f'<h1>{error.error}</h1>')
+#     user = token.get('userinfo')
+#     if user:
+#         request.session['user'] = dict(user)
+#     return RedirectResponse(url='/')
 
 
-@app.get('/google/logout')
-async def logout(request: Request):
-    request.session.pop('user', None)
-    return RedirectResponse(url='/')
+# @app.get('/google/logout')
+# async def logout(request: Request):
+#     request.session.pop('user', None)
+#     return RedirectResponse(url='/')
 
 #####
 

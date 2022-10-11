@@ -18,7 +18,7 @@ httpcore==0.15.0
 httptools==0.5.0
 httpx==0.23.0
 idna==3.4
-itsdangerous==1.1.0
+itsdangerous
 Jinja2==2.11.3
 Mako==1.2.3
 MarkupSafe==1.1.1
@@ -46,7 +46,7 @@ uvicorn==0.18.3
 uvloop==0.17.0
 watchfiles==0.17.0
 websockets==10.3
-Werkzeug==1.0.1
+Werkzeug
 fastapi_mail
 
 pip~=22.2.2
