@@ -210,7 +210,7 @@ async def reset_password(request: Request, reset_password_token: str, new_passwo
     now = datetime.now()
     timestamp = datetime.timestamp(now)
     code_timestamp = reset_token["time"]
-    if int(timestamp - code_timestamp) > 1*60*60: #  1 hours
+    if int(timestamp - code_timestamp) > 10: #  1 hours
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="reset password token has expired, please request a new one")
 
     # Check both new & confirm password are match
