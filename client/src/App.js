@@ -14,6 +14,7 @@ import Reports from './components/Dashboard/Reports';
 import Footer from './components/Footer/Footer';
 import PostPage from './pages/PostPage/PostPage';
 import FindPassword from './pages/FindPassword';
+import Account from './pages/Account';
 
 function App() {
   return (
@@ -26,6 +27,8 @@ function App() {
           <Route path="signin" element={<SignInSide />} />
           <Route path="signup" element={<SignUp />} />
           <Route path="find-password" element={<FindPassword />} />
+          <Route path="account-setting" element={<Account />} />
+
           <Route path="event">
             <Route path=":id" element={<EventDetail />} />
           </Route>
