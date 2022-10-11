@@ -12,9 +12,9 @@ class GenderEnum(str, Enum):
 
 class User(BaseModel):
     id: str = Field(default_factory=uuid.uuid4, alias="_id")
-    email: Union[str, None] = None
-    first_name: Union[str, None] = None
-    last_name: Union[str, None] = None
+    email:str = Field(...)
+    first_name:str = Field(...)
+    last_name:str = Field(...)
     gender: GenderEnum = Field(...)
     postcode: int = Field(...)
     disabled: Union[bool, None] = None
