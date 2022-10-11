@@ -46,7 +46,7 @@ const ResetPassword = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(passwords);
+    // TODO
   };
 
   const handleBlur = (e) => {

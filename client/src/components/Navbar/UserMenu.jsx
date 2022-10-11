@@ -8,7 +8,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import { useNavigate } from 'react-router-dom';
 
-const settings = ['Profile', 'My Tickets', 'Dashboard', 'Account', 'Logout'];
+const settings = ['My Tickets', 'Dashboard', 'Account', 'Logout'];
 
 const UserMenu = () => {
   const navigate = useNavigate();
@@ -28,6 +28,10 @@ const UserMenu = () => {
         setAnchorElUser(null);
         navigate('/dashboard/events');
         break;
+      case 'Account':
+        setAnchorElUser(null);
+        navigate('/account-setting');
+        break;
       default:
         setAnchorElUser(null);
     }
@@ -37,7 +41,7 @@ const UserMenu = () => {
     <Box sx={{ flexGrow: 0 }}>
       <Tooltip title="Open settings">
         <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-          <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+          <Avatar alt="Remy Sharp" src="" />
         </IconButton>
       </Tooltip>
       <Menu
