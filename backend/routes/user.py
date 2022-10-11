@@ -5,7 +5,7 @@ from cryptoUtil import hash_password
 import uuid
 from fastapi.security import  OAuth2PasswordRequestForm
 from typing import List, Union
-from util.oAuth import oauth2_scheme, verify_password, get_password_hash, oauth
+from util.oAuth import oauth2_scheme, verify_password, get_password_hash #,oauth
 from util.app import app
 from jose import JWTError, jwt
 from datetime import datetime, timedelta
