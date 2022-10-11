@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 // import ReactInputVerificationCode from 'react-input-verification-code';
-import { Input } from '@mui/material';
+import { TextField } from '@mui/material';
 import { Link } from 'react-router-dom';
 
 const Container = styled.div`
@@ -113,7 +113,7 @@ export default function App() {
         <ReturnButton>Return</ReturnButton>
       </Link>
       <Wrapper>
-        <Input />
+        <TextField variant="outlined" />
 
         {error.error && <StyledError>{error.message}</StyledError>}
 
