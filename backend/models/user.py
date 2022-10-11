@@ -78,3 +78,12 @@ class UserUpdate(BaseModel):
                 "postcode": "2000"
             }
         }
+
+
+class ForgetPassword(BaseModel):
+    email: Optional[str]
+
+class ResetPassword(BaseModel):
+    reset_password_token: Optional[str]
+    new_password: str
+    confirm_password: str

@@ -328,7 +328,7 @@ const PostPage = () => {
                                 id="Media upload"
                                 label="Thumbnail Image link"
                                 variant="outlined"
-                                value={thumb ? thumb.slice(0, 30) + '...' : ''}
+                                value={thumb}
                                 fullWidth
                                 onChange={handleMedia}
                             />
@@ -356,7 +356,7 @@ const PostPage = () => {
                                                     id="Media upload"
                                                     label={`Gallery link ${idx + 1}`}
                                                     variant="outlined"
-                                                    value={e ? e.slice(0, 30) + '...' : ''}
+                                                    value={e}
                                                     onChange={(event) => handleGallery(event, idx)}
                                                 /></Grid>
                                             <Grid item xs={3}>
