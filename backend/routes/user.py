@@ -5,9 +5,8 @@ from cryptoUtil import hash_password
 import uuid
 from fastapi.security import  OAuth2PasswordRequestForm
 from typing import List, Union
-from util.oAuth import oauth2_scheme, verify_password, get_password_hash #,oauth
+from util.oAuth import  authenticate_user, get_password_hash, create_access_token, get_current_user #,oauth
 from util.app import app
-from jose import JWTError, jwt
 from datetime import datetime, timedelta
 import os
 from starlette.responses import HTMLResponse, RedirectResponse
@@ -21,52 +20,6 @@ sys.path.append("..models") # Adds higher directory to python modules path.
 
 router = APIRouter()
 
-############
-# Utility Functions
-
-def get_user(email: str):
-    found_user = app.database["users"].find_one({"email":email})
-    return found_user
-
-
-## Oauth Management
-def authenticate_user(username: str, password: str):
-    print(username)
-    user = get_user(username)
-    if not user:
-        return False
-    if not verify_password(password, user["password"]):
-        return False
-    return user
-
-
-def create_access_token(data: dict, expires_delta: Union[timedelta, None] = None):
-    to_encode = data.copy()
-    if expires_delta:
-        expire = datetime.utcnow() + expires_delta
-    else:
-        expire = datetime.utcnow() + timedelta(minutes=15)
-    to_encode.update({"exp": expire})
-    encoded_jwt = jwt.encode(to_encode, os.getenv("TOKEN_SECRET"), algorithm=os.getenv("ALGORITHM"))
-    return encoded_jwt
-    
-def get_current_user(token: str = Depends(oauth2_scheme)):
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
-    try:
-        payload = jwt.decode(token, os.getenv("TOKEN_SECRET"), algorithms=[os.getenv("ALGORITHM")])
-        username: str = payload.get("sub")
-        if username is None:
-            raise credentials_exception
-    except JWTError:
-        raise credentials_exception
-    user = get_user(username)
-    if user is None:
-        raise credentials_exception
-    return user
     
 @app.post("/token", response_model=Token)
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
@@ -112,7 +65,7 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
 #Routes
 
 @router.get("/me", response_model=User)
-def read_users_me(current_user: User = Depends(get_current_user)):
+def whoami(current_user: User = Depends(get_current_user)):
     return current_user
 
 @router.post("/", response_description="Create a new user", status_code=status.HTTP_201_CREATED, response_model=User)
