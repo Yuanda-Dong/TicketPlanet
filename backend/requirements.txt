@@ -46,7 +46,7 @@ uvicorn==0.18.3
 uvloop==0.17.0
 watchfiles==0.17.0
 websockets==10.3
-Werkzeug==1.0.1
+Werkzeug
 fastapi_mail
 
 pip~=22.2.2
