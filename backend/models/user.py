@@ -40,8 +40,8 @@ class User(BaseModel):
         schema_extra = {
             "example": {
                 "email": "Don.Quixote@gmail.com",
-                "first name": "Don",
-                "last name" : "Quixote",
+                "first_name": "Don",
+                "last_name" : "Quixote",
                 "gender": "nonbinary",
                 "postcode": "2000",
                 "disabled:": "true",
@@ -56,8 +56,8 @@ class UserInDB(User):
         schema_extra = {
             "example": {
                 "email": "Don.Quixote@gmail.com",
-                "first name": "Don",
-                "last name" : "Quixote",
+                "first_name": "Don",
+                "last_name" : "Quixote",
                 "gender": "nonbinary",
                 "postcode": "2000",
                 "disabled:": "true",
@@ -84,8 +84,8 @@ class UserUpdate(BaseModel):
         schema_extra = {
             "example": {
                 "email": "Don.Quixote@gmail.com",
-                "first name": "Don",
-                "last name" : "Quixote",
+                "first_name": "Don",
+                "last_name" : "Quixote",
                 "gender": "nonbinary",
                 "postcode": "2000",
                 "age": "15 - 25 years"
