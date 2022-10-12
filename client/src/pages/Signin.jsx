@@ -54,6 +54,7 @@ export default function SignInSide() {
 
   const handleSignin = async (data) => {
     try {
+      // fetch token
       let config = {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
@@ -69,11 +70,13 @@ export default function SignInSide() {
         },
         config
       );
-      console.log(res.data);
+      // store token in localStorage
+      localStorage.setItem('token', res.data.access_token);
 
+      // fetch user info
       config = {
         headers: {
-          Authorization: `Bearer ${res.data.access_token}`,
+          Authorization: `Bearer ${localStorage.token}`,
         },
       };
       const user = await axiosInstance.get('/user/me', config);
