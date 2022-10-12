@@ -16,7 +16,7 @@ export default function ForgotPassword() {
 
   const handleSend = (e) => {
     axiosInstance
-      .post('/user/forgot-password', { email })
+      .post('/user/forgot-password', {}, { params: {email} })
       .then((res) => {
         setSeconds(60);
         let mySeconds = 60;
