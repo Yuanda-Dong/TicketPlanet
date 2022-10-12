@@ -1,7 +1,6 @@
 from fastapi import APIRouter, Body, Request, Response, HTTPException, status, Depends
 from fastapi.encoders import jsonable_encoder
 from util.send_email import password_reset, reset_template
-from cryptoUtil import hash_password
 import uuid
 from fastapi.security import  OAuth2PasswordRequestForm
 from typing import List, Union
@@ -119,7 +118,7 @@ def delete_user(id: str, request: Request, response: Response, user: User = Depe
 
 
 
-@router.post("/routes/forgot-password")
+@router.post("/forgot-password")
 async def forgot_password(request: Request, email: str):
     # Check User existed
     user = request.app.database["users"].find_one({"email": email})
@@ -153,7 +152,7 @@ async def forgot_password(request: Request, email: str):
         "message": "We've sent an email with instruction to reset your password"
     }
 
-@router.post("/routes/reset-password")
+@router.post("/reset-password")
 async def reset_password(request: Request, reset_password_token: str, new_password: str, confirm_password: str):
     # Check valid reset password token
     reset_token = request.app.database["forgot_pwd"].find_one({"code": reset_password_token})
@@ -176,7 +175,7 @@ async def reset_password(request: Request, reset_password_token: str, new_passwo
     # Reset new password
     forgot_password_object = ForgetPassword(**reset_token)
     email = forgot_password_object.email
-    new_hashed_password = hash_password(new_password)
+    new_hashed_password = get_password_hash(new_password)
 
     # Update password in db
     update_password = request.app.database["users"].update_one(

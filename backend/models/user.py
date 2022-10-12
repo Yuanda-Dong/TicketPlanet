@@ -11,11 +11,11 @@ class GenderEnum(str, Enum):
     nonbinary = 'nonbinary'
 
 class AgeEnum(str, Enum):
-    age_group1 = '<= 14 years'
-    age_group2 = '15 - 25 years'
-    age_group3 = '26 - 35 years'
-    age_group4 = '36 - 50 years'
-    age_group5 = '> 50 years'
+    age_group1 = '<=14'
+    age_group2 = '15-25'
+    age_group3 = '26-35'
+    age_group4 = '36-50'
+    age_group5 = '>50'
 
 
 class User(BaseModel):
@@ -45,7 +45,7 @@ class User(BaseModel):
                 "gender": "nonbinary",
                 "postcode": "2000",
                 "disabled:": "true",
-                "age": "15 - 25 years"
+                "age": "15-25"
             }
         }
         
@@ -62,7 +62,7 @@ class UserInDB(User):
                 "postcode": "2000",
                 "disabled:": "true",
                 "password": "password",
-                "age": "15 - 25 years"
+                "age": "15-25"
             }
         }
 
@@ -88,7 +88,7 @@ class UserUpdate(BaseModel):
                 "last_name" : "Quixote",
                 "gender": "nonbinary",
                 "postcode": "2000",
-                "age": "15 - 25 years"
+                "age": "15-25"
             }
         }
 

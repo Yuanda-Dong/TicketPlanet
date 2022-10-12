@@ -84,6 +84,7 @@ export default function SignInSide() {
       navigate('/');
     } catch (e) {
       console.error(e);
+      alert(e.message);
       dispatch(failedLogin());
     }
   };
