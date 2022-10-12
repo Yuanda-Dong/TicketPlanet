@@ -10,6 +10,14 @@ class GenderEnum(str, Enum):
     female = 'female'
     nonbinary = 'nonbinary'
 
+class AgeEnum(str, Enum):
+    age_group1 = '<= 14 years'
+    age_group2 = '15 - 25 years'
+    age_group3 = '26 - 35 years'
+    age_group4 = '36 - 50 years'
+    age_group5 = '> 50 years'
+
+
 class User(BaseModel):
     id: str = Field(default_factory=uuid.uuid4, alias="_id")
     email:str = Field(...)
@@ -18,6 +26,7 @@ class User(BaseModel):
     gender: GenderEnum = Field(...)
     postcode: int = Field(...)
     disabled: Union[bool, None] = None
+    age: AgeEnum = Field(...)
     # preferences
     
     @validator('postcode')
@@ -35,7 +44,8 @@ class User(BaseModel):
                 "last name" : "Quixote",
                 "gender": "nonbinary",
                 "postcode": "2000",
-                "disabled:": "true"
+                "disabled:": "true",
+                "age": "15 - 25 years"
             }
         }
         
@@ -51,7 +61,8 @@ class UserInDB(User):
                 "gender": "nonbinary",
                 "postcode": "2000",
                 "disabled:": "true",
-                "password": "password"
+                "password": "password",
+                "age": "15 - 25 years"
             }
         }
 
@@ -60,6 +71,7 @@ class UserUpdate(BaseModel):
     email: Optional[str]
     gender: Optional[GenderEnum]
     postcode: Optional[int]
+    age: Optional[AgeEnum]
     
     @validator('postcode')
     def postcode_must_be_4_digts(cls, v):
@@ -75,7 +87,8 @@ class UserUpdate(BaseModel):
                 "first name": "Don",
                 "last name" : "Quixote",
                 "gender": "nonbinary",
-                "postcode": "2000"
+                "postcode": "2000",
+                "age": "15 - 25 years"
             }
         }
 
