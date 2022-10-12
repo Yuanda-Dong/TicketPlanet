@@ -16,3 +16,10 @@ Week 3
 - Completed the background in the proposal
 - Completed the system architecture diagram and description for proposal 
 - Held meeting with team members to outline work responsibilities 
+- Completed User model and crud options
+
+Week 4
+- Completed Oauth2 authentication and dependencies 
+- Completed event model and crud 
+- began google auth login 
+- met with team mates to discuss demo
