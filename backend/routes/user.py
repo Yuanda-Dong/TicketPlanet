@@ -145,7 +145,11 @@ async def forgot_password(request: Request, email: str):
     subject = "Hello Coder"
     recipient = [email]
     message = reset_template.format(email, reset_code)
-    await password_reset(subject, recipient, message)
+    try:
+        await password_reset(subject, recipient, message)
+    except:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail="reset password token has expired, please request a new one")
     return {
         "reset_code": reset_code,
         "code":200,
