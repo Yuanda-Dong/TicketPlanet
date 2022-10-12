@@ -6,3 +6,6 @@ We discussed each individual's task for project proposal during the group meetin
 
 Week 3
 Complete the User Stories and Sprints section of the proposal with Naixin Li, and organize jira. Organize the proposal format.
+
+Week 4
+Improve the front-end part of the signup page. Design and complete the UI of Postpage. Complete the payment page section.
