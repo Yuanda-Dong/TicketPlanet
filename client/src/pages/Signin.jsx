@@ -24,6 +24,7 @@ import { failedLogin, startLogin, successfulLogin } from '../redux/userSlice';
 
 export default function SignInSide() {
   const dispatch = useDispatch();
+
   const navigate = useNavigate();
 
   const signUp = (e) => {
@@ -53,12 +54,13 @@ export default function SignInSide() {
 
   const handleSignin = async (data) => {
     try {
-      const config = {
+      // fetch token
+      let config = {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
       };
-      // dispatch(startLogin());
+      dispatch(startLogin());
       const res = await axiosInstance.post(
         '/token',
         {
@@ -68,12 +70,21 @@ export default function SignInSide() {
         },
         config
       );
-      console.log(res.data);
+      // store token in localStorage
+      localStorage.setItem('token', res.data.access_token);
+
+      // fetch user info
+      config = {
+        headers: {
+          Authorization: `Bearer ${localStorage.token}`,
+        },
+      };
+      const user = await axiosInstance.get('/user/me', config);
+      dispatch(successfulLogin(user.data));
       navigate('/');
-      // dispatch(successfulLogin(res.data));
     } catch (e) {
       console.error(e);
-      // dispatch(failedLogin());
+      dispatch(failedLogin());
     }
   };
 
