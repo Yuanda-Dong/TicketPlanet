@@ -3,20 +3,22 @@ import styled from 'styled-components';
 // import ReactInputVerificationCode from 'react-input-verification-code';
 import { TextField } from '@mui/material';
 import { Link } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 const Container = styled.div`
-  height: 70vh;
+  height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
 `;
 
-const Wrapper = styled.div`
+const Wrapper = styled.form`
   display: flex;
   width: 300px;
-  height: 200px;
+  height: 250px;
   flex-direction: column;
+  gap: 20px;
   align-items: center;
   justify-content: space-evenly;
   background-color: #dae9ff;
@@ -35,6 +37,7 @@ const StyledButton = styled.button`
   outline: none;
   width: 212px;
   height: 48px;
+  cursor: pointer;
 `;
 
 const ReturnButton = styled.button`
@@ -52,82 +55,82 @@ const ReturnButton = styled.button`
   text-decoration: none;
 `;
 
-const StyledResend = styled.div`
-  margin-top: 20px;
-  text-decoration: underline;
-  font-size: 14px;
-  line-height: 20px;
-  text-align: center;
-  cursor: pointer;
-  /* :focus {
-    color: red;
-  } */
-`;
+export default function FindPassword() {
+  const [passwords, setPasswords] = useState({
+    new: '',
+    repeat: '',
+  });
+  const [errors, setErrors] = useState({
+    error1: {
+      error: false,
+      message: '',
+    },
+    error2: {
+      error: false,
+      message: '',
+    },
+  });
 
-const StyledSeconds = styled.div`
-  margin-top: 20px;
-  font-size: 14px;
-  line-height: 20px;
-  text-align: center;
-  letter-spacing: 0.002em;
-  /* color: rgba(255, 255, 255, 0.4); */
-  color: rgba(32, 31, 84, 0.4);
-`;
-
-const StyledError = styled.div`
-  margin-top: 13px;
-  font-size: 12px;
-  line-height: 16px;
-  text-align: center;
-  letter-spacing: 0.004em;
-  color: #ef6c65;
-`;
-
-export default function App() {
-  const [value, setValue] = useState('');
-  const [error, setError] = useState({ error: false, message: null });
-
-  const [seconds, setSeconds] = useState(null);
-
-  const handleResend = (e) => {
-    setSeconds(60);
-
-    let mySeconds = 60;
-
-    // TODO Clear previos interval
-
-    const intervalId = setInterval(() => {
-      mySeconds = mySeconds - 1;
-      setSeconds(mySeconds);
-
-      if (mySeconds === 0) {
-        clearInterval(intervalId);
-        setSeconds(null);
-      }
-    }, 1000);
+  const handleChange = (e) => {
+    setPasswords((passwords) => ({ ...passwords, [e.target.name]: e.target.value }));
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log('submit');
+    // TODO
+  };
+
+  const handleBlur = (e) => {
+    const item = e.target.name;
+    switch (item) {
+      case 'new':
+        if (passwords.new === '') {
+          setErrors((err) => ({ ...err, error1: { error: true, message: 'New Password can not be empty' } }));
+        } else {
+          setErrors((err) => ({ ...err, error1: { error: false, message: '' } }));
+        }
+      case 'repeat':
+        if (passwords.new !== passwords.repeat) {
+          setErrors((err) => ({ ...err, error2: { error: true, message: 'Passwords do not match' } }));
+        } else {
+          setErrors((err) => ({ ...err, error2: { error: false, message: '' } }));
+        }
+    }
+  };
+
+  const location = useLocation();
+  const reset_token = location.search.split('=')[1];
   return (
     <Container>
       <Link to="/signin">
         <ReturnButton>Return</ReturnButton>
       </Link>
-      <Wrapper>
-        <TextField variant="outlined" />
+      <Wrapper onSubmit={handleSubmit}>
+        <TextField
+          name="new"
+          error={errors.error1.error}
+          value={passwords.new}
+          sx={{ width: '280px' }}
+          label="New Password"
+          type="password"
+          helperText={errors.error1.message}
+          onChange={handleChange}
+          onBlur={handleBlur}
+        />
+        <TextField
+          name="repeat"
+          error={errors.error2.error}
+          value={passwords.repeat}
+          sx={{ width: '280px' }}
+          label="Repeat Password"
+          type="password"
+          helperText={errors.error2.message}
+          onChange={handleChange}
+          onBlur={handleBlur}
+        />
 
-        {error.error && <StyledError>{error.message}</StyledError>}
-
-        {seconds && <StyledSeconds>{`Verification code has been re-sent (${seconds}s)`}</StyledSeconds>}
-
-        <StyledButton
-          onClick={() => {
-            setValue('');
-            setError({ error: true, message: 'Incorrect code. Please try again' });
-          }}
-        >
-          Send
-        </StyledButton>
-        <StyledResend onClick={handleResend}>Click to resent the verification code</StyledResend>
+        <StyledButton type="submit">Send</StyledButton>
       </Wrapper>
     </Container>
   );

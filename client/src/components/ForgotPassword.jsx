@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
@@ -11,6 +11,26 @@ import Link from '@mui/material/Link';
 export default function ForgotPassword() {
   const [open, setOpen] = React.useState(false);
   const [email, setEmail] = React.useState('');
+  const [sent, setSent] = useState(false);
+  const [seconds, setSeconds] = useState(null);
+
+  const handleSend = (e) => {
+    setSeconds(60);
+
+    let mySeconds = 60;
+
+    // TODO Clear previos interval
+
+    const intervalId = setInterval(() => {
+      mySeconds = mySeconds - 1;
+      setSeconds(mySeconds);
+
+      if (mySeconds === 0) {
+        clearInterval(intervalId);
+        setSeconds(null);
+      }
+    }, 1000);
+  };
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -19,8 +39,6 @@ export default function ForgotPassword() {
   const handleClose = () => {
     setOpen(false);
   };
-
-  const handleSend = () => {};
 
   return (
     <div>
@@ -44,6 +62,7 @@ export default function ForgotPassword() {
             onChange={(e) => {
               setEmail(e.target.value);
             }}
+            helperText={seconds && `Password reset email has been sent (${seconds}s)`}
           />
         </DialogContent>
         <DialogActions>

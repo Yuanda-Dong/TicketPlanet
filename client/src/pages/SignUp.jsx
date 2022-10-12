@@ -1,4 +1,5 @@
 import * as React from 'react';
+import axios from 'axios';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Container from '@mui/material/Container';
@@ -14,6 +15,9 @@ import { useNavigate } from 'react-router-dom';
 import NavBar from '../components/Navbar/NavBar';
 import GoogleIcon from '@mui/icons-material/Google';
 import './Payment/Payment.css';
+import { auth, provider } from '../firebase';
+import { signInWithPopup } from 'firebase/auth';
+import { axiosInstance } from '../config';
 
 const steps = ['Register your account', 'Enter your details'];
 
@@ -40,13 +44,48 @@ export default function SignUp() {
   const [profileInfo, setProfileInfo] = React.useState({ gender: '', age: '', postcode: '' });
 
   const handleNext = (e) => {
-    setActiveStep(activeStep + 1);
+    e.preventDefault();
+    if (activeStep === 1) {
+      console.log(signupInfo);
+      console.log(profileInfo);
+      handleSignup();
+    } else {
+      setActiveStep(activeStep + 1);
+    }
   };
 
   const handleBack = () => {
     setActiveStep(activeStep - 1);
   };
 
+  const handleSignup = () => {
+    axiosInstance
+      .post('/user/', {
+        email: signupInfo.email,
+        first_name: signupInfo.firstname,
+        lastname: signupInfo.lastname,
+        gender: profileInfo.gender === 'other' ? 'nobinary' : signupInfo.gender,
+        postcode: profileInfo.postcode,
+        age: profileInfo.age,
+      })
+      .then((res) => {
+        console.log(res);
+        setActiveStep(activeStep + 1);
+      })
+      .catch((e) => {
+        console.error(e);
+      });
+  };
+
+  const signUpWithGoogle = () => {
+    signInWithPopup(auth, provider)
+      .then((user) => {
+        console.log(user);
+      })
+      .catch((e) => {
+        console.error(e);
+      });
+  };
   return (
     <div>
       <NavBar />
@@ -102,7 +141,7 @@ export default function SignUp() {
             <Box>
               <Grid container justifyContent="space-between" alignItems="center">
                 <Grid item>
-                  <Button startIcon={<GoogleIcon />} variant="outlined">
+                  <Button startIcon={<GoogleIcon />} variant="outlined" onClick={signUpWithGoogle}>
                     Sign up with Google
                   </Button>
                 </Grid>

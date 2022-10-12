@@ -12,7 +12,7 @@ import FormLabel from '@mui/material/FormLabel';
 
 function SignUpForm1({ state }) {
   const handler = (e) => {
-    // console.log(e.target.value)
+    // console.log(state[0]);
     state[1]({ ...state[0], [e.target.name]: e.target.value });
   };
   return (
@@ -22,7 +22,6 @@ function SignUpForm1({ state }) {
         <Grid item xs={6}>
           <TextField
             required
-            //   fullWidth
             id="firstname"
             name="firstname"
             label="Firstname"
@@ -34,12 +33,11 @@ function SignUpForm1({ state }) {
         <Grid item xs={6}>
           <TextField
             required
-            //   fullWidth
             id="lastname"
             name="lastname"
             label="Lastname"
             autoComplete="lastname"
-            value={state[0].firstname}
+            value={state[0].lastname}
             onChange={handler}
           />
         </Grid>
@@ -85,8 +83,7 @@ function SignUpForm1({ state }) {
 
 function SignUpForm2({ state }) {
   const handler = (e) => {
-    // console.log(e.target.value)
-    state[1]({ ...state[1], [e.target.name]: e.target.value });
+    state[1]({ ...state[0], [e.target.name]: e.target.value });
   };
   return (
     <Container component="main" maxWidth="xs">

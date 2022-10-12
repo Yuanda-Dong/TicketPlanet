@@ -24,12 +24,17 @@ import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import Paper from '@mui/material/Paper';
 import Container from '@mui/material/Container';
 
+import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } from 'firebase/storage';
+
 const PostPage = () => {
+  const storage = getStorage();
+
   const [value, setValue] = useState({ from: null, to: null });
   const [cat, setcat] = React.useState('');
   const [thumb, setThumb] = React.useState('');
   const [gallery, setGallery] = React.useState([]);
   const [tickets, setTickets] = React.useState([]);
+  const [progress, setProgress] = React.useState({ thumbnail: 100, gallery: 100 });
   const [t, setT] = React.useState({ price: null, quantity: null, name: null });
   const style = {
     position: 'absolute',
@@ -52,22 +57,6 @@ const PostPage = () => {
   const handleClose = () => {
     setOpen(false);
   };
-  const fileToDataUrl = (file) => {
-    const validFileTypes = ['image/jpeg', 'image/png', 'image/jpg'];
-    const valid = validFileTypes.find((type) => type === file.type);
-    // Bad data, let's walk away.
-    if (!valid) {
-      throw Error('provided file is not a png, jpg or jpeg image.');
-    }
-
-    const reader = new FileReader();
-    const dataUrlPromise = new Promise((resolve, reject) => {
-      reader.onerror = reject;
-      reader.onload = () => resolve(reader.result);
-    });
-    reader.readAsDataURL(file);
-    return dataUrlPromise;
-  };
 
   const handleChange = (event) => {
     setcat(event.target.value);
@@ -77,33 +66,81 @@ const PostPage = () => {
     setThumb(event.target.value);
   };
 
-  const handleImage = (event) => {
-    const file = event.target.files[0];
-    fileToDataUrl(file).then((data) => {
-      setThumb(data);
-    });
-  };
-
   const handleGallery = (event, idx) => {
     const newGallery = [...gallery];
     newGallery[idx] = event.target.value;
     setGallery(newGallery);
   };
 
-  const handleGalleryImage = (event) => {
-    const newGallery = [...gallery];
-    console.log(gallery);
-    const file = event.target.files[0];
-    fileToDataUrl(file).then((data) => {
-      newGallery.push(data);
-      setGallery(newGallery);
-    });
+  const deleteFile = (filepath) => {
+    // Create a reference to the file to delete
+    const desertRef = ref(storage, filepath);
+
+    // Delete the file
+    deleteObject(desertRef)
+      .then(() => {
+        // File deleted successfully
+        console.log('file deleted from firebase');
+      })
+      .catch((error) => {
+        // Uh-oh, an error occurred!
+      });
+  };
+  const uploadFile = (file, type) => {
+    const filename = new Date().getTime() + file.name;
+    console.log(filename);
+    const storageRef = ref(storage, filename);
+    const uploadTask = uploadBytesResumable(storageRef, file);
+    uploadTask.on(
+      'state_changed',
+      (snapshot) => {
+        // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+        const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+
+        console.log('Upload is ' + progress + '% done');
+        console.log(progress);
+        setProgress((prev) => ({ ...prev, [type]: progress }));
+
+        switch (snapshot.state) {
+          case 'paused':
+            console.log('Upload is paused');
+            break;
+          case 'running':
+            console.log('Upload is running');
+            break;
+        }
+      },
+      (error) => {
+        // A full list of error codes is available at
+        // https://firebase.google.com/docs/storage/web/handle-errors
+        switch (error.code) {
+          case 'storage/unauthorized':
+            // User doesn't have permission to access the object
+            break;
+          case 'storage/canceled':
+            // User canceled the upload
+            break;
+          case 'storage/unknown':
+            // Unknown error occurred, inspect error.serverResponse
+            break;
+        }
+      },
+      () => {
+        // Upload completed successfully, now we can get the download URL
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          console.log('File available at', downloadURL);
+          type === 'thumbnail' ? setThumb(downloadURL) : setGallery((gallery) => [...gallery, downloadURL]);
+        });
+      }
+    );
   };
 
   const handleClick = (event, idx) => {
     const newGallery = [...gallery];
-    newGallery.splice(idx, 1);
+    const removed = newGallery.splice(idx, 1);
     setGallery(newGallery);
+    console.log(removed);
+    deleteFile(removed);
   };
 
   const removeTicket = (event, idx) => {
@@ -237,7 +274,7 @@ const PostPage = () => {
             <Grid item xs={12}>
               <div className="tik">
                 {tickets.map((e, idx) => (
-                  <Card sx={{ minWidth: 250 }}>
+                  <Card key={idx} sx={{ minWidth: 250 }}>
                     <CardContent>
                       <Grid container spacing={1} direction="row" justifyContent="space-between" alignItems="flex-end">
                         <Grid item xs={9}>
@@ -351,40 +388,50 @@ const PostPage = () => {
                 startIcon={<SendIcon />}
               >
                 Upload Thumbnail Image
-                <input type="file" hidden accept="image/jpeg, image/jpg" onChange={handleImage} />
+                <input
+                  type="file"
+                  hidden
+                  accept="image/jpeg, image/jpg"
+                  onChange={(e) => uploadFile(e.target.files[0], 'thumbnail')}
+                />
               </Button>
+              {progress.thumbnail < 100 ? `Uploading thumbnail: ${progress.thumbnail}%` : null}
             </Grid>
             <Grid item xs={12}>
               <div className="gallery">
                 {gallery.map((e, idx) => (
-                  <div>
-                    <Grid container spacing={1} direction="row" justifyContent="space-between" alignItems="center">
-                      <Grid item xs={9}>
-                        <TextField
-                          fullWidth
-                          margin="normal"
-                          key={idx}
-                          id="Media upload"
-                          label={`Gallery link ${idx + 1}`}
-                          variant="outlined"
-                          value={e}
-                          onChange={(event) => handleGallery(event, idx)}
-                        />
-                      </Grid>
-                      <Grid item xs={3}>
-                        <Button
-                          variant="outlined"
-                          component="label"
-                          color="error"
-                          startIcon={<DeleteIcon />}
-                          onClick={(event) => handleClick(event, idx)}
-                        >
-                          {' '}
-                          Remove{' '}
-                        </Button>
-                      </Grid>
+                  <Grid
+                    key={idx}
+                    container
+                    spacing={1}
+                    direction="row"
+                    justifyContent="space-between"
+                    alignItems="center"
+                  >
+                    <Grid item xs={9}>
+                      <TextField
+                        fullWidth
+                        margin="normal"
+                        key={idx}
+                        id="Media upload"
+                        label={`Gallery link ${idx + 1}`}
+                        variant="outlined"
+                        value={e}
+                        onChange={(event) => handleGallery(event, idx)}
+                      />
                     </Grid>
-                  </div>
+                    <Grid item xs={3}>
+                      <Button
+                        variant="outlined"
+                        component="label"
+                        color="error"
+                        startIcon={<DeleteIcon />}
+                        onClick={(event) => handleClick(event, idx)}
+                      >
+                        Remove
+                      </Button>
+                    </Grid>
+                  </Grid>
                 ))}
               </div>
             </Grid>
@@ -397,8 +444,16 @@ const PostPage = () => {
                 startIcon={<SendIcon />}
               >
                 Add Gallery Image
-                <input type="file" hidden accept="image/jpeg, image/jpg" onChange={handleGalleryImage} />
+                <input
+                  type="file"
+                  hidden
+                  accept="image/jpeg, image/jpg"
+                  onChange={(e) => {
+                    uploadFile(e.target.files[0], 'gallery');
+                  }}
+                />
               </Button>
+              {progress.gallery < 100 ? `Uploading gallery image: ${progress.gallery}%` : null}
             </Grid>
           </Grid>
         </Paper>
