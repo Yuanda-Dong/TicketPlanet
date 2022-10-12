@@ -48,8 +48,6 @@ export default function SignUp() {
   const handleNext = (e) => {
     e.preventDefault();
     if (activeStep === 1) {
-      console.log(signupInfo);
-      console.log(profileInfo);
       handleSignup();
     } else {
       setActiveStep(activeStep + 1);
@@ -62,18 +60,28 @@ export default function SignUp() {
 
   const handleSignup = async () => {
     try {
+      console.log({
+        email: signupInfo.email,
+        first_name: signupInfo.firstname,
+        last_name: signupInfo.lastname,
+        password: signupInfo.password,
+        gender: profileInfo.gender === 'other' ? 'nobinary' : profileInfo.gender,
+        postcode: profileInfo.postcode,
+        age: profileInfo.age,
+      });
       const res = await axiosInstance.post('/user/', {
         email: signupInfo.email,
         first_name: signupInfo.firstname,
-        lastname: signupInfo.lastname,
-        gender: profileInfo.gender === 'other' ? 'nobinary' : signupInfo.gender,
+        last_name: signupInfo.lastname,
+        password: signupInfo.password,
+        gender: profileInfo.gender === 'other' ? 'nobinary' : profileInfo.gender,
         postcode: profileInfo.postcode,
         age: profileInfo.age,
       });
       console.log(res.data);
       navigate('/');
     } catch (e) {
-      console.error(e);
+      console.error(e.response.data.detail);
     }
   };
 

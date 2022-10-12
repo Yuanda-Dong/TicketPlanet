@@ -7,29 +7,30 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Link from '@mui/material/Link';
+import { axiosInstance } from '../config';
 
 export default function ForgotPassword() {
   const [open, setOpen] = React.useState(false);
   const [email, setEmail] = React.useState('');
-  const [sent, setSent] = useState(false);
   const [seconds, setSeconds] = useState(null);
 
   const handleSend = (e) => {
-    setSeconds(60);
-
-    let mySeconds = 60;
-
-    // TODO Clear previos interval
-
-    const intervalId = setInterval(() => {
-      mySeconds = mySeconds - 1;
-      setSeconds(mySeconds);
-
-      if (mySeconds === 0) {
-        clearInterval(intervalId);
-        setSeconds(null);
-      }
-    }, 1000);
+    axiosInstance
+      .post('/user/forgot-password', {}, { params: {email} })
+      .then((res) => {
+        setSeconds(60);
+        let mySeconds = 60;
+        // TODO Clear previos interval
+        const intervalId = setInterval(() => {
+          mySeconds = mySeconds - 1;
+          setSeconds(mySeconds);
+          if (mySeconds === 0) {
+            clearInterval(intervalId);
+            setSeconds(null);
+          }
+        }, 1000);
+      })
+      .catch((e) => console.error(e));
   };
 
   const handleClickOpen = () => {

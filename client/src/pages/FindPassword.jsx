@@ -4,6 +4,8 @@ import styled from 'styled-components';
 import { TextField } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
+import { axiosInstance } from '../config';
+import Alert from '@mui/material/Alert';
 
 const Container = styled.div`
   height: 100vh;
@@ -38,24 +40,36 @@ const StyledButton = styled.button`
   width: 212px;
   height: 48px;
   cursor: pointer;
+  :hover {
+    background: #6b6f9d;
+  }
+  :disabled {
+    background-color: #676767;
+  }
 `;
 
-const ReturnButton = styled.button`
-  margin-top: 20px;
+const StyledAlert = styled(Alert)`
   position: absolute;
-  top: 0;
-  left: 15px;
-  color: white;
-  background: rgba(60, 63, 109, 0.8);
-  border-radius: 5px;
-  border: none;
-  outline: none;
-  width: 120px;
-  height: 48px;
-  text-decoration: none;
+  top: 30px;
 `;
+
+// const ReturnButton = styled.button`
+//   margin-top: 20px;
+//   position: absolute;
+//   top: 0;
+//   left: 15px;
+//   color: white;
+//   background: rgba(60, 63, 109, 0.8);
+//   border-radius: 5px;
+//   border: none;
+//   outline: none;
+//   width: 120px;
+//   height: 48px;
+//   text-decoration: none;
+// `;
 
 export default function FindPassword() {
+  const [reset, setReset] = useState(false);
   const [passwords, setPasswords] = useState({
     new: '',
     repeat: '',
@@ -73,12 +87,6 @@ export default function FindPassword() {
 
   const handleChange = (e) => {
     setPasswords((passwords) => ({ ...passwords, [e.target.name]: e.target.value }));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('submit');
-    // TODO
   };
 
   const handleBlur = (e) => {
@@ -101,11 +109,29 @@ export default function FindPassword() {
 
   const location = useLocation();
   const reset_token = location.search.split('=')[1];
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const data = new FormData(e.currentTarget);
+    console.log({
+      reset_password_token: reset_token,
+      new_password: data.get('new'),
+      confirm_password: data.get('repeat'),
+    });
+    axiosInstance
+      .post('/user/reset-password', {}, { 
+        params: {
+          reset_password_token: reset_token,
+          new_password: data.get('new'),
+          confirm_password: data.get('repeat'),
+        }
+      })
+      .then((res) => setReset(true));
+  };
   return (
     <Container>
-      <Link to="/signin">
-        <ReturnButton>Return</ReturnButton>
-      </Link>
+      <Link to="/signin">{/* <ReturnButton>Return</ReturnButton> */}</Link>
+
+      {reset && <StyledAlert severity="success">Password has been reset, you can clow this window now</StyledAlert>}
       <Wrapper onSubmit={handleSubmit}>
         <TextField
           name="new"
@@ -130,7 +156,9 @@ export default function FindPassword() {
           onBlur={handleBlur}
         />
 
-        <StyledButton type="submit">Send</StyledButton>
+        <StyledButton type="submit" disabled={errors.error1.error || errors.error2.error}>
+          Send
+        </StyledButton>
       </Wrapper>
     </Container>
   );

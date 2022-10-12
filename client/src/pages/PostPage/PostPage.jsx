@@ -391,7 +391,7 @@ const PostPage = () => {
                 <input
                   type="file"
                   hidden
-                  accept="image/jpeg, image/jpg"
+                  accept="image/*"
                   onChange={(e) => uploadFile(e.target.files[0], 'thumbnail')}
                 />
               </Button>
@@ -447,7 +447,7 @@ const PostPage = () => {
                 <input
                   type="file"
                   hidden
-                  accept="image/jpeg, image/jpg"
+                  accept="image/*"
                   onChange={(e) => {
                     uploadFile(e.target.files[0], 'gallery');
                   }}
