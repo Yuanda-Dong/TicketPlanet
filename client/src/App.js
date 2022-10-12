@@ -26,7 +26,7 @@ function App() {
           <Route path="search" element={<SearchPage />} />
           <Route path="signin" element={<SignInSide />} />
           <Route path="signup" element={<SignUp />} />
-          <Route path="find-password" element={<FindPassword />} />
+          <Route path="forgot-password" element={<FindPassword />} />
           <Route path="account-setting" element={<Account />} />
 
           <Route path="event">
