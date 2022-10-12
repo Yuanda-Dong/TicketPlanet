@@ -1,5 +1,4 @@
 Week 1 
-
 We formed a group of 5 during the lab, and decieded to go with the event management project. 
 Discussed responsibilities of each member, I'll code front-end using React. 
 Set up Jira. 
@@ -12,3 +11,11 @@ Researched existing systems on event management to come up with novel features.
 Week 3
 Drew story boards using draw.io for the proposal. 
 Compared our system with Ticketek, Eventbrite and TicketMaster for the proposal. 
+
+Week 4 
+Did a prototype on search page 
+Had a meeting with the back-end team to decide the data models we need for sprint 1 
+
+Week 5 
+Did a prototype on post event page
+Did a prototype on edit event page
