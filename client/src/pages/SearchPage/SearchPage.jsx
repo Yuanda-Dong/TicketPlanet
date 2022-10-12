@@ -10,12 +10,12 @@ const SearchPage = () => {
         <NavBar search={1}/>
         <Sidebar />
         <div className='events'>
-        <EventCard />
-        <EventCard />
-        <EventCard />
-        <EventCard />
-        <EventCard />
-        <EventCard />
+        <EventCard id = {0}/>
+        <EventCard id = {0}/>
+        <EventCard id = {0}/>
+        <EventCard id = {0}/>
+        <EventCard id = {0}/>
+        <EventCard id = {0}/>
         </div>
         
       </div>
