@@ -34,6 +34,7 @@ const PostPage = () => {
   const [thumb, setThumb] = React.useState('');
   const [gallery, setGallery] = React.useState([]);
   const [tickets, setTickets] = React.useState([]);
+  const [progress, setProgress] = React.useState({ thumbnail: 100, gallery: 100 });
   const [t, setT] = React.useState({ price: null, quantity: null, name: null });
   const style = {
     position: 'absolute',
@@ -71,7 +72,11 @@ const PostPage = () => {
     setGallery(newGallery);
   };
 
-  const uploadFile = (file) => {
+  React.useEffect(() => {
+    console.log(progress);
+  }, [progress]);
+
+  const uploadFile = (file, type) => {
     const filename = new Date().getTime() + file.name;
     console.log(filename);
     const storageRef = ref(storage, filename);
@@ -80,8 +85,12 @@ const PostPage = () => {
       'state_changed',
       (snapshot) => {
         // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+
         console.log('Upload is ' + progress + '% done');
+        console.log(progress);
+        setProgress((prev) => ({ ...prev, [type]: progress }));
+
         switch (snapshot.state) {
           case 'paused':
             console.log('Upload is paused');
@@ -110,7 +119,7 @@ const PostPage = () => {
         // Upload completed successfully, now we can get the download URL
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
           console.log('File available at', downloadURL);
-          setThumb(downloadURL);
+          type === 'thumbnail' ? setThumb(downloadURL) : setGallery((gallery) => [...gallery, downloadURL]);
         });
       }
     );
@@ -371,9 +380,10 @@ const PostPage = () => {
                   type="file"
                   hidden
                   accept="image/jpeg, image/jpg"
-                  onChange={(e) => uploadFile(e.target.files[0])}
+                  onChange={(e) => uploadFile(e.target.files[0], 'thumbnail')}
                 />
               </Button>
+              {progress.thumbnail < 100 ? `Uploading thumbnail: ${progress.thumbnail}%` : null}
             </Grid>
             <Grid item xs={12}>
               <div className="gallery">
@@ -427,10 +437,11 @@ const PostPage = () => {
                   hidden
                   accept="image/jpeg, image/jpg"
                   onChange={(e) => {
-                    uploadFile(e.target.files[0]);
+                    uploadFile(e.target.files[0], 'gallery');
                   }}
                 />
               </Button>
+              {progress.gallery < 100 ? `Uploading gallery image: ${progress.gallery}%` : null}
             </Grid>
           </Grid>
         </Paper>
