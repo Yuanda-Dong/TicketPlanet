@@ -24,7 +24,11 @@ import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import Paper from '@mui/material/Paper';
 import Container from '@mui/material/Container';
 
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+
 const PostPage = () => {
+  const storage = getStorage();
+
   const [value, setValue] = useState({ from: null, to: null });
   const [cat, setcat] = React.useState('');
   const [thumb, setThumb] = React.useState('');
@@ -52,22 +56,6 @@ const PostPage = () => {
   const handleClose = () => {
     setOpen(false);
   };
-  const fileToDataUrl = (file) => {
-    const validFileTypes = ['image/jpeg', 'image/png', 'image/jpg'];
-    const valid = validFileTypes.find((type) => type === file.type);
-    // Bad data, let's walk away.
-    if (!valid) {
-      throw Error('provided file is not a png, jpg or jpeg image.');
-    }
-
-    const reader = new FileReader();
-    const dataUrlPromise = new Promise((resolve, reject) => {
-      reader.onerror = reject;
-      reader.onload = () => resolve(reader.result);
-    });
-    reader.readAsDataURL(file);
-    return dataUrlPromise;
-  };
 
   const handleChange = (event) => {
     setcat(event.target.value);
@@ -77,27 +65,55 @@ const PostPage = () => {
     setThumb(event.target.value);
   };
 
-  const handleImage = (event) => {
-    const file = event.target.files[0];
-    fileToDataUrl(file).then((data) => {
-      setThumb(data);
-    });
-  };
-
   const handleGallery = (event, idx) => {
     const newGallery = [...gallery];
     newGallery[idx] = event.target.value;
     setGallery(newGallery);
   };
 
-  const handleGalleryImage = (event) => {
-    const newGallery = [...gallery];
-    console.log(gallery);
-    const file = event.target.files[0];
-    fileToDataUrl(file).then((data) => {
-      newGallery.push(data);
-      setGallery(newGallery);
-    });
+  const uploadFile = (file) => {
+    const filename = new Date().getTime() + file.name;
+    console.log(filename);
+    const storageRef = ref(storage, filename);
+    const uploadTask = uploadBytesResumable(storageRef, file);
+    uploadTask.on(
+      'state_changed',
+      (snapshot) => {
+        // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log('Upload is ' + progress + '% done');
+        switch (snapshot.state) {
+          case 'paused':
+            console.log('Upload is paused');
+            break;
+          case 'running':
+            console.log('Upload is running');
+            break;
+        }
+      },
+      (error) => {
+        // A full list of error codes is available at
+        // https://firebase.google.com/docs/storage/web/handle-errors
+        switch (error.code) {
+          case 'storage/unauthorized':
+            // User doesn't have permission to access the object
+            break;
+          case 'storage/canceled':
+            // User canceled the upload
+            break;
+          case 'storage/unknown':
+            // Unknown error occurred, inspect error.serverResponse
+            break;
+        }
+      },
+      () => {
+        // Upload completed successfully, now we can get the download URL
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          console.log('File available at', downloadURL);
+          setThumb(downloadURL);
+        });
+      }
+    );
   };
 
   const handleClick = (event, idx) => {
@@ -351,7 +367,12 @@ const PostPage = () => {
                 startIcon={<SendIcon />}
               >
                 Upload Thumbnail Image
-                <input type="file" hidden accept="image/jpeg, image/jpg" onChange={handleImage} />
+                <input
+                  type="file"
+                  hidden
+                  accept="image/jpeg, image/jpg"
+                  onChange={(e) => uploadFile(e.target.files[0])}
+                />
               </Button>
             </Grid>
             <Grid item xs={12}>
@@ -401,7 +422,14 @@ const PostPage = () => {
                 startIcon={<SendIcon />}
               >
                 Add Gallery Image
-                <input type="file" hidden accept="image/jpeg, image/jpg" onChange={handleGalleryImage} />
+                <input
+                  type="file"
+                  hidden
+                  accept="image/jpeg, image/jpg"
+                  onChange={(e) => {
+                    uploadFile(e.target.files[0]);
+                  }}
+                />
               </Button>
             </Grid>
           </Grid>
