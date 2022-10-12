@@ -17,7 +17,7 @@ const EventList = () => {
   const handleCloseNavMenu = () => {
     setanchoEl(null);
   };
-  const operations = [{ id: 'Edit', to: 'edit' }, { id: 'Delete' }];
+  const operations = [{ id: 'Edit', to: '/edit' }, { id: 'Delete' }];
   const event_menu_id = 'menu-appbar';
   const event_menu = (
     <Menu
