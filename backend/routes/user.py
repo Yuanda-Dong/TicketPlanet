@@ -119,7 +119,7 @@ def delete_user(id: str, request: Request, response: Response, user: User = Depe
 
 
 
-@router.post("/routes/forgot-password")
+@router.post("/forgot-password")
 async def forgot_password(request: Request, email: str):
     # Check User existed
     user = request.app.database["users"].find_one({"email": email})
@@ -153,7 +153,7 @@ async def forgot_password(request: Request, email: str):
         "message": "We've sent an email with instruction to reset your password"
     }
 
-@router.post("/routes/reset-password")
+@router.post("/reset-password")
 async def reset_password(request: Request, reset_password_token: str, new_password: str, confirm_password: str):
     # Check valid reset password token
     reset_token = request.app.database["forgot_pwd"].find_one({"code": reset_password_token})
