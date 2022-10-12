@@ -24,7 +24,7 @@ import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import Paper from '@mui/material/Paper';
 import Container from '@mui/material/Container';
 
-import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } from 'firebase/storage';
 
 const PostPage = () => {
   const storage = getStorage();
@@ -76,6 +76,20 @@ const PostPage = () => {
     console.log(progress);
   }, [progress]);
 
+  const deleteFile = (filepath) => {
+    // Create a reference to the file to delete
+    const desertRef = ref(storage, filepath);
+
+    // Delete the file
+    deleteObject(desertRef)
+      .then(() => {
+        // File deleted successfully
+        console.log('file deleted from firebase');
+      })
+      .catch((error) => {
+        // Uh-oh, an error occurred!
+      });
+  };
   const uploadFile = (file, type) => {
     const filename = new Date().getTime() + file.name;
     console.log(filename);
@@ -127,8 +141,10 @@ const PostPage = () => {
 
   const handleClick = (event, idx) => {
     const newGallery = [...gallery];
-    newGallery.splice(idx, 1);
+    const removed = newGallery.splice(idx, 1);
     setGallery(newGallery);
+    console.log(removed);
+    deleteFile(removed);
   };
 
   const removeTicket = (event, idx) => {
