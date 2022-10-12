@@ -161,34 +161,30 @@ export default function Dashboard() {
   };
 
   return (
-    <ThemeProvider theme={theme}>
-      <Box sx={{ display: 'flex', minHeight: '100vh' }}>
-        <CssBaseline />
-
-        <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-          <NavBar onDrawerToggle={handleDrawerToggle} dashboard={true} />
-          <div style={{ display: 'flex', height: '100%' }}>
-            <Box component="nav" sx={{ width: { md: drawerWidth }, flexShrink: { sm: 0 } }}>
-              {isSmUp ? null : (
-                <Navigator
-                  PaperProps={{ style: { width: drawerWidth } }}
-                  variant="temporary"
-                  open={mobileOpen}
-                  onClose={handleDrawerToggle}
-                />
-              )}
-
+    <>
+      <NavBar onDrawerToggle={handleDrawerToggle} dashboard={true} />
+      <Box sx={{ display: 'flex', height: '90vh', flexDirection: 'column' }}>
+        <div style={{ display: 'flex', height: '100%' }}>
+          <Box component="nav" sx={{ width: { md: drawerWidth }, flexShrink: { sm: 0 } }}>
+            {isSmUp ? null : (
               <Navigator
                 PaperProps={{ style: { width: drawerWidth } }}
-                sx={{ display: { md: 'block', sm: 'none', xs: 'none' } }}
+                variant="temporary"
+                open={mobileOpen}
+                onClose={handleDrawerToggle}
               />
-            </Box>
-            <Box component="main" sx={{ flex: 1, py: 6, px: 4, bgcolor: '#eaeff1' }}>
-              <Outlet />
-            </Box>
-          </div>
-        </Box>
+            )}
+
+            <Navigator
+              PaperProps={{ style: { width: drawerWidth } }}
+              sx={{ display: { md: 'block', sm: 'none', xs: 'none' } }}
+            />
+          </Box>
+          <Box component="main" sx={{ flex: 1, py: 6, px: 4, bgcolor: '#eaeff1' }}>
+            <Outlet />
+          </Box>
+        </div>
       </Box>
-    </ThemeProvider>
+    </>
   );
 }

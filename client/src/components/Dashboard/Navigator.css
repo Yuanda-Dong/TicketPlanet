@@ -3,13 +3,15 @@
 }
 .MuiDrawer-root .MuiPaper-root {
   background-color: rgb(50, 62, 88);
+  position: sticky;
+  height: 100%;
 }
 
-.MuiBox-root .css-o6d2th-MuiPaper-root-MuiDrawer-paper {
+/* .MuiBox-root .css-o6d2th-MuiPaper-root-MuiDrawer-paper {
   top: auto;
   position: sticky;
-  /* height: 100%; */
-}
+  height: 100%;
+} */
 
 .MuiBox-root .category {
   color: white;
