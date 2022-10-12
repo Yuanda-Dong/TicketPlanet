@@ -15,8 +15,10 @@ import { useNavigate } from 'react-router-dom';
 import NavBar from '../components/Navbar/NavBar';
 import GoogleIcon from '@mui/icons-material/Google';
 import './Payment/Payment.css';
+// firebase google auth
 import { auth, provider } from '../firebase';
 import { signInWithPopup } from 'firebase/auth';
+// axios baseUrl
 import { axiosInstance } from '../config';
 
 const steps = ['Register your account', 'Enter your details'];
@@ -58,23 +60,21 @@ export default function SignUp() {
     setActiveStep(activeStep - 1);
   };
 
-  const handleSignup = () => {
-    axiosInstance
-      .post('/user/', {
+  const handleSignup = async () => {
+    try {
+      const res = await axiosInstance.post('/user/', {
         email: signupInfo.email,
         first_name: signupInfo.firstname,
         lastname: signupInfo.lastname,
         gender: profileInfo.gender === 'other' ? 'nobinary' : signupInfo.gender,
         postcode: profileInfo.postcode,
         age: profileInfo.age,
-      })
-      .then((res) => {
-        console.log(res);
-        setActiveStep(activeStep + 1);
-      })
-      .catch((e) => {
-        console.error(e);
       });
+      console.log(res.data);
+      navigate('/');
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   const signUpWithGoogle = () => {
@@ -86,6 +86,7 @@ export default function SignUp() {
         console.error(e);
       });
   };
+
   return (
     <div>
       <NavBar />

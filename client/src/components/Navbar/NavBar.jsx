@@ -11,10 +11,13 @@ import { Link } from 'react-router-dom';
 import './NavBar.css';
 import UserMenu from './UserMenu';
 import SearchBar from '../SearchBar/SearchBar';
+// redux
+import { useSelector } from 'react-redux';
 
 const pages = ['Products', 'Pricing', 'Blog'];
 
 const NavBar = (props) => {
+  const { currentUser } = useSelector((state) => state.user);
   const dashboard = props.dashboard;
   const onDrawerToggle = props.onDrawerToggle;
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -91,7 +94,9 @@ const NavBar = (props) => {
             </Button>
           </Link>
 
-          {false ? (
+          {currentUser ? (
+            <UserMenu />
+          ) : (
             <>
               <Link className="link" to={'/signin'}>
                 <Button variant="outlined" className="login">
@@ -104,8 +109,6 @@ const NavBar = (props) => {
                 </Button>
               </Link>
             </>
-          ) : (
-            <UserMenu />
           )}
         </div>
       </div>

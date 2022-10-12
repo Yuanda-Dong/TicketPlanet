@@ -13,24 +13,22 @@ import ForgotPassword from '../components/ForgotPassword';
 import { useNavigate } from 'react-router-dom';
 import NavBar from '../components/Navbar/NavBar';
 import GoogleIcon from '@mui/icons-material/Google';
+// firebase google auth
 import { auth, provider } from '../firebase';
 import { signInWithPopup } from 'firebase/auth';
+// axios baseUrl
+import { axiosInstance } from '../config';
+// redux import
+import { useDispatch } from 'react-redux';
+import { failedLogin, startLogin, successfulLogin } from '../redux/userSlice';
 
 export default function SignInSide() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const signUp = (e) => {
     e.preventDefault();
     navigate('/signup');
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
   };
 
   const signInWithGoogle = () => {
@@ -41,6 +39,42 @@ export default function SignInSide() {
       .catch((e) => {
         console.error(e);
       });
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    // console.log({
+    //   email: data.get('email'),
+    //   password: data.get('password'),
+    // });
+    handleSignin(data);
+  };
+
+  const handleSignin = async (data) => {
+    try {
+      const config = {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      };
+      // dispatch(startLogin());
+      const res = await axiosInstance.post(
+        '/token',
+        {
+          grant_type: 'password',
+          username: data.get('email'),
+          password: data.get('password'),
+        },
+        config
+      );
+      console.log(res.data);
+      navigate('/');
+      // dispatch(successfulLogin(res.data));
+    } catch (e) {
+      console.error(e);
+      // dispatch(failedLogin());
+    }
   };
 
   return (
