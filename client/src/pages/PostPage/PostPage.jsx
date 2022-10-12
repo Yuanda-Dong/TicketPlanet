@@ -72,10 +72,6 @@ const PostPage = () => {
     setGallery(newGallery);
   };
 
-  React.useEffect(() => {
-    console.log(progress);
-  }, [progress]);
-
   const deleteFile = (filepath) => {
     // Create a reference to the file to delete
     const desertRef = ref(storage, filepath);
