@@ -237,7 +237,7 @@ const PostPage = () => {
             <Grid item xs={12}>
               <div className="tik">
                 {tickets.map((e, idx) => (
-                  <Card sx={{ minWidth: 250 }}>
+                  <Card key={idx} sx={{ minWidth: 250 }}>
                     <CardContent>
                       <Grid container spacing={1} direction="row" justifyContent="space-between" alignItems="flex-end">
                         <Grid item xs={9}>
@@ -357,34 +357,38 @@ const PostPage = () => {
             <Grid item xs={12}>
               <div className="gallery">
                 {gallery.map((e, idx) => (
-                  <div>
-                    <Grid container spacing={1} direction="row" justifyContent="space-between" alignItems="center">
-                      <Grid item xs={9}>
-                        <TextField
-                          fullWidth
-                          margin="normal"
-                          key={idx}
-                          id="Media upload"
-                          label={`Gallery link ${idx + 1}`}
-                          variant="outlined"
-                          value={e}
-                          onChange={(event) => handleGallery(event, idx)}
-                        />
-                      </Grid>
-                      <Grid item xs={3}>
-                        <Button
-                          variant="outlined"
-                          component="label"
-                          color="error"
-                          startIcon={<DeleteIcon />}
-                          onClick={(event) => handleClick(event, idx)}
-                        >
-                          {' '}
-                          Remove{' '}
-                        </Button>
-                      </Grid>
+                  <Grid
+                    key={idx}
+                    container
+                    spacing={1}
+                    direction="row"
+                    justifyContent="space-between"
+                    alignItems="center"
+                  >
+                    <Grid item xs={9}>
+                      <TextField
+                        fullWidth
+                        margin="normal"
+                        key={idx}
+                        id="Media upload"
+                        label={`Gallery link ${idx + 1}`}
+                        variant="outlined"
+                        value={e}
+                        onChange={(event) => handleGallery(event, idx)}
+                      />
                     </Grid>
-                  </div>
+                    <Grid item xs={3}>
+                      <Button
+                        variant="outlined"
+                        component="label"
+                        color="error"
+                        startIcon={<DeleteIcon />}
+                        onClick={(event) => handleClick(event, idx)}
+                      >
+                        Remove
+                      </Button>
+                    </Grid>
+                  </Grid>
                 ))}
               </div>
             </Grid>
