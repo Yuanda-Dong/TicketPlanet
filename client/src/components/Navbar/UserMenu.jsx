@@ -7,13 +7,15 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const settings = ['My Tickets', 'Dashboard', 'Account', 'Logout'];
 
 const UserMenu = () => {
+  const { currentUser } = useSelector((state) => state.user);
+
   const navigate = useNavigate();
   const [anchorElUser, setAnchorElUser] = useState(null);
-  const [userId, setUserId] = useState(123);
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
   };
@@ -41,7 +43,7 @@ const UserMenu = () => {
     <Box sx={{ flexGrow: 0 }}>
       <Tooltip title="Open settings">
         <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-          <Avatar alt="Remy Sharp" src="" />
+          <Avatar>{`${currentUser.first_name[0]}.${currentUser.last_name[0]}`}</Avatar>
         </IconButton>
       </Tooltip>
       <Menu

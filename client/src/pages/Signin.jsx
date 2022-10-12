@@ -21,12 +21,9 @@ import { axiosInstance } from '../config';
 // redux import
 import { useDispatch } from 'react-redux';
 import { failedLogin, startLogin, successfulLogin } from '../redux/userSlice';
-// cookie
-import { useCookies } from 'react-cookie';
 
 export default function SignInSide() {
   const dispatch = useDispatch();
-  const [cookies, setCookie] = useCookies(['user']);
 
   const navigate = useNavigate();
 
@@ -57,7 +54,8 @@ export default function SignInSide() {
 
   const handleSignin = async (data) => {
     try {
-      const config = {
+      // fetch token
+      let config = {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
@@ -72,11 +70,16 @@ export default function SignInSide() {
         },
         config
       );
-      console.log(res.data);
-      await setCookie('access_token', res.data.access_token, {
-        path: '/',
-      });
-      const user = await axiosInstance.get('/user/me');
+      // store token in localStorage
+      localStorage.setItem('token', res.data.access_token);
+
+      // fetch user info
+      config = {
+        headers: {
+          Authorization: `Bearer ${localStorage.token}`,
+        },
+      };
+      const user = await axiosInstance.get('/user/me', config);
       dispatch(successfulLogin(user.data));
       navigate('/');
     } catch (e) {
