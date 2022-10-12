@@ -14,6 +14,8 @@ import { useNavigate } from 'react-router-dom';
 import NavBar from '../components/Navbar/NavBar';
 import GoogleIcon from '@mui/icons-material/Google';
 import './Payment/Payment.css';
+import { auth, provider } from '../firebase';
+import { signInWithPopup } from 'firebase/auth';
 
 const steps = ['Register your account', 'Enter your details'];
 
@@ -47,6 +49,15 @@ export default function SignUp() {
     setActiveStep(activeStep - 1);
   };
 
+  const signUpWithGoogle = () => {
+    signInWithPopup(auth, provider)
+      .then((user) => {
+        console.log(user);
+      })
+      .catch((e) => {
+        console.error(e);
+      });
+  };
   return (
     <div>
       <NavBar />
@@ -102,7 +113,7 @@ export default function SignUp() {
             <Box>
               <Grid container justifyContent="space-between" alignItems="center">
                 <Grid item>
-                  <Button startIcon={<GoogleIcon />} variant="outlined">
+                  <Button startIcon={<GoogleIcon />} variant="outlined" onClick={signUpWithGoogle}>
                     Sign up with Google
                   </Button>
                 </Grid>

@@ -13,6 +13,8 @@ import ForgotPassword from '../components/ForgotPassword';
 import { useNavigate } from 'react-router-dom';
 import NavBar from '../components/Navbar/NavBar';
 import GoogleIcon from '@mui/icons-material/Google';
+import { auth, provider } from '../firebase';
+import { signInWithPopup } from 'firebase/auth';
 
 export default function SignInSide() {
   const navigate = useNavigate();
@@ -29,6 +31,16 @@ export default function SignInSide() {
       email: data.get('email'),
       password: data.get('password'),
     });
+  };
+
+  const signInWithGoogle = () => {
+    signInWithPopup(auth, provider)
+      .then((user) => {
+        console.log(user);
+      })
+      .catch((e) => {
+        console.error(e);
+      });
   };
 
   return (
@@ -103,7 +115,7 @@ export default function SignInSide() {
               </Grid>
             </Grid>
           </Box>
-          <Button startIcon={<GoogleIcon />} sx={{ margin: '50px 0' }} variant="outlined">
+          <Button startIcon={<GoogleIcon />} sx={{ margin: '50px 0' }} variant="outlined" onClick={signInWithGoogle}>
             Sign in with Google
           </Button>
         </Box>
