@@ -8,10 +8,13 @@ import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { logout } from '../../redux/userSlice';
 
 const settings = ['My Tickets', 'Dashboard', 'Account', 'Logout'];
 
 const UserMenu = () => {
+  const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.user);
 
   const navigate = useNavigate();
@@ -33,6 +36,14 @@ const UserMenu = () => {
       case 'Account':
         setAnchorElUser(null);
         navigate('/account-setting');
+        break;
+      case 'Logout':
+        dispatch(logout());
+        localStorage.setItem('token', null);
+        navigate('/');
+
+        setAnchorElUser(null);
+
         break;
       default:
         setAnchorElUser(null);

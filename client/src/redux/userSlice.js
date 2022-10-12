@@ -21,7 +21,9 @@ export const userSlice = createSlice({
     },
 
     logout: (state) => {
-      return state;
+      state.currentUser = null;
+      state.loading = false;
+      state.error = false;
     },
 
     // subscription: (state, action) => {
