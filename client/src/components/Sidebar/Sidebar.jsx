@@ -39,9 +39,9 @@ const marks1 = [
 const Sidebar = () => {
     return (
       <div className="sidebar">
-        Filters
+          <h2>Filters</h2>
         <Divider variant="middle" />
-        Distance 
+          <h4>Distance </h4>
         <Box sx={{ width: 180 }}>
         <Slider
             defaultValue={20}
@@ -51,7 +51,7 @@ const Sidebar = () => {
         />
         </Box>
         <Divider variant="middle" />
-        Categories
+          <h4>Categories</h4>
         <FormGroup>
         <FormControlLabel control={<Checkbox defaultChecked />} label="Movies" />
         <FormControlLabel control={<Checkbox />} label="Concert" />
@@ -60,7 +60,7 @@ const Sidebar = () => {
         <FormControlLabel control={<Checkbox />} label="Other" />
         </FormGroup>
         <Divider variant="middle" />
-        Price 
+          <h4>Price </h4>
         <Box sx={{ width: 180 }}>
         <Slider
             defaultValue={20}

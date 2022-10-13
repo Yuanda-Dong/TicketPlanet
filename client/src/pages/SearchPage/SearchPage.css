@@ -1,7 +1,7 @@
 .events{
     display: flex;
     top: 10vh;
-    position: fixed;
-    left: 300px;
+    position: inherit;
+    margin-left: 300px;
     flex-wrap: wrap;
 }
