@@ -1,11 +1,13 @@
 import axios from 'axios';
-
+// console.log(process.env.REACT_APP_API_MODE);
+const url =
+  process.env.REACT_APP_API_MODE === 'test' ? 'http://127.0.0.1:8000' : 'https://comp9900-production.up.railway.app';
 const axiosInstance = axios.create({
-  baseURL: 'http://127.0.0.1:8000',
+  baseURL: url,
 });
 
-const axiosProduction = axios.create({
-  baseURL: 'https://comp9900-production.up.railway.app',
-});
+// const axiosProduction = axios.create({
+//   baseURL: 'https://comp9900-production.up.railway.app',
+// });
 
-export { axiosInstance, axiosProduction };
+export { axiosInstance };
