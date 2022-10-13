@@ -83,8 +83,13 @@ export default function SignInSide() {
       dispatch(successfulLogin(user.data));
       navigate('/');
     } catch (e) {
-      console.error(e);
-      alert(e.message);
+      if (e.response) {
+        alert(e.response.data.detail);
+      } else if (e.request) {
+        console.error(e.request);
+      } else {
+        console.errorr('Error', e.message);
+      }
       dispatch(failedLogin());
     }
   };

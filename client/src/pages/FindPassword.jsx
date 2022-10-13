@@ -118,12 +118,10 @@ export default function FindPassword() {
       confirm_password: data.get('repeat'),
     });
     axiosInstance
-      .post('/user/reset-password', {}, { 
-        params: {
-          reset_password_token: reset_token,
-          new_password: data.get('new'),
-          confirm_password: data.get('repeat'),
-        }
+      .post('/user/reset-password', {
+        reset_password_token: reset_token,
+        new_password: data.get('new'),
+        confirm_password: data.get('repeat'),
       })
       .then((res) => setReset(true));
   };

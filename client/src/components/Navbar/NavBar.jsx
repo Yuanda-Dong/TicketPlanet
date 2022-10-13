@@ -88,7 +88,7 @@ const NavBar = (props) => {
         )}
 
         <div className="button_group">
-          <Link className="link" to={'/post'}>
+          <Link className="link" to={currentUser ? '/post' : '/signup'}>
             <Button variant="outlined" className="create-event">
               Create Event
             </Button>
