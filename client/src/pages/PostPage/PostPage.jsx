@@ -28,10 +28,17 @@ import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } f
 
 const PostPage = () => {
   const storage = getStorage();
+  const [event, setEvent] = useState({
+    title: '',
+    host: '',
+    category: '',
+    address: '',
+    postcode: '',
+    start: null,
+    end: null,
+    thumbnail: '',
+  });
 
-  const [value, setValue] = useState({ from: null, to: null });
-  const [cat, setcat] = React.useState('');
-  const [thumb, setThumb] = React.useState('');
   const [gallery, setGallery] = React.useState([]);
   const [tickets, setTickets] = React.useState([]);
   const [progress, setProgress] = React.useState({ thumbnail: 100, gallery: 100 });
@@ -58,18 +65,14 @@ const PostPage = () => {
     setOpen(false);
   };
 
-  const handleChange = (event) => {
-    setcat(event.target.value);
-  };
-
-  const handleMedia = (event) => {
-    setThumb(event.target.value);
-  };
-
   const handleGallery = (event, idx) => {
     const newGallery = [...gallery];
     newGallery[idx] = event.target.value;
     setGallery(newGallery);
+  };
+
+  const handleEventChange = (e) => {
+    setEvent((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const deleteFile = (filepath) => {
@@ -129,13 +132,16 @@ const PostPage = () => {
         // Upload completed successfully, now we can get the download URL
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
           console.log('File available at', downloadURL);
-          type === 'thumbnail' ? setThumb(downloadURL) : setGallery((gallery) => [...gallery, downloadURL]);
+
+          type === 'thumbnail'
+            ? setEvent((prev) => ({ ...prev, [type]: downloadURL }))
+            : setGallery((gallery) => [...gallery, downloadURL]);
         });
       }
     );
   };
 
-  const handleClick = (event, idx) => {
+  const removeGallery = (event, idx) => {
     const newGallery = [...gallery];
     const removed = newGallery.splice(idx, 1);
     setGallery(newGallery);
@@ -148,10 +154,6 @@ const PostPage = () => {
     newTickets.splice(idx, 1);
     setTickets(newTickets);
   };
-
-  // const addTickets = () => {
-
-  // }
 
   const setName = (event) => {
     const newT = { ...t };
@@ -180,6 +182,8 @@ const PostPage = () => {
     setOpen(false);
   };
 
+  // editor state
+
   const [state, setEditorState] = useState({
     editorState: EditorState.createEmpty(),
   });
@@ -203,10 +207,30 @@ const PostPage = () => {
               <h3> Event Information</h3>
             </Grid>
             <Grid item xs={6}>
-              <TextField fullWidth required id="outlined-basic" label="Event Title" variant="outlined" sx={{ mb: 1 }} />
+              <TextField
+                value={event.title}
+                fullWidth
+                required
+                id="outlined-basic"
+                label="Event Title"
+                variant="outlined"
+                name="title"
+                onChange={handleEventChange}
+                sx={{ mb: 1 }}
+              />
             </Grid>
             <Grid item xs={6}>
-              <TextField fullWidth required id="outlined-basic" label="Host Name" variant="outlined" sx={{ mb: 1 }} />
+              <TextField
+                value={event.host}
+                name="host"
+                fullWidth
+                required
+                id="outlined-basic"
+                label="Host Name"
+                variant="outlined"
+                onChange={handleEventChange}
+                sx={{ mb: 1 }}
+              />
             </Grid>
             <Grid item xs={12}>
               <FormControl fullWidth sx={{ mb: 1 }}>
@@ -214,9 +238,10 @@ const PostPage = () => {
                 <Select
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
-                  value={cat}
-                  label="cat"
-                  onChange={handleChange}
+                  value={event.category}
+                  label="Category"
+                  name="category"
+                  onChange={handleEventChange}
                 >
                   <MenuItem value={'Movies'}>Movies</MenuItem>
                   <MenuItem value={'Concert'}>Concert</MenuItem>
@@ -227,20 +252,37 @@ const PostPage = () => {
               </FormControl>
             </Grid>
             <Grid item xs={6}>
-              <TextField fullWidth id="outlined-basic" label="Address" variant="outlined" sx={{ mb: 1 }} />
+              <TextField
+                value={event.address}
+                name="address"
+                fullWidth
+                id="outlined-basic"
+                label="Address"
+                variant="outlined"
+                onChange={handleEventChange}
+                sx={{ mb: 1 }}
+              />
             </Grid>
             <Grid item xs={6}>
-              <TextField fullWidth id="outlined-basic" label="Post Code" variant="outlined" sx={{ mb: 1 }} />
+              <TextField
+                value={event.postcode}
+                name="postcode"
+                fullWidth
+                id="outlined-basic"
+                label="Post Code"
+                variant="outlined"
+                onChange={handleEventChange}
+                sx={{ mb: 1 }}
+              />
             </Grid>
             <Grid item xs={6}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DateTimePicker
                   label="start"
                   className="search"
-                  value={value.from}
-                  onChange={(newValue) => {
-                    setValue({ ...value, from: newValue });
-                  }}
+                  value={event.start}
+                  name="start"
+                  onChange={handleEventChange}
                   renderInput={(params) => <TextField fullWidth className="search_date" {...params} />}
                 />
               </LocalizationProvider>
@@ -250,10 +292,9 @@ const PostPage = () => {
                 <DateTimePicker
                   label="end"
                   className="search"
-                  value={value.to}
-                  onChange={(newValue) => {
-                    setValue({ ...value, to: newValue });
-                  }}
+                  value={event.end}
+                  name="end"
+                  onChange={handleEventChange}
                   renderInput={(params) => <TextField fullWidth className="search_date" {...params} />}
                 />
               </LocalizationProvider>
@@ -265,9 +306,6 @@ const PostPage = () => {
             <Grid item xs={12}>
               <Editor
                 editorState={state.editorState}
-                // toolbarClassName="toolbarClassName"
-                // wrapperClassName="wrapperClassName"
-                // editorClassName="editorClassName"
                 editorStyle={{
                   backgroundColor: 'white',
                   border: '2px solid rgb(50, 62, 88',
@@ -384,9 +422,10 @@ const PostPage = () => {
                 id="Media upload"
                 label="Thumbnail Image link"
                 variant="outlined"
-                value={thumb}
+                value={event.thumbnail}
+                name="thumbnail"
                 fullWidth
-                onChange={handleMedia}
+                onChange={handleEventChange}
               />
             </Grid>
             <Grid item xs={12}>
@@ -436,7 +475,7 @@ const PostPage = () => {
                         component="label"
                         color="error"
                         startIcon={<DeleteIcon />}
-                        onClick={(event) => handleClick(event, idx)}
+                        onClick={(event) => removeGallery(event, idx)}
                       >
                         Remove
                       </Button>
@@ -466,6 +505,15 @@ const PostPage = () => {
               {progress.gallery < 100 ? `Uploading gallery image: ${progress.gallery}%` : null}
             </Grid>
           </Grid>
+          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '20px', marginTop: '50px' }}>
+            <Button sx={{ mt: '20px' }} variant="outlined">
+              Cancel
+            </Button>
+
+            <Button sx={{ mt: '20px' }} variant="contained">
+              Save & Next
+            </Button>
+          </div>
         </Paper>
       </Container>
     </div>
