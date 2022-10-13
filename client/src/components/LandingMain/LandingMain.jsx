@@ -17,7 +17,7 @@ export default function LandingMain() {
     setValue(newValue);
   };
 
-  const events = [1, 2, 3, 4, 5, 6, 7, 8];
+  const events = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
   return (
     <Box className="landing_main_container">
@@ -35,7 +35,7 @@ export default function LandingMain() {
             ))}
           </div>
 
-          <Link className="link" to={'/search'}>
+          <Link style={{ textDecoration: 'none' }} className="link" to={'/search'}>
             <Button variant="contained" className="loadmore">
               Load More
             </Button>
