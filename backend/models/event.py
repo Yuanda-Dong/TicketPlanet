@@ -55,6 +55,7 @@ class EventInDB(Event):
         allow_population_by_field_name = True
         schema_extra = {
             "example": {
+                "host_id": "12345",
                 "title": "Movie Night",
                 "host_name": "DJ Khaled",
                 "category": "Movie",
