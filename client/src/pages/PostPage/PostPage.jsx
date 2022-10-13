@@ -199,6 +199,9 @@ const PostPage = () => {
             Create New Event
           </Typography>
           <Grid container spacing={3} rowSpacing={2}>
+            <Grid item xs={12}>
+              <h3> Event Information</h3>
+            </Grid>
             <Grid item xs={6}>
               <TextField fullWidth required id="outlined-basic" label="Event Title" variant="outlined" sx={{ mb: 1 }} />
             </Grid>
@@ -256,7 +259,9 @@ const PostPage = () => {
               </LocalizationProvider>
             </Grid>
 
-            {/* <TextField label="Description" multiline rows={5} maxRows={Infinity} style={{ width: '40vw' }} /> */}
+            <Grid item xs={12}>
+              <h3> Event Description</h3>
+            </Grid>
             <Grid item xs={12}>
               <Editor
                 editorState={state.editorState}
@@ -270,6 +275,9 @@ const PostPage = () => {
                 }}
                 onEditorStateChange={onChange}
               />
+            </Grid>
+            <Grid item xs={12}>
+              <h3> Tickets</h3>
             </Grid>
             <Grid item xs={12}>
               <div className="tik">
@@ -368,7 +376,9 @@ const PostPage = () => {
                 </Modal>
               </div>
             </Grid>
-
+            <Grid item xs={12}>
+              <h3> Image Upload</h3>
+            </Grid>
             <Grid item xs={12}>
               <TextField
                 id="Media upload"

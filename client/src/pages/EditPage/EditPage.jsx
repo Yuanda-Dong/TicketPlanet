@@ -18,7 +18,7 @@ import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SendIcon from '@mui/icons-material/Send';
-import { EditorState,ContentState } from 'draft-js';
+import { EditorState, ContentState } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import Paper from '@mui/material/Paper';
@@ -29,11 +29,13 @@ import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } f
 const EditPage = () => {
   const storage = getStorage();
 
-  const [value, setValue] = useState({ from: "10/21/2022 07:30 PM", to: "10/22/2022 12:00 AM" });
+  const [value, setValue] = useState({ from: '10/21/2022 07:30 PM', to: '10/22/2022 12:00 AM' });
   const [cat, setcat] = React.useState('Arts');
-  const [thumb, setThumb] = React.useState('https://firebasestorage.googleapis.com/v0/b/project-4177137297351481009.appspot.com/o/1665598559012f1e7b3e32143cd904a6528ce9f0d9ef80d01734e6b497e2a6aaf613b7b6dcdf6-rimg-w1200-h1200-gmir.webp?alt=media&token=c31f1bf2-b8f5-4835-b135-e585181eeeb9');
+  const [thumb, setThumb] = React.useState(
+    'https://firebasestorage.googleapis.com/v0/b/project-4177137297351481009.appspot.com/o/1665598559012f1e7b3e32143cd904a6528ce9f0d9ef80d01734e6b497e2a6aaf613b7b6dcdf6-rimg-w1200-h1200-gmir.webp?alt=media&token=c31f1bf2-b8f5-4835-b135-e585181eeeb9'
+  );
   const [gallery, setGallery] = React.useState([]);
-  const [tickets, setTickets] = React.useState([{ price: 38.01, quantity: 100, name: "General Admission" }]);
+  const [tickets, setTickets] = React.useState([{ price: 38.01, quantity: 100, name: 'General Admission' }]);
   const [progress, setProgress] = React.useState({ thumbnail: 100, gallery: 100 });
   const [t, setT] = React.useState({ price: null, quantity: null, name: null });
   const style = {
@@ -181,7 +183,11 @@ const EditPage = () => {
   };
 
   const [state, setEditorState] = useState({
-    editorState: EditorState.createWithContent(ContentState.createFromText("🎃 Halloween Boat Party 🎃 \nTree Productions is bringing the iconic Halloween Boat Party once again. Are you ready ? \nGet dressed to enjoy the best boat party and take a part of the contest for the best costume. \nThis 4 hour creepy cruise takes place on-board the Darling Harbour, 3 nice dance floors and a fully licensed bar. Our spook-tacular party is the place to be this November, along with our DJs we're throwing in some treats."))
+    editorState: EditorState.createWithContent(
+      ContentState.createFromText(
+        "🎃 Halloween Boat Party 🎃 \nTree Productions is bringing the iconic Halloween Boat Party once again. Are you ready ? \nGet dressed to enjoy the best boat party and take a part of the contest for the best costume. \nThis 4 hour creepy cruise takes place on-board the Darling Harbour, 3 nice dance floors and a fully licensed bar. Our spook-tacular party is the place to be this November, along with our DJs we're throwing in some treats."
+      )
+    ),
   });
 
   const onChange = (editorState) => {
@@ -199,11 +205,30 @@ const EditPage = () => {
             Edit Event
           </Typography>
           <Grid container spacing={3} rowSpacing={2}>
-            <Grid item xs={6}>
-              <TextField fullWidth required id="outlined-basic" label="Event Title" variant="outlined" sx={{ mb: 1 }} defaultValue="Halloween Boat party"/>
+            <Grid item xs={12}>
+              <h3> Event Information</h3>
             </Grid>
             <Grid item xs={6}>
-              <TextField fullWidth required id="outlined-basic" label="Host Name" variant="outlined" sx={{ mb: 1 }} defaultValue="Tree Productions"/>
+              <TextField
+                fullWidth
+                required
+                id="outlined-basic"
+                label="Event Title"
+                variant="outlined"
+                sx={{ mb: 1 }}
+                defaultValue="Halloween Boat party"
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                fullWidth
+                required
+                id="outlined-basic"
+                label="Host Name"
+                variant="outlined"
+                sx={{ mb: 1 }}
+                defaultValue="Tree Productions"
+              />
             </Grid>
             <Grid item xs={12}>
               <FormControl fullWidth sx={{ mb: 1 }}>
@@ -224,10 +249,24 @@ const EditPage = () => {
               </FormControl>
             </Grid>
             <Grid item xs={6}>
-              <TextField fullWidth id="outlined-basic" label="Address" variant="outlined" sx={{ mb: 1 }} defaultValue="King Street Wharf 6 Wharf #6 - Darling Harbour Sydney, NSW"/>
+              <TextField
+                fullWidth
+                id="outlined-basic"
+                label="Address"
+                variant="outlined"
+                sx={{ mb: 1 }}
+                defaultValue="King Street Wharf 6 Wharf #6 - Darling Harbour Sydney, NSW"
+              />
             </Grid>
             <Grid item xs={6}>
-              <TextField fullWidth id="outlined-basic" label="Post Code" variant="outlined" sx={{ mb: 1 }} defaultValue="2000"/>
+              <TextField
+                fullWidth
+                id="outlined-basic"
+                label="Post Code"
+                variant="outlined"
+                sx={{ mb: 1 }}
+                defaultValue="2000"
+              />
             </Grid>
             <Grid item xs={6}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -258,6 +297,9 @@ const EditPage = () => {
 
             {/* <TextField label="Description" multiline rows={5} maxRows={Infinity} style={{ width: '40vw' }} /> */}
             <Grid item xs={12}>
+              <h3> Event Description</h3>
+            </Grid>
+            <Grid item xs={12}>
               <Editor
                 editorState={state.editorState}
                 // toolbarClassName="toolbarClassName"
@@ -270,6 +312,9 @@ const EditPage = () => {
                 }}
                 onEditorStateChange={onChange}
               />
+            </Grid>
+            <Grid item xs={12}>
+              <h3> Tickets</h3>
             </Grid>
             <Grid item xs={12}>
               <div className="tik">
@@ -368,7 +413,9 @@ const EditPage = () => {
                 </Modal>
               </div>
             </Grid>
-
+            <Grid item xs={12}>
+              <h3> Image Upload</h3>
+            </Grid>
             <Grid item xs={12}>
               <TextField
                 id="Media upload"
