@@ -8,3 +8,8 @@ Week 3
 Completed the UserStory with team members in the proposal.
 Completed the StoryBoard with team members and added description to proposal.
 And had a meeting with team members. 
+
+Week 4
+Met with team member to discuss demo
+Completed forgot password and reset password features and dependencies 
+Updated user model
