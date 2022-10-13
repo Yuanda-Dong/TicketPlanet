@@ -13,24 +13,38 @@ export default function ForgotPassword() {
   const [open, setOpen] = React.useState(false);
   const [email, setEmail] = React.useState('');
   const [seconds, setSeconds] = useState(null);
+  // { params: { email } }
 
+  const setTimer = () => {
+    setSeconds(60);
+    let mySeconds = 60;
+    // TODO Clear previos interval
+    const intervalId = setInterval(() => {
+      mySeconds = mySeconds - 1;
+      setSeconds(mySeconds);
+      if (mySeconds === 0) {
+        clearInterval(intervalId);
+        setSeconds(null);
+      }
+    }, 1000);
+  };
   const handleSend = (e) => {
     axiosInstance
       .post('/user/forgot-password', { email })
       .then((res) => {
-        setSeconds(60);
-        let mySeconds = 60;
-        // TODO Clear previos interval
-        const intervalId = setInterval(() => {
-          mySeconds = mySeconds - 1;
-          setSeconds(mySeconds);
-          if (mySeconds === 0) {
-            clearInterval(intervalId);
-            setSeconds(null);
-          }
-        }, 1000);
+        setTimer();
+        console.log(res);
       })
-      .catch((e) => console.error(e));
+      .catch((e) => {
+        console.log(e);
+        if (e.response) {
+          alert(e.response.data.detail);
+        } else if (e.request) {
+          console.error(e.request);
+        } else {
+          console.errorr('Error', e.message);
+        }
+      });
   };
 
   const handleClickOpen = () => {
@@ -50,7 +64,7 @@ export default function ForgotPassword() {
         <DialogTitle>Need help with your password?</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Enter the email you use for registration, and we will send you a code to verify your account.
+            Enter the email you use for registration, and we will send you an email to reset your password.
           </DialogContentText>
           <TextField
             autoFocus

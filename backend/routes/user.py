@@ -119,7 +119,8 @@ def delete_user(id: str, request: Request, response: Response, user: User = Depe
 
 
 @router.post("/forgot-password")
-async def forgot_password(request: Request, email: str):
+async def forgot_password(request: Request, email: ForgetPassword):
+    email = email.email
     # Check User existed
     user = request.app.database["users"].find_one({"email": email})
     # check reset-code
@@ -145,7 +146,11 @@ async def forgot_password(request: Request, email: str):
     subject = "Hello Coder"
     recipient = [email]
     message = reset_template.format(email, reset_code)
+    # try:
     await password_reset(subject, recipient, message)
+    # except:
+    #     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+    #                         detail="reset password token has expired, please request a new one")
     return {
         "reset_code": reset_code,
         "code":200,
@@ -153,7 +158,11 @@ async def forgot_password(request: Request, email: str):
     }
 
 @router.post("/reset-password")
-async def reset_password(request: Request, reset_password_token: str, new_password: str, confirm_password: str):
+# async def reset_password(request: Request, reset_password_token: str, new_password: str, confirm_password: str):
+async def reset_password(request: Request, body : ResetPassword):
+    reset_password_token = body.reset_password_token
+    new_password = body.new_password
+    confirm_password=body.confirm_password
     # Check valid reset password token
     reset_token = request.app.database["forgot_pwd"].find_one({"code": reset_password_token})
     print(reset_token["status"])

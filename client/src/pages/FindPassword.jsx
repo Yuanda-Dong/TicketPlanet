@@ -123,7 +123,16 @@ export default function FindPassword() {
         new_password: data.get('new'),
         confirm_password: data.get('repeat'),
       })
-      .then((res) => setReset(true));
+      .then((res) => setReset(true))
+      .catch((e) => {
+        if (e.response) {
+          alert(e.response.data.detail);
+        } else if (e.request) {
+          console.error(e.request);
+        } else {
+          console.errorr('Error', e.message);
+        }
+      });
   };
   return (
     <Container>

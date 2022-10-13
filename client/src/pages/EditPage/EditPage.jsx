@@ -4,7 +4,7 @@ import TextField from '@mui/material/TextField';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import './PostPage.css';
+import './EditPage.css';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import InputLabel from '@mui/material/InputLabel';
@@ -18,7 +18,7 @@ import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SendIcon from '@mui/icons-material/Send';
-import { EditorState } from 'draft-js';
+import { EditorState, ContentState } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import Paper from '@mui/material/Paper';
@@ -26,14 +26,16 @@ import Container from '@mui/material/Container';
 
 import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } from 'firebase/storage';
 
-const PostPage = () => {
+const EditPage = () => {
   const storage = getStorage();
 
-  const [value, setValue] = useState({ from: null, to: null });
-  const [cat, setcat] = React.useState('');
-  const [thumb, setThumb] = React.useState('');
+  const [value, setValue] = useState({ from: '10/21/2022 07:30 PM', to: '10/22/2022 12:00 AM' });
+  const [cat, setcat] = React.useState('Arts');
+  const [thumb, setThumb] = React.useState(
+    'https://firebasestorage.googleapis.com/v0/b/project-4177137297351481009.appspot.com/o/1665598559012f1e7b3e32143cd904a6528ce9f0d9ef80d01734e6b497e2a6aaf613b7b6dcdf6-rimg-w1200-h1200-gmir.webp?alt=media&token=c31f1bf2-b8f5-4835-b135-e585181eeeb9'
+  );
   const [gallery, setGallery] = React.useState([]);
-  const [tickets, setTickets] = React.useState([]);
+  const [tickets, setTickets] = React.useState([{ price: 38.01, quantity: 100, name: 'General Admission' }]);
   const [progress, setProgress] = React.useState({ thumbnail: 100, gallery: 100 });
   const [t, setT] = React.useState({ price: null, quantity: null, name: null });
   const style = {
@@ -181,7 +183,11 @@ const PostPage = () => {
   };
 
   const [state, setEditorState] = useState({
-    editorState: EditorState.createEmpty(),
+    editorState: EditorState.createWithContent(
+      ContentState.createFromText(
+        "🎃 Halloween Boat Party 🎃 \nTree Productions is bringing the iconic Halloween Boat Party once again. Are you ready ? \nGet dressed to enjoy the best boat party and take a part of the contest for the best costume. \nThis 4 hour creepy cruise takes place on-board the Darling Harbour, 3 nice dance floors and a fully licensed bar. Our spook-tacular party is the place to be this November, along with our DJs we're throwing in some treats."
+      )
+    ),
   });
 
   const onChange = (editorState) => {
@@ -196,17 +202,33 @@ const PostPage = () => {
       <Container component="main" maxWidth="md" sx={{ mb: 0 }}>
         <Paper elevation={3} sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}>
           <Typography component="h1" variant="h4" align="center" sx={{ mb: 2 }}>
-            Create New Event
+            Edit Event
           </Typography>
           <Grid container spacing={3} rowSpacing={2}>
             <Grid item xs={12}>
               <h3> Event Information</h3>
             </Grid>
             <Grid item xs={6}>
-              <TextField fullWidth required id="outlined-basic" label="Event Title" variant="outlined" sx={{ mb: 1 }} />
+              <TextField
+                fullWidth
+                required
+                id="outlined-basic"
+                label="Event Title"
+                variant="outlined"
+                sx={{ mb: 1 }}
+                defaultValue="Halloween Boat party"
+              />
             </Grid>
             <Grid item xs={6}>
-              <TextField fullWidth required id="outlined-basic" label="Host Name" variant="outlined" sx={{ mb: 1 }} />
+              <TextField
+                fullWidth
+                required
+                id="outlined-basic"
+                label="Host Name"
+                variant="outlined"
+                sx={{ mb: 1 }}
+                defaultValue="Tree Productions"
+              />
             </Grid>
             <Grid item xs={12}>
               <FormControl fullWidth sx={{ mb: 1 }}>
@@ -227,10 +249,24 @@ const PostPage = () => {
               </FormControl>
             </Grid>
             <Grid item xs={6}>
-              <TextField fullWidth id="outlined-basic" label="Address" variant="outlined" sx={{ mb: 1 }} />
+              <TextField
+                fullWidth
+                id="outlined-basic"
+                label="Address"
+                variant="outlined"
+                sx={{ mb: 1 }}
+                defaultValue="King Street Wharf 6 Wharf #6 - Darling Harbour Sydney, NSW"
+              />
             </Grid>
             <Grid item xs={6}>
-              <TextField fullWidth id="outlined-basic" label="Post Code" variant="outlined" sx={{ mb: 1 }} />
+              <TextField
+                fullWidth
+                id="outlined-basic"
+                label="Post Code"
+                variant="outlined"
+                sx={{ mb: 1 }}
+                defaultValue="2000"
+              />
             </Grid>
             <Grid item xs={6}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -259,6 +295,7 @@ const PostPage = () => {
               </LocalizationProvider>
             </Grid>
 
+            {/* <TextField label="Description" multiline rows={5} maxRows={Infinity} style={{ width: '40vw' }} /> */}
             <Grid item xs={12}>
               <h3> Event Description</h3>
             </Grid>
@@ -472,4 +509,4 @@ const PostPage = () => {
   );
 };
 
-export default PostPage;
+export default EditPage;

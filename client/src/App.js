@@ -13,6 +13,7 @@ import Reports from './components/Dashboard/Reports';
 // import Navbar from './components/Navbar/NavBar';
 import Footer from './components/Footer/Footer';
 import PostPage from './pages/PostPage/PostPage';
+import EditPage from './pages/EditPage/EditPage';
 import FindPassword from './pages/FindPassword';
 import Account from './pages/Account';
 
@@ -39,6 +40,7 @@ function App() {
           {/* <Route path="payment" element={<Payment />} />
            */}
           <Route path="post" element={<PostPage />} />
+          <Route path="edit" element={<EditPage />} />
         </Route>
       </Routes>
       <Footer />
