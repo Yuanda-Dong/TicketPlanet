@@ -5,17 +5,13 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import './PostPage.css';
-import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import Button from '@mui/material/Button';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
-import Modal from '@mui/material/Modal';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SendIcon from '@mui/icons-material/Send';
 import { EditorState } from 'draft-js';
@@ -23,6 +19,11 @@ import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import Paper from '@mui/material/Paper';
 import Container from '@mui/material/Container';
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+
+import Modal from '@mui/material/Modal';
 
 import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } from 'firebase/storage';
 
@@ -37,12 +38,10 @@ const PostPage = () => {
     start: null,
     end: null,
     thumbnail: '',
+    gallery: [],
   });
+  const [ticket, setTicket] = React.useState({ t: { price: null, quantity: null, name: null }, tickets: [] });
 
-  const [gallery, setGallery] = React.useState([]);
-  const [tickets, setTickets] = React.useState([]);
-  const [progress, setProgress] = React.useState({ thumbnail: 100, gallery: 100 });
-  const [t, setT] = React.useState({ price: null, quantity: null, name: null });
   const style = {
     position: 'absolute',
     top: '50%',
@@ -56,7 +55,6 @@ const PostPage = () => {
     px: 4,
     pb: 3,
   };
-
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => {
     setOpen(true);
@@ -64,14 +62,51 @@ const PostPage = () => {
   const handleClose = () => {
     setOpen(false);
   };
+  const removeTicket = (event, idx) => {
+    const newTickets = [...ticket.tickets];
+    newTickets.splice(idx, 1);
+    setTicket({ ...ticket, tickets: newTickets });
+  };
 
-  const handleGallery = (event, idx) => {
-    const newGallery = [...gallery];
-    newGallery[idx] = event.target.value;
-    setGallery(newGallery);
+  const setName = (event) => {
+    const newT = { ...ticket.t };
+    newT.name = event.target.value;
+    setTicket({ ...ticket, t: newT });
+  };
+  const setPrice = (event) => {
+    const newT = { ...ticket.t };
+    newT.price = event.target.value;
+    setTicket({ ...ticket, t: newT });
+  };
+  const setQuantity = (event) => {
+    const newT = { ...ticket.t };
+    newT.quantity = event.target.value;
+    setTicket({ ...ticket, t: newT });
+  };
+  const cancel = () => {
+    const newT = { price: null, quantity: null, name: null };
+    setTicket({ ...ticket, t: newT });
+    setOpen(false);
+  };
+  const add = () => {
+    const newTickets = ticket.tickets;
+    newTickets.push(ticket.t);
+    setTicket({ ...ticket, tickets: newTickets });
+    // setT({ price: null, quantity: null, name: null });
+    cancel();
+    setOpen(false);
+  };
+
+  const [progress, setProgress] = React.useState({ thumbnail: 100, gallery: 100 });
+
+  const handleGallery = (e, idx) => {
+    const newGallery = event.gallery;
+    newGallery[idx] = e.target.value;
+    setEvent((prev) => ({ ...prev, gallery: newGallery }));
   };
 
   const handleEventChange = (e) => {
+    e.preventDefault();
     setEvent((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
@@ -135,55 +170,22 @@ const PostPage = () => {
 
           type === 'thumbnail'
             ? setEvent((prev) => ({ ...prev, [type]: downloadURL }))
-            : setGallery((gallery) => [...gallery, downloadURL]);
+            : setEvent((prev) => ({ ...prev, gallery: [...event.gallery, downloadURL] }));
         });
       }
     );
   };
 
-  const removeGallery = (event, idx) => {
-    const newGallery = [...gallery];
+  const removeGallery = (idx) => {
+    const newGallery = event.gallery;
+    console.log(newGallery);
     const removed = newGallery.splice(idx, 1);
-    setGallery(newGallery);
+    setEvent((prev) => ({ ...prev, gallery: newGallery }));
     console.log(removed);
     deleteFile(removed);
   };
 
-  const removeTicket = (event, idx) => {
-    const newTickets = [...tickets];
-    newTickets.splice(idx, 1);
-    setTickets(newTickets);
-  };
-
-  const setName = (event) => {
-    const newT = { ...t };
-    newT.name = event.target.value;
-    setT(newT);
-  };
-  const setPrice = (event) => {
-    const newT = { ...t };
-    newT.price = event.target.value;
-    setT(newT);
-  };
-  const setQuantity = (event) => {
-    const newT = { ...t };
-    newT.quantity = event.target.value;
-    setT(newT);
-  };
-  const cancel = () => {
-    setT({ price: null, quantity: null, name: null });
-    setOpen(false);
-  };
-  const add = () => {
-    const newTickets = [...tickets];
-    newTickets.push({ price: t.price, quantity: t.quantity, name: t.name });
-    setTickets(newTickets);
-    setT({ price: null, quantity: null, name: null });
-    setOpen(false);
-  };
-
   // editor state
-
   const [state, setEditorState] = useState({
     editorState: EditorState.createEmpty(),
   });
@@ -278,11 +280,13 @@ const PostPage = () => {
             <Grid item xs={6}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DateTimePicker
-                  label="start"
+                  label="Start"
                   className="search"
                   value={event.start}
                   name="start"
-                  onChange={handleEventChange}
+                  onChange={(newVal) => {
+                    setEvent((prev) => ({ ...prev, start: newVal }));
+                  }}
                   renderInput={(params) => <TextField fullWidth className="search_date" {...params} />}
                 />
               </LocalizationProvider>
@@ -290,11 +294,13 @@ const PostPage = () => {
             <Grid item xs={6}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DateTimePicker
-                  label="end"
+                  label="End"
                   className="search"
                   value={event.end}
                   name="end"
-                  onChange={handleEventChange}
+                  onChange={(newVal) => {
+                    setEvent((prev) => ({ ...prev, end: newVal }));
+                  }}
                   renderInput={(params) => <TextField fullWidth className="search_date" {...params} />}
                 />
               </LocalizationProvider>
@@ -314,12 +320,13 @@ const PostPage = () => {
                 onEditorStateChange={onChange}
               />
             </Grid>
+            {/* TICKETs */}
             <Grid item xs={12}>
               <h3> Tickets</h3>
             </Grid>
             <Grid item xs={12}>
               <div className="tik">
-                {tickets.map((e, idx) => (
+                {ticket.tickets.map((e, idx) => (
                   <Card key={idx} sx={{ minWidth: 250 }}>
                     <CardContent>
                       <Grid container spacing={1} direction="row" justifyContent="space-between" alignItems="flex-end">
@@ -375,7 +382,7 @@ const PostPage = () => {
                             id="standard-basic"
                             label="Name: "
                             variant="standard"
-                            value={t.name}
+                            value={ticket.t.name}
                             margin="normal"
                             onChange={setName}
                           />
@@ -384,7 +391,7 @@ const PostPage = () => {
                             id="standard-basic"
                             label="Price: "
                             variant="standard"
-                            value={t.price}
+                            value={ticket.t.price}
                             margin="normal"
                             onChange={setPrice}
                           />
@@ -393,7 +400,7 @@ const PostPage = () => {
                             id="standard-basic"
                             label="Quantity: "
                             variant="standard"
-                            value={t.quantity}
+                            value={ticket.t.quantity}
                             margin="normal"
                             onChange={setQuantity}
                           />
@@ -414,6 +421,7 @@ const PostPage = () => {
                 </Modal>
               </div>
             </Grid>
+
             <Grid item xs={12}>
               <h3> Image Upload</h3>
             </Grid>
@@ -448,7 +456,7 @@ const PostPage = () => {
             </Grid>
             <Grid item xs={12}>
               <div className="gallery">
-                {gallery.map((e, idx) => (
+                {event.gallery.map((e, idx) => (
                   <Grid
                     key={idx}
                     container
