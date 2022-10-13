@@ -30,7 +30,7 @@ function App() {
           <Route path="forgot-password" element={<FindPassword />} />
           <Route path="account-setting" element={<Account />} />
 
-          <Route path="event">
+          <Route exact path="event">
             <Route path=":id" element={<EventDetail />} />
           </Route>
           <Route path="dashboard" element={<Dashboard />}>
