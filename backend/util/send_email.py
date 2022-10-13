@@ -47,7 +47,7 @@ reset_template = """
         If you did not make this request kindly ignore this email and nothing will happen, thanks.
     </p>
         <a style="display: block; margin: 0 auto; border: none; background-color: rgba(255, 214, 10, 1); color: white; width: 200px; line-height: 24px; padding: 10px; font-size: 24px; border-radius: 10px; cursor: pointer; text-decoration: none;"
-            href="http://comp9900-production.up.railway.app/forgot-password?reset_password_token={1:}"
+            href="http://localhost:3000/forgot-password?reset_password_token={1:}"
             target="_blank"
         >
             Reset password
