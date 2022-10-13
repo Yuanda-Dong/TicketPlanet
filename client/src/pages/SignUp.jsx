@@ -49,6 +49,7 @@ export default function SignUp() {
     e.preventDefault();
     if (activeStep === 1) {
       handleSignup();
+      setActiveStep(activeStep + 1);
     } else {
       setActiveStep(activeStep + 1);
     }
@@ -79,7 +80,7 @@ export default function SignUp() {
         age: profileInfo.age,
       });
       console.log(res.data);
-      navigate('/');
+      // navigate('/');
     } catch (e) {
       console.error(e.response.data.detail);
     }
