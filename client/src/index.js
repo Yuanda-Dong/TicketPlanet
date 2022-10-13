@@ -7,6 +7,9 @@ import { render } from 'react-dom'; // add this
 import { store, persistor } from './redux/store';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
+// import dotenv from 'dotenv';
+
+// dotenv.config();
 
 // const root = ReactDOM.createRoot(document.getElementById('root'));
 render(

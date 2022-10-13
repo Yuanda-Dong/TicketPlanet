@@ -39,6 +39,7 @@ class User(BaseModel):
         allow_population_by_field_name = True
         schema_extra = {
             "example": {
+                "_id": "123456",
                 "email": "Don.Quixote@gmail.com",
                 "first_name": "Don",
                 "last_name" : "Quixote",
