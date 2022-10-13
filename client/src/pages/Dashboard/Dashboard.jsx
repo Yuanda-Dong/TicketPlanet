@@ -163,7 +163,7 @@ export default function Dashboard() {
   return (
     <>
       <NavBar onDrawerToggle={handleDrawerToggle} dashboard={true} />
-      <Box sx={{ display: 'flex', height: '120vh', flexDirection: 'column' }}>
+      <Box sx={{ display: 'flex', height: '130vh', flexDirection: 'column' }}>
         <div style={{ display: 'flex', height: '100%' }}>
           <Box component="nav" sx={{ width: { md: drawerWidth }, flexShrink: { sm: 0 } }}>
             {isSmUp ? null : (
