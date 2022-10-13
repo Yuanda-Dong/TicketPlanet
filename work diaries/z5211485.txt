@@ -6,3 +6,9 @@ I had a meeting with frontend teams and Lingyu, during the meeting we decided th
 
 Week 3
 I completed the storyboard with Yuanda and Jane, and finished came up with customer report novel feature. Yuanda and I worked together to finish the system comparison and novel feature justification part in the proposal. I also formatted the proposal doc on top of the formats finished by Lingyu. 
+
+Week 4
+I completed the signin and signup pages, as well as landing page, event detail page, and dashboard page UI designs. 
+
+Week 5
+I completed the API connection for signin and signup using email, and connected to firebase for google signin. I also fixed the hook handler for Event Post page.
