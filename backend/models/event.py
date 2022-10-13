@@ -51,6 +51,22 @@ class Event(BaseModel):
         
 class EventInDB(Event):
     host_id: str = Field(...)
+    class Config:
+        allow_population_by_field_name = True
+        schema_extra = {
+            "example": {
+                "title": "Movie Night",
+                "host_name": "DJ Khaled",
+                "category": "Movie",
+                "address": "123 Seaseme Street",
+                "postcode" : "1234",
+                "start_dt": "2022-10-11T12:55",
+                "end_dt": "2022-11-11T03:55",
+                "details:": "",
+                "image_url": "https://images.app.goo.gl/3TLpJJwGzicrDLN78",
+                "gallery": "[https://images.app.goo.gl/3TLpJJwGzicrDLN78, https://images.app.goo.gl/3TLpJJwGzicrDLN78]"
+            }
+        }
         
 class EventUpdate(BaseModel):
     title: str = Field(...)
