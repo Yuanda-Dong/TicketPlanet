@@ -314,7 +314,7 @@ const PostPage = () => {
                 editorState={state.editorState}
                 editorStyle={{
                   backgroundColor: 'white',
-                  border: '2px solid rgb(50, 62, 88',
+                  border: '2px solid rgb(50, 62, 88)',
                   height: '200px',
                 }}
                 onEditorStateChange={onChange}
