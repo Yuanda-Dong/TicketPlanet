@@ -89,7 +89,9 @@ def find_user(id: str, request: Request, user: User = Depends(get_current_user))
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"user with ID {id} not found")
 
 @router.put("/{id}", response_description="Update a user", response_model=UserInDB, )
-def update_user(id: str, request: Request, user: UserUpdate = Depends(get_current_user)):
+def update_user(id: str, request: Request, user: UserUpdate, auth:User = Depends(get_current_user)):
+    if auth["_id"] != id:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=f"Only the user can edit their details")
     user = {k: v for k, v in user.dict().items() if v is not None}
     if len(user) >= 1:
         update_result = request.app.database["users"].update_one(
