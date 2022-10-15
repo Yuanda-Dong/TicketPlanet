@@ -50,7 +50,10 @@ def update_ticket(id: str, request: Request, ticket: TicketUpdate, user: User = 
     if len(ticket) >= 1:
         updated_result = request.app.database["tickets"].update_one(
             {"_id": id}, {"$set": ticket}
+            
         )
+        if updated_result.modified_count == 0:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"ticket with ID {id} not found")
         return updated_result
     return existing_ticket
 

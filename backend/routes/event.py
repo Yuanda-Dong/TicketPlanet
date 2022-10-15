@@ -47,6 +47,8 @@ def update_event(id: str, request: Request, event: EventUpdate, user: User = Dep
         updated_result = request.app.database["events"].update_one(
             {"_id": id}, {"$set": event}
         )
+        if updated_result.modified_count == 0:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Event with ID {id} not found")
         return updated_result
     return existing_event
 
