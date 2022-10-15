@@ -4,7 +4,7 @@ from util.oAuth import get_current_user
 from fastapi import APIRouter, Body, Request, Response, HTTPException, status, Depends
 from fastapi.encoders import jsonable_encoder
 from typing import List
-
+from pymongo import ReturnDocument
 router = APIRouter()
 
 @router.post("/{event_id}", response_description="Add ticket to event", status_code=status.HTTP_201_CREATED, response_model=TicketInDB)
@@ -19,9 +19,13 @@ def create_ticket(event_id: str, request: Request, ticket: Ticket = Body(...), u
     ticket["event_id"] = event_id
     ticket["host_id"] = found_event["host_id"]
     new_ticket = request.app.database["tickets"].insert_one(ticket)
+    
+    current_tickets = found_event["tickets"]
     created_ticket = request.app.database["tickets"].find_one(
         {"_id": new_ticket.inserted_id}
     )
+    current_tickets.append(new_ticket.inserted_id)
+    updated_event = request.app.database["events"].find_one_and_update({"_id": event_id}, {"$set":{'tickets':current_tickets}})
     
     return created_ticket
 
@@ -38,7 +42,8 @@ def find_ticket(id: str, request: Request):
 
 @router.put("/{id}", response_description="Update a ticket", response_model=TicketInDB)
 def update_ticket(id: str, request: Request, ticket: TicketUpdate, user: User = Depends(get_current_user)):
-    ticket = user = {k: v for k, v in ticket.dict().items() if v is not None}
+    ticket = {k: v for k, v in ticket.dict().items() if v is not None}
+    
     if (
         existing_ticket := request.app.database["tickets"].find_one({"_id": id})
     ) is None:
@@ -48,12 +53,9 @@ def update_ticket(id: str, request: Request, ticket: TicketUpdate, user: User = 
          raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=f"Only the owner of this ticket can edit it")
                    
     if len(ticket) >= 1:
-        updated_result = request.app.database["tickets"].update_one(
-            {"_id": id}, {"$set": ticket}
-            
+        updated_result = request.app.database["tickets"].find_one_and_update(
+            {"_id": id}, {"$set": ticket}, return_document=ReturnDocument.AFTER
         )
-        if updated_result.modified_count == 0:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"ticket with ID {id} not found")
         return updated_result
     return existing_ticket
 

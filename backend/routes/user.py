@@ -10,7 +10,7 @@ from datetime import datetime, timedelta
 import os
 from starlette.responses import HTMLResponse, RedirectResponse
 from authlib.integrations.starlette_client import OAuthError
-
+from pymongo import ReturnDocument
 from models.user import User, UserUpdate, UserInDB, ForgetPassword, ResetPassword
 from models.token import Token, TokenData
 
@@ -89,17 +89,13 @@ def find_user(id: str, request: Request, user: User = Depends(get_current_user))
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"user with ID {id} not found")
 
 @router.put("/{id}", response_description="Update a user", response_model=UserInDB, )
-def update_user(id: str, request: Request, user: UserUpdate, auth:User = Depends(get_current_user)):
+def update_user(id: str, request: Request, updates: UserUpdate, auth:User = Depends(get_current_user)):
     if auth["_id"] != id:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=f"Only the user can edit their details")
-    user = {k: v for k, v in user.dict().items() if v is not None}
-    if len(user) >= 1:
-        update_result = request.app.database["users"].update_one(
-            {"_id": id}, {"$set": user}
-        )
-
-        if update_result.modified_count == 0:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"User with ID {id} not found")
+    updates = {k: v for k, v in updates.dict().items() if v is not None}
+    if len(updates) >= 1:
+        updated_result = request.app.database["users"].find_one_and_update({"_id": id}, {"$set": updates}, return_document=ReturnDocument.AFTER)
+        return updated_result
 
     if (
         existing_user := request.app.database["users"].find_one({"_id": id})

@@ -4,6 +4,7 @@ from models.event import Event, EventInDB, EventUpdate
 from models.user import User
 from util.oAuth import get_current_user
 from typing import List
+from pymongo import ReturnDocument
 
 router = APIRouter()
 
@@ -44,11 +45,9 @@ def update_event(id: str, request: Request, event: EventUpdate, user: User = Dep
     event = {k: v for k, v in event.dict().items() if v is not None}
         
     if len(event) >= 1:
-        updated_result = request.app.database["events"].update_one(
-            {"_id": id}, {"$set": event}
+        updated_result = request.app.database["events"].find_one_and_update(
+            {"_id": id}, {"$set": event}, return_document=ReturnDocument.AFTER
         )
-        if updated_result.modified_count == 0:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Event with ID {id} not found")
         return updated_result
     return existing_event
 

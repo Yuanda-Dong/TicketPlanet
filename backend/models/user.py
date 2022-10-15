@@ -69,6 +69,8 @@ class UserInDB(User):
 
 class UserUpdate(BaseModel):
     id: Optional[str]
+    first_name:str = Optional[str]
+    last_name:str = Optional[str]
     email: Optional[str]
     gender: Optional[GenderEnum]
     postcode: Optional[int]
