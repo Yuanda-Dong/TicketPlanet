@@ -1,7 +1,6 @@
 import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
@@ -21,6 +20,7 @@ import { axiosInstance } from '../config';
 // redux import
 import { useDispatch } from 'react-redux';
 import { failedLogin, startLogin, successfulLogin } from '../redux/userSlice';
+import {useState} from "react";
 
 export default function SignInSide() {
   const dispatch = useDispatch();
@@ -40,6 +40,43 @@ export default function SignInSide() {
       .catch((e) => {
         console.error(e);
       });
+  };
+
+  const [info, setInfo] = useState({
+    email: '',
+    password: '',
+  });
+  const [errors, setErrors] = useState({
+    error1: {
+      error: false,
+      message: '',
+    },
+    error2: {
+      error: false,
+      message: '',
+    },
+  });
+
+  const handleChange = (e) => {
+    setInfo((info) => ({ ...info, [e.target.name]: e.target.value }));
+  };
+
+  const handleBlur = (e) => {
+    const item = e.target.name;
+    switch (item) {
+      case 'email':
+        if (info.email === '') {
+          setErrors((err) => ({ ...err, error1: { error: true, message: 'Email can not be empty' } }));
+        } else {
+          setErrors((err) => ({ ...err, error1: { error: false, message: '' } }));
+        }
+      case 'password':
+        if (info.password === '') {
+          setErrors((err) => ({ ...err, error2: { error: true, message: 'Password can not be empty' } }));
+        } else {
+          setErrors((err) => ({ ...err, error2: { error: false, message: '' } }));
+        }
+    }
   };
 
   const handleSubmit = (event) => {
@@ -108,7 +145,6 @@ export default function SignInSide() {
           // backgroundImage: 'url(https://source.unsplash.com/random)',
           backgroundImage:
             'url(https://images.unsplash.com/photo-1658093180204-fd48aa384ebc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218MHx8fHx8fHx8MTY1ODkyMjY0OA&ixlib=rb-1.2.1&q=80&w=1080)',
-
           backgroundRepeat: 'no-repeat',
           backgroundColor: (t) => (t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900]),
           backgroundSize: 'cover',
@@ -141,6 +177,10 @@ export default function SignInSide() {
               name="email"
               autoComplete="email"
               autoFocus
+              error={errors.error1.error}
+              helperText={errors.error1.message}
+              onChange={handleChange}
+              onBlur={handleBlur}
             />
             <TextField
               margin="normal"
@@ -151,8 +191,12 @@ export default function SignInSide() {
               type="password"
               id="password"
               autoComplete="current-password"
+              error={errors.error2.error}
+              helperText={errors.error2.message}
+              onChange={handleChange}
+              onBlur={handleBlur}
             />
-            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }} disabled={errors.error1.error || errors.error2.error}>
               Sign In
             </Button>
             <Grid container>
