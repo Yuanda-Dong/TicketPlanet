@@ -37,6 +37,10 @@ const UserMenu = () => {
         setAnchorElUser(null);
         navigate('/account-setting');
         break;
+      case 'My Tickets':
+        setAnchorElUser(null);
+        navigate('/my-tickets');
+        break;
       case 'Logout':
         dispatch(logout());
         localStorage.setItem('token', null);

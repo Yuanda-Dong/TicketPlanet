@@ -5,7 +5,7 @@ import SignInSide from './pages/Signin';
 import SignUp from './pages/SignUp';
 import EventDetail from './pages/EventDetail/EventDetail';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-
+import MyTickets from "./pages/MyTickets/MyTickets";
 import Dashboard from './pages/Dashboard/Dashboard.jsx';
 import Events from './components/Dashboard/Events';
 import Reports from './components/Dashboard/Reports';
@@ -41,6 +41,7 @@ function App() {
            */}
           <Route path="post" element={<PostPage />} />
           <Route path="edit" element={<EditPage />} />
+          <Route path="my-tickets" element={<MyTickets />} />
         </Route>
       </Routes>
       <Footer />
