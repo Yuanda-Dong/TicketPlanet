@@ -45,7 +45,7 @@ class Event(BaseModel):
                 "end_dt": "2022-11-11T03:55",
                 "details:": "",
                 "image_url": "https://images.app.goo.gl/3TLpJJwGzicrDLN78",
-                "gallery": ["https://images.app.goo.gl/3TLpJJwGzicrDLN78", "https://images.app.goo.gl/3TLpJJwGzicrDLN78"],         
+                "gallery": ["https://images.app.goo.gl/3TLpJJwGzicrDLN78", "https://images.app.goo.gl/3TLpJJwGzicrDLN78"]         
             }
         }
         
@@ -66,7 +66,7 @@ class EventInDB(Event):
                 "end_dt": "2022-11-11T03:55",
                 "details:": "",
                 "image_url": "https://images.app.goo.gl/3TLpJJwGzicrDLN78",
-                "gallery": ["https://images.app.goo.gl/3TLpJJwGzicrDLN78", "https://images.app.goo.gl/3TLpJJwGzicrDLN78"], 
+                "gallery": ["https://images.app.goo.gl/3TLpJJwGzicrDLN78", "https://images.app.goo.gl/3TLpJJwGzicrDLN78"] 
             }
         }
         
