@@ -7,7 +7,7 @@ from typing import List
 from pymongo import ReturnDocument
 router = APIRouter()
 
-@router.post("/{event_id}", response_description="Add ticket to event", status_code=status.HTTP_201_CREATED, response_model=TicketInDB)
+@router.post("/e/{event_id}", response_description="Add ticket to event", status_code=status.HTTP_201_CREATED, response_model=TicketInDB)
 def create_ticket(event_id: str, request: Request, ticket: Ticket = Body(...), user: User = Depends(get_current_user)):
     if(
         found_event := request.app.database["events"].find_one({"_id": event_id})
@@ -29,7 +29,7 @@ def create_ticket(event_id: str, request: Request, ticket: Ticket = Body(...), u
     
     return created_ticket
 
-@router.get("/{event_id}", response_description="Get all tickets to an event", response_model=List[TicketInDB])
+@router.get("/e/{event_id}", response_description="Get all tickets to an event", response_model=List[TicketInDB])
 def list_tickets(event_id: str, request: Request):
     tickets = list(request.app.database["tickets"].find({"event_id": event_id},limit=100))
     return tickets
@@ -63,14 +63,24 @@ def update_ticket(id: str, request: Request, ticket: TicketUpdate, user: User = 
 def delete_ticket(id: str, request: Request, response: Response, user: User = Depends(get_current_user)):
     if(
         found_ticket := request.app.database["tickets"].find_one({"_id": id})
-    ) is not None: 
+    ) is not None:
+        event_id = found_ticket["event_id"]
+        event = request.app.database["events"].find_one({"_id": event_id })
         if found_ticket["host_id"] != user["_id"]:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=f"Only the owner of this ticket can delete this")
+        try:     
+            event["tickets"].remove(id)
+            request.app.database["events"].find_one_and_update(
+                {"_id": event_id}, {"$set": event}, return_document=ReturnDocument.AFTER
+             )
+        except ValueError:
+            pass
+        
         delete_result = request.app.database["tickets"].delete_one({"_id": id})
         if delete_result.deleted_count == 1:
             response.status_code = status.HTTP_204_NO_CONTENT
             return response
-
+           
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Ticket with ID {id} not found")
     
 @router.post("/buy/{id}", response_description="Buy a ticket", response_model=TicketInDB)

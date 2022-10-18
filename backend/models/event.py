@@ -71,9 +71,9 @@ class EventInDB(Event):
         }
         
 class EventUpdate(BaseModel):
-    title: str = Field(...)
-    host_name:str = Field(...)
-    category:str = Field(...)
+    title: Optional[str]
+    host_name:Optional[str]
+    category:Optional[str]
     address: Optional[str]
     postcode: Optional[int]
     start_dt: Optional[datetime]
