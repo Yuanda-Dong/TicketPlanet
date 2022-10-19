@@ -9,7 +9,7 @@ let comments = [
     userId: '1',
     parentId: null,
     replyUsername: null,
-    createdAt: '2021-08-16T23:00:33.010+02:00',
+    createdAt: 'Wed Oct 5 2022 18:47:10 GMT+1100',
   },
   {
     id: '2',
@@ -18,7 +18,7 @@ let comments = [
     userId: '2',
     parentId: null,
     replyUsername: null,
-    createdAt: '2021-08-16T23:00:33.010+02:00',
+    createdAt: 'Wed Sep 1 2022 18:47:10 GMT+1100',
   },
   {
     id: '3',
@@ -27,16 +27,16 @@ let comments = [
     userId: '2',
     parentId: '1',
     replyUsername: 'Jack',
-    createdAt: '2021-08-16T23:00:33.010+02:00',
+    createdAt: 'Wed Oct 10 2022 18:47:10 GMT+1100',
   },
   {
     id: '4',
-    body: 'Second commentsecond child',
+    body: 'Second comment second child',
     username: 'Mike',
     userId: '2',
-    parentId: '3',
-    replyUsername: 'Jessie',
-    createdAt: '2021-08-16T23:00:33.010+02:00',
+    parentId: '2',
+    replyUsername: 'John',
+    createdAt: 'Wed Oct 2 2022 18:47:10 GMT+1100',
   },
 ];
 

@@ -86,3 +86,10 @@
   padding-left: 20px;
   border-left: 1px solid lightgrey;
 }
+
+.comment-text .at_reply {
+  background-color: rgb(210, 234, 242);
+  margin-right: 5px;
+  border-radius: 3px;
+  padding: 2px 3px;
+}

@@ -2,9 +2,14 @@ import CommentForm from './CommentForm';
 import { Grid, Button, Avatar } from '@mui/material';
 import ReplyIcon from '@mui/icons-material/Reply';
 import { useNavigate } from 'react-router-dom';
+import { format } from 'timeago.js';
 
 import More from './More';
 import './Comment.css';
+
+function getInitials(firstname, lastname) {
+  return `${firstname[0]}.${lastname[0]}`;
+}
 
 function Comment({
   userId,
@@ -22,34 +27,37 @@ function Comment({
 
   const isEditing = activeComment && activeComment.id === comment.id && activeComment.type === 'editing';
   const isReplying = activeComment && activeComment.id === comment.id && activeComment.type === 'replying';
-  // const fiveMinutes = 300000;
-  // const timePassed = new Date() - new Date(comment.createdAt) > fiveMinutes;
-  // const canDelete = currentUserId === comment.userId && replies.length === 0;
-  // const canEdit = currentUserId === comment.userId;
   const canModify = currentUserId === userId;
   const canReply = Boolean(currentUserId);
   const replyId = parentId ? parentId : comment.id;
-  // const createdAt = new Date(comment.update_time).toLocaleDateString();
   const navigateProfile = () => {
     navigate(`/profile/${userId}`);
   };
   return (
     <Grid className="comment" container wrap="wrap" spacing={2}>
       <Grid item onClick={navigateProfile}>
-        <Avatar>{comment.username}</Avatar>
+        {/* <Avatar>{getInitials(comment.username, comment.username)}</Avatar> */}
+        <Avatar alt={comment.username} src="/" />
       </Grid>
       <Grid justifyContent="left" item xs zeroMinWidth>
         <div className="comment-header">
           <div className="comment-content">
             <h4 className="comment-author">{comment.username || 'Unknown User'}</h4>
-            <div>{comment.createdAt}</div>
+            <div>{format(comment.createdAt)}</div>
           </div>
 
           {canModify && <More handleEdit={setActiveComment} handleDelete={deleteComment} id={comment.id} />}
         </div>
         {!isEditing && (
           <div className="comment-text">
-            {comment.parentId ? `@${comment.replyUsername} ${comment.body}` : comment.body}
+            {comment.parentId ? (
+              <>
+                <span className="at_reply">{`@${comment.replyUsername}`}</span>
+                <span>{comment.body}</span>
+              </>
+            ) : (
+              comment.body
+            )}
           </div>
         )}
         {isEditing && (
