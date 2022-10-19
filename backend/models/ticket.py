@@ -37,8 +37,9 @@ class TicketStatus(str, Enum):
 
 class TicketInstance(BaseModel):
     id: str = Field(default_factory=uuid.uuid4, alias="_id")
-    seat_number: Optional(str)
-    section_number: Optional(str)
+    base_id: str
+    seat_number: Optional[str]
+    section_number: Optional[str]
     user_id: str
-    status: TicketStatus = "active"
+    status: TicketStatus = "deactive"
     
