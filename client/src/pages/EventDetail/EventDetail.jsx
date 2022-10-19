@@ -4,9 +4,13 @@ import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import NavBar from '../../components/Navbar/NavBar';
 import Gallery from '../../components/Gallery/Gallery';
+import Comments from '../../components/Comment/Comments';
+import { useSelector } from 'react-redux';
 
 import './EventDetail.css';
 const EventDetail = () => {
+  const { currentUser } = useSelector((state) => state.user);
+
   return (
     <>
       <NavBar />
@@ -73,6 +77,9 @@ const EventDetail = () => {
           <h2>Gallery</h2>
           <Gallery />
         </div>
+      </div>
+      <div className="comments-section">
+        <Comments eventId="0" />
       </div>
     </>
   );
