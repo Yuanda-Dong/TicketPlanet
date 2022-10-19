@@ -1,4 +1,5 @@
 # from datetime import datetime
+from enum import Enum
 import uuid
 from typing import Optional, List
 from pydantic import BaseModel,Field
@@ -27,3 +28,17 @@ class TicketUpdate(BaseModel):
     ticket_name :Optional[str]
     price: Optional[float]
     availability: Optional[int]
+    
+
+class TicketStatus(str, Enum):
+    active="active"
+    decativate = "deactive"
+    refunded = "refunded"
+
+class TicketInstance(BaseModel):
+    id: str = Field(default_factory=uuid.uuid4, alias="_id")
+    seat_number: Optional(str)
+    section_number: Optional(str)
+    user_id: str
+    status: TicketStatus = "active"
+    
