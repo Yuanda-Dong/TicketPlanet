@@ -1,8 +1,9 @@
 from datetime import datetime
 import uuid
-from typing import Optional, List
+from typing import Optional, List, Dict
 from enum import Enum
 from pydantic import BaseModel, Field, validator
+
 
 
 class EventEnum(str, Enum):
@@ -24,7 +25,6 @@ class Event(BaseModel):
     details: Optional[str]
     image_url: Optional[str]
     gallery: Optional[List[str]]
-    # preferences
     
     @validator('postcode')
     def postcode_must_be_4_digts(cls, v):
@@ -45,12 +45,13 @@ class Event(BaseModel):
                 "end_dt": "2022-11-11T03:55",
                 "details:": "",
                 "image_url": "https://images.app.goo.gl/3TLpJJwGzicrDLN78",
-                "gallery": "[https://images.app.goo.gl/3TLpJJwGzicrDLN78, https://images.app.goo.gl/3TLpJJwGzicrDLN78]"
+                "gallery": ["https://images.app.goo.gl/3TLpJJwGzicrDLN78", "https://images.app.goo.gl/3TLpJJwGzicrDLN78"]         
             }
         }
         
 class EventInDB(Event):
     host_id: str = Field(...)
+    tickets: List[str]
     class Config:
         allow_population_by_field_name = True
         schema_extra = {
@@ -65,14 +66,14 @@ class EventInDB(Event):
                 "end_dt": "2022-11-11T03:55",
                 "details:": "",
                 "image_url": "https://images.app.goo.gl/3TLpJJwGzicrDLN78",
-                "gallery": "[https://images.app.goo.gl/3TLpJJwGzicrDLN78, https://images.app.goo.gl/3TLpJJwGzicrDLN78]"
+                "gallery": ["https://images.app.goo.gl/3TLpJJwGzicrDLN78", "https://images.app.goo.gl/3TLpJJwGzicrDLN78"] 
             }
         }
         
 class EventUpdate(BaseModel):
-    title: str = Field(...)
-    host_name:str = Field(...)
-    category:str = Field(...)
+    title: Optional[str]
+    host_name:Optional[str]
+    category:Optional[str]
     address: Optional[str]
     postcode: Optional[int]
     start_dt: Optional[datetime]
@@ -99,7 +100,7 @@ class EventUpdate(BaseModel):
                 "start_dt": "2022-10-11T12:55",
                 "end_dt": "2022-11-11T03:55",
                 "details:": "",
-                "image_url": "https://images.app.goo.gl/3TLpJJwGzicrDLN78"
+                "image_url": "https://images.app.goo.gl/3TLpJJwGzicrDLN78" 
             }
         }
 

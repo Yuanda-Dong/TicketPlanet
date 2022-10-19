@@ -13,7 +13,26 @@ export default function ForgotPassword() {
   const [open, setOpen] = React.useState(false);
   const [email, setEmail] = React.useState('');
   const [seconds, setSeconds] = useState(null);
+  const [errors, setErrors] = useState({
+    error1: {
+      error: false,
+      message: '',
+    },
+  });
   // { params: { email } }
+
+  const validateEmailBlur = email => {
+    console.log(email.target.value)
+    const regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    const result = regex.test(email.target.value);
+    if(result === true){
+      setErrors((err) => ({ ...err, error1: { error: false, message: '' } }));
+    }
+    else{
+      console.log("Enter correct email address!")
+      setErrors((err) => ({ ...err, error1: { error: true, message: 'Enter correct email address!' } }));
+    }
+  };
 
   const setTimer = () => {
     setSeconds(60);
@@ -29,6 +48,7 @@ export default function ForgotPassword() {
     }, 1000);
   };
   const handleSend = (e) => {
+
     axiosInstance
       .post('/user/forgot-password', { email })
       .then((res) => {
@@ -42,7 +62,7 @@ export default function ForgotPassword() {
         } else if (e.request) {
           console.error(e.request);
         } else {
-          console.errorr('Error', e.message);
+          console.error('Error', e.message);
         }
       });
   };
@@ -70,19 +90,22 @@ export default function ForgotPassword() {
             autoFocus
             margin="dense"
             id="name"
+            autoComplete="email"
             label="Email Address"
             type="email"
             fullWidth
             variant="standard"
+            error={errors.error1.error}
             onChange={(e) => {
               setEmail(e.target.value);
             }}
-            helperText={seconds && `Password reset email has been sent (${seconds}s)`}
+            onBlur={validateEmailBlur}
+            helperText={(errors.error1.error && errors.error1.message) || (seconds && `Password reset email has been sent (${seconds}s)`)}
           />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleSend}>Send</Button>
+          <Button onClick={handleSend} disabled={errors.error1.error}>Send</Button>
         </DialogActions>
       </Dialog>
     </div>

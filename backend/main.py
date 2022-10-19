@@ -2,6 +2,7 @@
 from util.app import app
 from routes.user import router as user_router
 from routes.event import router as event_router
+from routes.ticket import router as ticket_router
 # from uvicorn import run
 
 @app.get("/")
@@ -19,6 +20,6 @@ def shutdown_db_client():
 
 app.include_router(user_router, tags=["users"], prefix="/user")
 app.include_router(event_router, tags=["events"], prefix="/event")
-
+app.include_router(ticket_router, tags=["tickets"], prefix="/ticket")
 # if __name__ == '__main__':
 #     run('main:app', reload=True, port=8082)
