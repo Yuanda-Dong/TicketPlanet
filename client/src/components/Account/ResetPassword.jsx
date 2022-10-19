@@ -1,6 +1,7 @@
 import {Box, Button, Card, CardContent, CardHeader, Divider, Grid, TextField} from '@mui/material';
 import React, {useState} from 'react';
 import './Account.css'
+import Typography from "@mui/material/Typography";
 // import styled from 'styled-components';
 
 // const Button = styled(ButtonMui)`
@@ -76,69 +77,64 @@ const ResetPassword = () => {
 		>
 			<Card>
 				<CardHeader
-					subheader="The password can be reset"
-					title="Password Reset"
+					subheader="Update password"
+					title="Password"
 				/>
 				<Divider/>
 				<CardContent className='profile'>
-					<Grid
-						container
-						spacing={3}
-					>
-						<Grid
-							item
-							md={6}
-							xs={12}
-						>
-							<TextField
-								fullWidth
-								name="current"
-								error={errors.error1.error}
-								value={passwords.current}
-								label="Current Password"
-								type="password"
-								helperText={errors.error1.message}
-								onChange={handleChange}
-								onBlur={handleBlur}
-							/>
+					<Grid container spacing={3}>
+						<Grid item md={6} xs={12}>
+							<Grid container spacing={3}>
+								<Grid item md={12} xs={12}>
+									<TextField
+										fullWidth
+										name="current"
+										error={errors.error1.error}
+										value={passwords.current}
+										label="Current Password"
+										type="password"
+										helperText={errors.error1.message}
+										onChange={handleChange}
+										onBlur={handleBlur}
+									/>
+								</Grid>
+								<Grid item md={12} xs={12}>
+									<TextField
+										fullWidth
+										name="new"
+										error={errors.error2.error}
+										value={passwords.new}
+										label="New Password"
+										type="password"
+										helperText={errors.error2.message}
+										onChange={handleChange}
+										onBlur={handleBlur}
+									/>
+								</Grid>
+								<Grid item md={12} xs={12}>
+									<TextField
+										fullWidth
+										name="repeat"
+										error={errors.error3.error}
+										value={passwords.repeat}
+										label="Repeat Password"
+										type="password"
+										helperText={errors.error3.message}
+										onChange={handleChange}
+										onBlur={handleBlur}
+									/>
+								</Grid>
+							</Grid>
 						</Grid>
-						<Grid item md={6} xs={12}/>
-						<Grid
-							item
-							md={6}
-							xs={12}
-						>
-							<TextField
-								fullWidth
-								name="new"
-								error={errors.error2.error}
-								value={passwords.new}
-								label="New Password"
-								type="password"
-								helperText={errors.error2.message}
-								onChange={handleChange}
-								onBlur={handleBlur}
-							/>
+						<Grid item md={6} xs={12}>
+							<Typography variant="h8">Your password should:</Typography>
+							<ul>
+								<li> contain 6 to 20 characters</li>
+								<li> and contain at least one numeric digit</li>
+								<li> and contain at least one uppercase</li>
+								<li>and contain at least one lowercase letter</li>
+							</ul>
 						</Grid>
-						<Grid item md={6} xs={12}/>
-						<Grid
-							item
-							md={6}
-							xs={12}
-						>
-							<TextField
-								fullWidth
-								name="repeat"
-								error={errors.error3.error}
-								value={passwords.repeat}
-								label="Repeat Password"
-								type="password"
-								helperText={errors.error3.message}
-								onChange={handleChange}
-								onBlur={handleBlur}
-							/>
-						</Grid>
-						<Grid item md={6} xs={12}/>
 					</Grid>
 				</CardContent>
 				<Divider/>
@@ -154,7 +150,7 @@ const ResetPassword = () => {
 						variant="contained"
 						type="submit"
 					>
-						Save details
+						Update
 					</Button>
 				</Box>
 			</Card>
