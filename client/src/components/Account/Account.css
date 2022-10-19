@@ -5,3 +5,11 @@
 .css-md26zr-MuiInputBase-root-MuiOutlinedInput-root {
     background-color: white;
 }
+
+.portrait{
+    /*background: url("../../assets/account1.jpg") center;*/
+}
+
+.accountBg{
+    background-image: url("../../assets/bg.png") ;
+}
