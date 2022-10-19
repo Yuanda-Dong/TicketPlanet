@@ -20,6 +20,7 @@ import NavBar from '../components/Navbar/NavBar';
 import ResetPassword from "../components/Account/ResetPassword";
 import {PersonalInformation} from "../components/Account/Account_profile_detail";
 import '../components/Account/Account.css'
+import {Lock, Portrait} from "@mui/icons-material";
 
 // const Container = styled.div`
 //   min-height: 100vh;
@@ -67,9 +68,9 @@ const Account = () => {
 			>
 				<Container maxWidth="lg">
 					<TabContext value={value}>
-						<Typography sx={{mb: 3}} variant="h4">
-							Account
-						</Typography>
+						{/*<Typography sx={{mb: 3}} variant="h4">*/}
+						{/*	Account*/}
+						{/*</Typography>*/}
 						<Grid container spacing={3}>
 							<Grid item lg={4} md={6} xs={12}>
 								<Card className='portrait'>
@@ -116,8 +117,8 @@ const Account = () => {
 												onChange={handleChange}
 												variant="fullWidth"
 												aria-label="lab API tabs example">
-												<Tab label="Personal Information" value="1"/>
-												<Tab label="Reset Password" value="2"/>
+												<Tab icon={<Portrait/>} iconPosition={"start"} label="Account" value="1"/>
+												<Tab icon={<Lock/>} iconPosition={"start"} label="Security" value="2"/>
 											</TabList>
 										</Box>
 									</CardContent>
@@ -135,10 +136,10 @@ const Account = () => {
 								</Card>
 							</Grid>
 							<Grid item lg={8} md={6} xs={12}>
-								<TabPanel value="1" sx={{p:0}}>
+								<TabPanel value="1" sx={{p: 0}}>
 									<PersonalInformation/>
 								</TabPanel>
-								<TabPanel value="2" sx={{p:0}}>
+								<TabPanel value="2" sx={{p: 0}}>
 									<ResetPassword/>
 								</TabPanel>
 							</Grid>
