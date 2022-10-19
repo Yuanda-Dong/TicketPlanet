@@ -64,3 +64,4 @@ def delete_event(id: str, request: Request, response: Response, user: User = Dep
             return response
 
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Event with ID {id} not found")
+
