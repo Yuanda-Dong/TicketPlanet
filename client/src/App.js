@@ -16,7 +16,7 @@ import PostPage from './pages/PostPage/PostPage';
 import EditPage from './pages/EditPage/EditPage';
 import FindPassword from './pages/FindPassword';
 import Account from './pages/Account';
-
+import TicketPage from './pages/PostPage/TicketPage';
 function App() {
   return (
     <BrowserRouter>
@@ -42,6 +42,7 @@ function App() {
           <Route path="post" element={<PostPage />} />
           <Route path="edit" element={<EditPage />} />
           <Route path="my-tickets" element={<MyTickets />} />
+          <Route path="/tickets/:id/" element={<TicketPage />} />
         </Route>
       </Routes>
       <Footer />

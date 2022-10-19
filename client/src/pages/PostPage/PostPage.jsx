@@ -19,28 +19,30 @@ import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import Paper from '@mui/material/Paper';
 import Container from '@mui/material/Container';
-import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-
-import Modal from '@mui/material/Modal';
-
+import { axiosInstance } from '../../config';
+import { useNavigate } from 'react-router-dom';
 import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } from 'firebase/storage';
 
 const PostPage = () => {
+  const navigate = useNavigate();
+  const config = {
+    headers: {
+      Authorization: `Bearer ${localStorage.token}`,
+    },
+  };
   const storage = getStorage();
   const [event, setEvent] = useState({
     title: '',
-    host: '',
+    host_name: '',
     category: '',
     address: '',
     postcode: '',
-    start: null,
-    end: null,
-    thumbnail: '',
+    start_dt: null,
+    end_dt: null,
+    image_url: '',
     gallery: [],
+    details: '',
   });
-  const [ticket, setTicket] = React.useState({ t: { price: null, quantity: null, name: null }, tickets: [] });
 
   const style = {
     position: 'absolute',
@@ -55,47 +57,6 @@ const PostPage = () => {
     px: 4,
     pb: 3,
   };
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
-  };
-  const removeTicket = (event, idx) => {
-    const newTickets = [...ticket.tickets];
-    newTickets.splice(idx, 1);
-    setTicket({ ...ticket, tickets: newTickets });
-  };
-
-  const setName = (event) => {
-    const newT = { ...ticket.t };
-    newT.name = event.target.value;
-    setTicket({ ...ticket, t: newT });
-  };
-  const setPrice = (event) => {
-    const newT = { ...ticket.t };
-    newT.price = event.target.value;
-    setTicket({ ...ticket, t: newT });
-  };
-  const setQuantity = (event) => {
-    const newT = { ...ticket.t };
-    newT.quantity = event.target.value;
-    setTicket({ ...ticket, t: newT });
-  };
-  const cancel = () => {
-    const newT = { price: null, quantity: null, name: null };
-    setTicket({ ...ticket, t: newT });
-    setOpen(false);
-  };
-  const add = () => {
-    const newTickets = ticket.tickets;
-    newTickets.push(ticket.t);
-    setTicket({ ...ticket, tickets: newTickets });
-    // setT({ price: null, quantity: null, name: null });
-    cancel();
-    setOpen(false);
-  };
 
   const [progress, setProgress] = React.useState({ thumbnail: 100, gallery: 100 });
 
@@ -106,6 +67,7 @@ const PostPage = () => {
   };
 
   const handleEventChange = (e) => {
+    // console.log(e.target.name);
     e.preventDefault();
     setEvent((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
@@ -169,7 +131,7 @@ const PostPage = () => {
           console.log('File available at', downloadURL);
 
           type === 'thumbnail'
-            ? setEvent((prev) => ({ ...prev, [type]: downloadURL }))
+            ? setEvent((prev) => ({ ...prev, image_url: downloadURL }))
             : setEvent((prev) => ({ ...prev, gallery: [...event.gallery, downloadURL] }));
         });
       }
@@ -194,7 +156,56 @@ const PostPage = () => {
     setEditorState({
       editorState,
     });
+    setEvent((prev) => ({ ...prev, details: editorState.getCurrentContent().getPlainText('\u0001') }));
+
   };
+  const goHome = () => {
+    navigate('/dashboard/events');
+  }
+
+  const goNext = async () => {
+    if (event.title ==''){
+      alert("Event must have title");
+      return;
+    }
+    if (event.host_name ==''){
+      alert("Event must have host");
+      return;
+    }
+    if (event.category == ''){
+      alert("Event must have category");
+      return;
+    }
+    if (event.address == ''){
+      alert("Event must have address");
+      return;
+    }
+    const regex = /^\d{4}$/
+    let result = regex.test(event.postcode);
+    if (result == false){
+      alert("Event must have a valid postcode");
+      return;
+    }
+    if (event.start_dt == null){
+      alert("Event must have a start datetime");
+      return;
+    }
+    if (event.end_dt == null){
+      alert("Event must have an end datetime");
+      return;
+    }
+    if(event.end_dt < event.start_dt){
+      alert("Event must not end before it starts");
+    }
+    try{
+      let res = await axiosInstance.post('/event',event,config);
+      let id = res.data._id;
+      navigate(`/tickets/${id}`);
+      
+    }catch(err){
+      console.log(err);
+    }
+  }
 
   return (
     <div className="PostPage">
@@ -223,8 +234,8 @@ const PostPage = () => {
             </Grid>
             <Grid item xs={6}>
               <TextField
-                value={event.host}
-                name="host"
+                value={event.host_name}
+                name="host_name"
                 fullWidth
                 required
                 id="outlined-basic"
@@ -244,6 +255,7 @@ const PostPage = () => {
                   label="Category"
                   name="category"
                   onChange={handleEventChange}
+                  required
                 >
                   <MenuItem value={'Movies'}>Movies</MenuItem>
                   <MenuItem value={'Concert'}>Concert</MenuItem>
@@ -263,6 +275,7 @@ const PostPage = () => {
                 variant="outlined"
                 onChange={handleEventChange}
                 sx={{ mb: 1 }}
+                required
               />
             </Grid>
             <Grid item xs={6}>
@@ -275,17 +288,19 @@ const PostPage = () => {
                 variant="outlined"
                 onChange={handleEventChange}
                 sx={{ mb: 1 }}
+                required
               />
             </Grid>
             <Grid item xs={6}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DateTimePicker
+                  required
                   label="Start"
                   className="search"
-                  value={event.start}
-                  name="start"
+                  value={event.start_dt}
+                  name="start_dt"
                   onChange={(newVal) => {
-                    setEvent((prev) => ({ ...prev, start: newVal }));
+                    setEvent((prev) => ({ ...prev, start_dt: newVal }));
                   }}
                   renderInput={(params) => <TextField fullWidth className="search_date" {...params} />}
                 />
@@ -294,12 +309,13 @@ const PostPage = () => {
             <Grid item xs={6}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DateTimePicker
+                  required
                   label="End"
                   className="search"
-                  value={event.end}
-                  name="end"
+                  value={event.end_dt}
+                  name="end_dt"
                   onChange={(newVal) => {
-                    setEvent((prev) => ({ ...prev, end: newVal }));
+                    setEvent((prev) => ({ ...prev, end_dt: newVal }));
                   }}
                   renderInput={(params) => <TextField fullWidth className="search_date" {...params} />}
                 />
@@ -320,108 +336,6 @@ const PostPage = () => {
                 onEditorStateChange={onChange}
               />
             </Grid>
-            {/* TICKETs */}
-            <Grid item xs={12}>
-              <h3> Tickets</h3>
-            </Grid>
-            <Grid item xs={12}>
-              <div className="tik">
-                {ticket.tickets.map((e, idx) => (
-                  <Card key={idx} sx={{ minWidth: 250 }}>
-                    <CardContent>
-                      <Grid container spacing={1} direction="row" justifyContent="space-between" alignItems="flex-end">
-                        <Grid item xs={9}>
-                          <Typography gutterBottom variant="h5" component="div">
-                            {e.name}
-                          </Typography>
-                          <Typography variant="body2" color="text.secondary">
-                            Price: ${e.price}
-                          </Typography>
-                          <Typography variant="body2" color="text.secondary">
-                            Available quantity: {e.quantity}
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={3}>
-                          <Button
-                            variant="outlined"
-                            component="label"
-                            color="error"
-                            startIcon={<DeleteIcon />}
-                            onClick={(event) => removeTicket(event, idx)}
-                          >
-                            Remove
-                          </Button>
-                        </Grid>
-                      </Grid>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-
-              <div>
-                <Button fullWidth variant="outlined" onClick={handleOpen}>
-                  Add Tickets
-                </Button>
-                <Modal
-                  open={open}
-                  onClose={handleClose}
-                  aria-labelledby="modal-modal-title"
-                  aria-describedby="modal-modal-description"
-                >
-                  <Box sx={style}>
-                    <Grid container spacing={2}>
-                      <Grid item xs={12}>
-                        <Typography align="center" id="modal-modal-title" variant="h6" component="h2">
-                          Add Tickets
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={12}>
-                        <Typography id="modal-modal-description">
-                          <TextField
-                            fullWidth
-                            id="standard-basic"
-                            label="Name: "
-                            variant="standard"
-                            value={ticket.t.name}
-                            margin="normal"
-                            onChange={setName}
-                          />
-                          <TextField
-                            fullWidth
-                            id="standard-basic"
-                            label="Price: "
-                            variant="standard"
-                            value={ticket.t.price}
-                            margin="normal"
-                            onChange={setPrice}
-                          />
-                          <TextField
-                            fullWidth
-                            id="standard-basic"
-                            label="Quantity: "
-                            variant="standard"
-                            value={ticket.t.quantity}
-                            margin="normal"
-                            onChange={setQuantity}
-                          />
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={10} mt={1}>
-                        <Button variant="contained" color="error" onClick={cancel}>
-                          Cancel
-                        </Button>
-                      </Grid>
-                      <Grid item xs={2} mt={1}>
-                        <Button variant="contained" onClick={add}>
-                          Add
-                        </Button>
-                      </Grid>
-                    </Grid>
-                  </Box>
-                </Modal>
-              </div>
-            </Grid>
-
             <Grid item xs={12}>
               <h3> Image Upload</h3>
             </Grid>
@@ -430,8 +344,8 @@ const PostPage = () => {
                 id="Media upload"
                 label="Thumbnail Image link"
                 variant="outlined"
-                value={event.thumbnail}
-                name="thumbnail"
+                value={event.image_url}
+                name="image_url"
                 fullWidth
                 onChange={handleEventChange}
               />
@@ -514,11 +428,11 @@ const PostPage = () => {
             </Grid>
           </Grid>
           <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '20px', marginTop: '50px' }}>
-            <Button sx={{ mt: '20px' }} variant="outlined">
+            <Button sx={{ mt: '20px' }} variant="outlined" onClick={goHome}>
               Cancel
             </Button>
 
-            <Button sx={{ mt: '20px' }} variant="contained">
+            <Button sx={{ mt: '20px' }} variant="contained" onClick={goNext}>
               Save & Next
             </Button>
           </div>
