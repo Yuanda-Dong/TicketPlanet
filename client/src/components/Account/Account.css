@@ -1,15 +1,19 @@
-.profile{
-    background-color: rgb(239, 243, 248);
+.profile {
+  background-color: rgb(239, 243, 248);
 }
 
 .css-md26zr-MuiInputBase-root-MuiOutlinedInput-root {
-    background-color: white;
+  background-color: white;
 }
 
-.portrait{
-    /*background: url("../../assets/account1.jpg") center;*/
+.portrait {
+  /*background: url("../../assets/account1.jpg") center;*/
 }
 
-.accountBg{
-    background-image: url("../../assets/bg.png") ;
+.accountBg {
+  min-height: 100vh;
+  background-image: url('../../assets/bg.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  padding-top: 10rem;
 }
