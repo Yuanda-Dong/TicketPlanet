@@ -114,7 +114,7 @@ const ResetPassword = () => {
 						<Grid item md={6} xs={12}>
 							<Grid container spacing={3}>
 								<Grid item md={12} xs={12}>
-									<FormControl variant="outlined">
+									<FormControl variant="outlined" fullWidth>
 										<InputLabel htmlFor="outlined-adornment-password">Current Password</InputLabel>
 										<OutlinedInput
 											fullWidth
@@ -144,7 +144,7 @@ const ResetPassword = () => {
 									</FormControl>
 								</Grid>
 								<Grid item md={12} xs={12}>
-									<FormControl variant="outlined">
+									<FormControl variant="outlined" fullWidth>
 										<InputLabel htmlFor="outlined-adornment-password">New Password</InputLabel>
 										<OutlinedInput
 											fullWidth
@@ -174,7 +174,7 @@ const ResetPassword = () => {
 									</FormControl>
 								</Grid>
 								<Grid item md={12} xs={12}>
-									<FormControl variant="outlined">
+									<FormControl variant="outlined" fullWidth>
 										<InputLabel htmlFor="outlined-adornment-password">Repeat Password</InputLabel>
 										<OutlinedInput
 											fullWidth
