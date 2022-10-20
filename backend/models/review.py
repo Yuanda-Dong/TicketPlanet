@@ -14,12 +14,14 @@ class Review(BaseModel):
     username: str # can be the first name of user
     message: str
     parent_id: Optional(str) # base review: None, replies: id of base review
+    reply_review_id: Optional(str) #review id of reviews it replies to
     reply_username: Optional(str) # username the review replies to
     createdAt:datetime  # DateTime created on server side
 
     class Config:
         allow_population_by_field_name = True
         schema_extra = {
+            # base review by Mike
             "example": {
                 "id": "review1",
                 "event_id": "event1",
@@ -27,9 +29,12 @@ class Review(BaseModel):
                 "username":"Mike",
                 "message": "this is base review message by Mike",
                 "parent_id": None,
+                "reply_review_id": None,
                 "reply_username":None,
                 "createdAt" :"Wed Oct 5 2022 18:47:10 GMT+1100",
             },
+            
+            # reply review by Jennie to Mike
             "example":{
                 "id": "review2",
                 "event_id": "event1",
@@ -37,7 +42,21 @@ class Review(BaseModel):
                 "username":"Jennie",
                 "message": "this is reply review message by Jennie",
                 "parent_id": "review1",
+                "reply_review_id": "review1",
                 "reply_username":"Mike",
+                "createdAt" :"Wed Oct 5 2022 18:47:10 GMT+1100",
+            },
+
+            # nested reply review by Lisa to Jennie
+            "example":{
+                "id": "review3",
+                "event_id": "event1",
+                "user_id":"user3",
+                "username":"Lisa",
+                "message": "this is reply review message by Lisa",
+                "parent_id": "review1",
+                "reply_review_id": "review2",
+                "reply_username":"Jennie",
                 "createdAt" :"Wed Oct 5 2022 18:47:10 GMT+1100",
             }
         }
