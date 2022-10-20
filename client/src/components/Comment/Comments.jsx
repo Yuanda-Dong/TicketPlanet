@@ -26,8 +26,8 @@ const Comments = ({ eventId }) => {
       .filter((backendComment) => backendComment.parentId === commentId)
       .sort((a, b) => new Date(a.update_time).getTime() - new Date(b.update_time).getTime());
 
-  const addComment = (text, parentId, replyUsername) => {
-    createCommentApi(text, eventId, parentId, replyUsername).then((comment) => {
+  const addComment = (text, parentId, replyUsername, replyId) => {
+    createCommentApi(text, eventId, parentId, replyUsername, replyId).then((comment) => {
       setActiveComment(null);
       setChange((prev) => !prev);
     });

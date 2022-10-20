@@ -50,7 +50,7 @@ function Comment({
         </div>
         {!isEditing && (
           <div className="comment-text">
-            {comment.parentId ? (
+            {comment.parentId !== comment.reply_review_id && comment.parentId ? (
               <>
                 <span className="at_reply">{`@${comment.replyUsername}`}</span>
                 <span>{comment.body}</span>
@@ -89,7 +89,7 @@ function Comment({
             handleCancel={() => {
               setActiveComment(null);
             }}
-            handleSubmit={(text) => addComment(text, replyId, comment.username)}
+            handleSubmit={(text) => addComment(text, replyId, comment.username, comment.id)}
           />
         )}
         {replies.length > 0 && (
