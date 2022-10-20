@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useEffect} from 'react';
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
@@ -7,6 +7,7 @@ import TabPanel from '@mui/lab/TabPanel';
 import EventList from '../EventList/EventList';
 import usePagination from './usePagination';
 import Pagination from '@mui/material/Pagination';
+import { axiosInstance } from '../../config';
 const Events = () => {
   const events = [1, 2, 3, 4, 5, 6, 7, 8, 9];
   const events2 = [10, 11, 12, 13, 14, 15];
@@ -28,6 +29,12 @@ const Events = () => {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
+  const yourCallback = () => {
+    axiosInstance.get('/event').then((res) => console.log(res));
+  }
+
+  useEffect(yourCallback, [])
 
   return (
     <>
