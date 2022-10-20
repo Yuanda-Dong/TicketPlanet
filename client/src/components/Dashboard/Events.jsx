@@ -23,7 +23,7 @@ const Events = () => {
     handleData.jump(p);
     // window.scrollTo({ top: 0 });
   };
-  const [value, setValue] = React.useState('1');
+  const [value, setValue] = React.useState('2');
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
