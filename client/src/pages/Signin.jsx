@@ -15,17 +15,20 @@ import GoogleIcon from '@mui/icons-material/Google';
 // firebase google auth
 import { auth, provider } from '../firebase';
 import { signInWithPopup } from 'firebase/auth';
+import GoogleSignupDialog from '../components/SignUp/GoogleSignupDialog';
 // axios baseUrl
 import { axiosInstance } from '../config';
 // redux import
 import { useDispatch } from 'react-redux';
 import { failedLogin, startLogin, successfulLogin } from '../redux/userSlice';
-import {useState} from "react";
+import { useState } from 'react';
 
 export default function SignInSide() {
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
+  const [openDialog, setOpenDialog] = useState(false);
+  const [googleUserInfo, setGoogleUserInfo] = useState({});
 
   const signUp = (e) => {
     e.preventDefault();
@@ -35,7 +38,20 @@ export default function SignInSide() {
   const signInWithGoogle = () => {
     signInWithPopup(auth, provider)
       .then((user) => {
-        console.log(user);
+        const userInfo = {
+          firstname: user._tokenResponse.firstName,
+          lastname: user._tokenResponse.lastName,
+          email: user.user.email,
+          password: user._tokenResponse.idToken,
+        };
+        setGoogleUserInfo(userInfo);
+        // TODO
+        // check if user has already registered with backend server
+        // if registered:
+        // get full user info:  token needed? or not?
+        // navigate('/')
+        // else
+        setOpenDialog(true);
       })
       .catch((e) => {
         console.error(e);
@@ -82,10 +98,7 @@ export default function SignInSide() {
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    // console.log({
-    //   email: data.get('email'),
-    //   password: data.get('password'),
-    // });
+
     handleSignin(data);
   };
 
@@ -196,7 +209,13 @@ export default function SignInSide() {
               onChange={handleChange}
               onBlur={handleBlur}
             />
-            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }} disabled={errors.error1.error || errors.error2.error}>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+              disabled={errors.error1.error || errors.error2.error}
+            >
               Sign In
             </Button>
             <Grid container>
@@ -215,6 +234,7 @@ export default function SignInSide() {
           </Button>
         </Box>
       </Grid>
+      <GoogleSignupDialog open={openDialog} setOpen={setOpenDialog} userInfo={googleUserInfo} />
     </Grid>
   );
 }

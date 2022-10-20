@@ -1,5 +1,4 @@
-import * as React from 'react';
-import axios from 'axios';
+import React, { useState } from 'react';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Container from '@mui/material/Container';
@@ -20,6 +19,7 @@ import { auth, provider } from '../firebase';
 import { signInWithPopup } from 'firebase/auth';
 // axios baseUrl
 import { axiosInstance } from '../config';
+import GoogleSignupDialog from '../components/SignUp/GoogleSignupDialog';
 
 const steps = ['Register your account', 'Enter your details'];
 
@@ -35,6 +35,9 @@ function getStepContent(step, [state1, state2]) {
 }
 
 export default function SignUp() {
+  const [openDialog, setOpenDialog] = useState(false);
+  const [googleUserInfo, setGoogleUserInfo] = useState({});
+
   const navigate = useNavigate();
   const [activeStep, setActiveStep] = React.useState(0);
   const navSignIn = (e) => {
@@ -89,7 +92,14 @@ export default function SignUp() {
   const signUpWithGoogle = () => {
     signInWithPopup(auth, provider)
       .then((user) => {
-        console.log(user);
+        const userInfo = {
+          firstname: user._tokenResponse.firstName,
+          lastname: user._tokenResponse.lastName,
+          email: user.user.email,
+          password: user._tokenResponse.idToken,
+        };
+        setGoogleUserInfo(userInfo);
+        setOpenDialog(true);
       })
       .catch((e) => {
         console.error(e);
@@ -98,6 +108,7 @@ export default function SignUp() {
 
   return (
     <div>
+      <GoogleSignupDialog open={openDialog} setOpen={setOpenDialog} userInfo={googleUserInfo} />
       <NavBar />
       <div className="Signs">
         <Container component="main" maxWidth="sm" sx={{ mb: 4 }}>
