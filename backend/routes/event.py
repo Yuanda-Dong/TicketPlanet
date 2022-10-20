@@ -65,3 +65,11 @@ def delete_event(id: str, request: Request, response: Response, user: User = Dep
 
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Event with ID {id} not found")
 
+
+@router.get("/comment", response_description="Get event comments", response_model=List[])
+def list_events(request: Request, id: str):
+    comments = list(request.app.database["comments"].find({'event_id': id}))
+    return comments
+
+@router.post("/new/comment")
+def list_events(request: Request, id: str):
