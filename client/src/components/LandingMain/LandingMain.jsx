@@ -7,11 +7,13 @@ import TabPanel from '@mui/lab/TabPanel';
 import EventCard from '../EventCard/EventCard';
 import Button from '@mui/material/Button';
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 import './LandingMain.css';
 
 export default function LandingMain() {
   const [value, setValue] = React.useState('1');
+  const { currentUser } = useSelector((state) => state.user);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -25,7 +27,7 @@ export default function LandingMain() {
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <TabList className="list" onChange={handleChange} aria-label="lab API tabs example">
             <Tab label="Upcoming Events" value="1" />
-            <Tab label="For You" value="2" />
+            {currentUser && <Tab label="For You" value="2" />}
           </TabList>
         </Box>
         <TabPanel value="1">
