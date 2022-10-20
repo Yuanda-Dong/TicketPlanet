@@ -20,7 +20,7 @@ import GoogleSignupDialog from '../components/SignUp/GoogleSignupDialog';
 import { axiosInstance } from '../config';
 // redux import
 import { useDispatch } from 'react-redux';
-import { failedLogin, startLogin, successfulLogin } from '../redux/userSlice';
+import { failedLogin, startLogin, successfulLogin, storeToken } from '../redux/userSlice';
 import { useState } from 'react';
 
 export default function SignInSide() {
@@ -120,13 +120,12 @@ export default function SignInSide() {
         },
         config
       );
-      // store token in localStorage
-      localStorage.setItem('token', res.data.access_token);
-
+      // store token in redux
+      dispatch(storeToken(res.data.access_token));
       // fetch user info
       config = {
         headers: {
-          Authorization: `Bearer ${localStorage.token}`,
+          Authorization: `Bearer ${res.data.access_token}`,
         },
       };
       const user = await axiosInstance.get('/user/me', config);
