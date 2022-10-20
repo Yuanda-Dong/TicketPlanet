@@ -7,15 +7,14 @@ from typing import Optional, List, Dict
 
 
 
-class Review(BaseModel):
+class Review(BaseModel): #use to get from frontend, and store in DB
     id: str = Field(default_factory=uuid.uuid4, alias="_id")
     event_id: str
     user_id: str
-    username: str # can be the first name of user
     message: str
     parent_id: Optional(str) # base review: None, replies: id of base review
-    reply_review_id: Optional(str) #review id of reviews it replies to
-    reply_username: Optional(str) # username the review replies to
+    reply_to_review_id: Optional(str) #review id of reviews it replies to
+    reply_userId: Optional(str) # userId of the review replies to
     createdAt:datetime  # DateTime created on server side
 
     class Config:
@@ -29,7 +28,7 @@ class Review(BaseModel):
                 "username":"Mike",
                 "message": "this is base review message by Mike",
                 "parent_id": None,
-                "reply_review_id": None,
+                "reply_to_review_id": None,
                 "reply_username":None,
                 "createdAt" :"Wed Oct 5 2022 18:47:10 GMT+1100",
             },
@@ -42,7 +41,7 @@ class Review(BaseModel):
                 "username":"Jennie",
                 "message": "this is reply review message by Jennie",
                 "parent_id": "review1",
-                "reply_review_id": "review1",
+                "reply_to_review_id": "review1",
                 "reply_username":"Mike",
                 "createdAt" :"Wed Oct 5 2022 18:47:10 GMT+1100",
             },
@@ -55,13 +54,38 @@ class Review(BaseModel):
                 "username":"Lisa",
                 "message": "this is reply review message by Lisa",
                 "parent_id": "review1",
-                "reply_review_id": "review2",
+                "reply_to_review_id": "review2",
                 "reply_username":"Jennie",
                 "createdAt" :"Wed Oct 5 2022 18:47:10 GMT+1100",
             }
         }
 
+# reviews = list(request.app.database["reviews"].find(limit=100))
+# for review in revews:
+#     review['username']= find_username_by_userId
+# username: "firstname lastname"
+# username: "firstname"
+#     review['reply_username'] = find_reply_username_by_reply_userId]
+# return reviews
 
+class ReviewResponse(Review): #use to send back to frontend
+    username: str
+    reply_to_username: Optional(str)
+
+# @router.put('/{reviewId}')
+class UpdateReview(BaseModel): #use to update reviews in DB
+    message: str #updated message
+    createdAt: datetime
+
+
+# @router.delete("/{reviewId}")
+# delete a review using reviewId
+
+
+
+
+
+    
 # class Reply(BaseModel):
 #     id: str = Field(default_factory=uuid.uuid4, alias="_id")
 #     base_comment: str

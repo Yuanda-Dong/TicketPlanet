@@ -13,7 +13,7 @@ const Header = () => {
   const [value, setValue] = useState({ from: null, to: null });
   return (
     <div className="header">
-      <h1 className="title">The title text</h1>
+      <h1 className="title">Fabulous Event Booking Platform!</h1>
       <div className="search_container">
         <div className="search_box">
           <input className="search" placeholder="Search by events, name, location and more" type="text" />
