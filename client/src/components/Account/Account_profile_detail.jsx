@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Box, Button as ButtonMui, Card, CardContent, CardHeader, Divider, Grid, TextField } from '@mui/material';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
-
 import './Account.css';
 
 const Button = styled(ButtonMui)`
@@ -75,8 +74,8 @@ export const PersonalInformation = (props) => {
   return (
     <form autoComplete="off" noValidate {...props}>
       <Card>
-        <CardHeader subheader="The information can be edited" title="Profile" />
-        <Divider />
+        <CardHeader subheader="The information can be edited" title="Personal Information"/>
+        <Divider/>
         <CardContent className="profile">
           <Grid container spacing={3}>
             <Grid item md={6} xs={12}>

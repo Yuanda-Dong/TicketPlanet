@@ -34,6 +34,9 @@ const Account = () => {
       <Box className="accountBg" component="main">
         <Container maxWidth="lg">
           <TabContext value={value}>
+            <Typography sx={{mb: 3}} variant="h4">
+              User Profile
+            </Typography>
             <Grid container spacing={3}>
               <Grid item lg={4} md={6} xs={12}>
                 <Card className="portrait">
@@ -77,22 +80,22 @@ const Account = () => {
                         variant="fullWidth"
                         aria-label="lab API tabs example"
                       >
-                        <Tab icon={<Portrait />} iconPosition={'start'} label="Account" value="1" />
-                        <Tab icon={<Lock />} iconPosition={'start'} label="Security" value="2" />
+                        <Tab icon={<Portrait/>} iconPosition={'start'} label="Account Details" value="1"/>
+                        <Tab icon={<Lock/>} iconPosition={'start'} label="Reset Password" value="2"/>
                       </TabList>
                     </Box>
                   </CardContent>
                   {/*<Divider/>*/}
-                  {/*<Link className="link" to={'/my-tickets'}>*/}
-                  {/*	<CardActions>*/}
-                  {/*		<Button*/}
-                  {/*			color="primary"*/}
-                  {/*			fullWidth*/}
-                  {/*			variant="text"*/}
-                  {/*		>My Tickets*/}
-                  {/*		</Button>*/}
-                  {/*	</CardActions>*/}
-                  {/*</Link>*/}
+                  <Link className="link" to={'/my-tickets'}>
+                    <CardActions>
+                      <Button
+                        color="primary"
+                        fullWidth
+                        variant="text"
+                      >My Tickets
+                      </Button>
+                    </CardActions>
+                  </Link>
                 </Card>
               </Grid>
               <Grid item lg={8} md={6} xs={12}>
