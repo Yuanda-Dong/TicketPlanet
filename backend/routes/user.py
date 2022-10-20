@@ -11,7 +11,7 @@ import os
 from starlette.responses import HTMLResponse, RedirectResponse
 from authlib.integrations.starlette_client import OAuthError
 from pymongo import ReturnDocument
-from models.user import User, UserUpdate, UserInDB, ForgetPassword, ResetPassword
+from models.user import User, UserUpdate, UserInDB, ForgetPassword, ResetPassword, UserWithAccess
 from models.token import Token, TokenData
 
 import sys
@@ -67,7 +67,7 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
 def whoami(current_user: User = Depends(get_current_user)):
     return current_user
 
-@router.post("/", response_description="Create a new user", status_code=status.HTTP_201_CREATED, response_model=User)
+@router.post("/", response_description="Create a new user", status_code=status.HTTP_201_CREATED, response_model=UserWithAccess)
 def create_user(request: Request, user: UserInDB = Body(...)):
     user = jsonable_encoder(user)
     user["password"] = get_password_hash(user["password"])
@@ -75,6 +75,13 @@ def create_user(request: Request, user: UserInDB = Body(...)):
     created_user = request.app.database["users"].find_one(
         {"_id": new_user.inserted_id}
     )
+    
+    access_token_expires = timedelta(minutes=int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES")))
+    access_token = create_access_token(
+        data={"sub": user["email"]}, expires_delta=access_token_expires
+    )
+    token = {"access_token": access_token, "token_type": "bearer"}
+    created_user["token"] = token
     return created_user
 
 @router.get("/", response_description="Get all users", response_model=List[User])

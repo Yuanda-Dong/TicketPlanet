@@ -3,6 +3,7 @@ from typing import Optional, Union
 from enum import Enum
 from pydantic import BaseModel, Field, validator, ValidationError
 from util.oAuth import oauth2_scheme
+from models.token import Token
 
 
 class GenderEnum(str, Enum):
@@ -66,6 +67,9 @@ class UserInDB(User):
                 "age": "15-25"
             }
         }
+        
+class UserWithAccess(User):
+    token: Token = Field(...)
 
 class UserUpdate(BaseModel):
     id: Optional[str]
