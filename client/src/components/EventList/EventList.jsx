@@ -7,8 +7,9 @@ import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import './EventList.css';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
-const EventList = ({ id, published }) => {
+const EventList = (props) => {
   const [anchoEl, setanchoEl] = React.useState(false);
   const handleOpenNavMenu = (event) => {
     event.preventDefault();
@@ -27,11 +28,11 @@ const EventList = ({ id, published }) => {
     { id: 'Delete', handler: deleteHandler },
   ];
   const publsihed_operations = [
-    { id: 'Update', to: '/edit' },
+    { id: 'Edit', to: `/edit/${props.eventInfo._id}` },
     { id: 'Cancel', to: '/cancel-event' },
-    { id: 'View', to: `/event/${id}` },
+    { id: 'View', to: `/event/${props.eventInfo._id}` },
   ];
-  const event_menu_id = id;
+  const event_menu_id = props.eventInfo._id;
   const event_menu = (
     <Menu
       id={event_menu_id}
@@ -48,17 +49,9 @@ const EventList = ({ id, published }) => {
       open={Boolean(anchoEl)}
       onClose={handleCloseNavMenu}
     >
-      {published
-        ? publsihed_operations.map((operation) => (
+      {publsihed_operations.map((operation) => (
             <Link key={operation.id} to={operation.to} style={{ color: 'inherit', textDecoration: 'none' }}>
               <MenuItem>
-                <Typography textAlign="center">{operation.id}</Typography>
-              </MenuItem>
-            </Link>
-          ))
-        : operations.map((operation) => (
-            <Link key={operation.id} to={operation.to} style={{ color: 'inherit', textDecoration: 'none' }}>
-              <MenuItem onClick={operation.handler}>
                 <Typography textAlign="center">{operation.id}</Typography>
               </MenuItem>
             </Link>
@@ -69,18 +62,19 @@ const EventList = ({ id, published }) => {
     <Paper elevation={3} sx={{ margin: '20px 0', backgroundColor: '#e8e8ea' }}>
       <div className="event-list-item">
         <div className="date">
-          <span className="month">Nov</span>
-          <span className="day">13</span>
+          <span className="month">
+            {new Date(props.eventInfo.start_dt).toLocaleString("default", { month: "long" })}
+          </span>
+          <span className="day">
+          {new Date(props.eventInfo.start_dt).toLocaleString("default", { day: "numeric" })}
+          </span>
         </div>
         <div className="event-info">
           <Typography gutterBottom variant="body1" color="text.primary">
-            Event Title
+            {props.eventInfo.title}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Event price
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            Event Location
+          {props.eventInfo.address}
           </Typography>
         </div>
         <IconButton
@@ -100,3 +94,6 @@ const EventList = ({ id, published }) => {
 };
 
 export default EventList;
+EventList.propTypes = {
+  eventInfo: PropTypes.object,
+};

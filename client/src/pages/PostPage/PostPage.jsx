@@ -14,7 +14,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SendIcon from '@mui/icons-material/Send';
-import { EditorState } from 'draft-js';
+import { EditorState,convertToRaw } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import Paper from '@mui/material/Paper';
@@ -23,7 +23,6 @@ import { axiosInstance } from '../../config';
 import { useNavigate } from 'react-router-dom';
 import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } from 'firebase/storage';
 import { useSelector } from 'react-redux';
-
 const PostPage = () => {
   const { token } = useSelector((state) => state.user);
   const navigate = useNavigate();
@@ -158,7 +157,7 @@ const PostPage = () => {
     setEditorState({
       editorState,
     });
-    setEvent((prev) => ({ ...prev, details: JSON.stringify(editorState.getCurrentContent()) }));
+    setEvent((prev) => ({ ...prev, details: JSON.stringify(convertToRaw(editorState.getCurrentContent()))}));
   };
   const goHome = () => {
     navigate('/dashboard/events');

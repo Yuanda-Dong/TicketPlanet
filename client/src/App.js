@@ -28,7 +28,6 @@ function App() {
           <Route path="signup" element={<SignUp />} />
           <Route path="forgot-password" element={<FindPassword />} />
           <Route path="account-setting" element={<Account />} />
-
           <Route exact path="event">
             <Route path=":id" element={<EventDetail />} />
           </Route>
@@ -38,7 +37,7 @@ function App() {
           </Route>
           {/* <Route path="payment" element={<Payment />} /> */}
           <Route path="post" element={<PostPage />} />
-          <Route path="edit" element={<EditPage />} />
+          <Route path="edit/:id/" element={<EditPage />} />
           <Route path="my-tickets" element={<MyTickets />} />
           <Route path="/tickets/:id/" element={<TicketPage />} />
         </Route>
