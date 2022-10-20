@@ -14,7 +14,6 @@ class Review(BaseModel):
     username: str # can be the first name of user
     message: str
     parent_id: Optional(str) # base review: None, replies: id of base review
-    reply_message: Optional(str) # message the review replies to
     reply_username: Optional(str) # username the review replies to
     createdAt:datetime  # DateTime created on server side
 
@@ -28,7 +27,6 @@ class Review(BaseModel):
                 "username":"Mike",
                 "message": "this is base review message by Mike",
                 "parent_id": None,
-                "reply_message": None,
                 "reply_username":None,
                 "createdAt" :"Wed Oct 5 2022 18:47:10 GMT+1100",
             },
@@ -39,7 +37,6 @@ class Review(BaseModel):
                 "username":"Jennie",
                 "message": "this is reply review message by Jennie",
                 "parent_id": "review1",
-                "reply_message": "this is base review message by Mike",
                 "reply_username":"Mike",
                 "createdAt" :"Wed Oct 5 2022 18:47:10 GMT+1100",
             }
