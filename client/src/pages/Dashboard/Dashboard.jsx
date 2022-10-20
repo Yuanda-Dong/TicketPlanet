@@ -7,7 +7,7 @@ import Navigator from '../../components/Dashboard/Navigator';
 import NavBar from '../../components/Navbar/NavBar';
 import { Outlet } from 'react-router-dom';
 
-let theme = createTheme();
+let theme = createTheme({});
 
 const drawerWidth = 256;
 

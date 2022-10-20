@@ -24,7 +24,7 @@ const Events = () => {
     handleData.jump(p);
     // window.scrollTo({ top: 0 });
   };
-  const [value, setValue] = React.useState('1');
+  const [value, setValue] = React.useState('2');
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -43,7 +43,7 @@ const Events = () => {
       <TabContext value={value}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <TabList onChange={handleChange} aria-label="lab API tabs example">
-            <Tab label="Draft Events" value="1" />
+            {/* <Tab label="Draft Events" value="1" /> */}
             <Tab label="Published Events" value="2" />
           </TabList>
         </Box>

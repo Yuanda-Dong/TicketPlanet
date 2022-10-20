@@ -22,12 +22,14 @@ import Container from '@mui/material/Container';
 import { axiosInstance } from '../../config';
 import { useNavigate } from 'react-router-dom';
 import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } from 'firebase/storage';
+import { useSelector } from 'react-redux';
 
 const PostPage = () => {
+  const { token } = useSelector((state) => state.user);
   const navigate = useNavigate();
   const config = {
     headers: {
-      Authorization: `Bearer ${localStorage.token}`,
+      Authorization: `Bearer ${token}`,
     },
   };
   const storage = getStorage();
@@ -156,56 +158,54 @@ const PostPage = () => {
     setEditorState({
       editorState,
     });
-    setEvent((prev) => ({ ...prev, details: editorState.getCurrentContent().getPlainText('\u0001') }));
-
+    setEvent((prev) => ({ ...prev, details: JSON.stringify(editorState.getCurrentContent()) }));
   };
   const goHome = () => {
     navigate('/dashboard/events');
-  }
+  };
 
   const goNext = async () => {
-    if (event.title ==''){
-      alert("Event must have title");
+    if (event.title == '') {
+      alert('Event must have title');
       return;
     }
-    if (event.host_name ==''){
-      alert("Event must have host");
+    if (event.host_name == '') {
+      alert('Event must have host');
       return;
     }
-    if (event.category == ''){
-      alert("Event must have category");
+    if (event.category == '') {
+      alert('Event must have category');
       return;
     }
-    if (event.address == ''){
-      alert("Event must have address");
+    if (event.address == '') {
+      alert('Event must have address');
       return;
     }
-    const regex = /^\d{4}$/
+    const regex = /^\d{4}$/;
     let result = regex.test(event.postcode);
-    if (result == false){
-      alert("Event must have a valid postcode");
+    if (result == false) {
+      alert('Event must have a valid postcode');
       return;
     }
-    if (event.start_dt == null){
-      alert("Event must have a start datetime");
+    if (event.start_dt == null) {
+      alert('Event must have a start datetime');
       return;
     }
-    if (event.end_dt == null){
-      alert("Event must have an end datetime");
+    if (event.end_dt == null) {
+      alert('Event must have an end datetime');
       return;
     }
-    if(event.end_dt < event.start_dt){
-      alert("Event must not end before it starts");
+    if (event.end_dt < event.start_dt) {
+      alert('Event must not end before it starts');
     }
-    try{
-      let res = await axiosInstance.post('/event',event,config);
+    try {
+      let res = await axiosInstance.post('/event', event, config);
       let id = res.data._id;
       navigate(`/tickets/${id}`);
-      
-    }catch(err){
+    } catch (err) {
       console.log(err);
     }
-  }
+  };
 
   return (
     <div className="PostPage">
