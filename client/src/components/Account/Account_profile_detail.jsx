@@ -1,7 +1,20 @@
 import { useState } from 'react';
-import { Box, Button, Card, CardContent, CardHeader, Divider, Grid, TextField } from '@mui/material';
+import { Box, Button as ButtonMui, Card, CardContent, CardHeader, Divider, Grid, TextField } from '@mui/material';
 import { useSelector } from 'react-redux';
+import styled from 'styled-components';
+
 import './Account.css';
+
+const Button = styled(ButtonMui)`
+  && {
+    color: white;
+    padding: 7px 13px;
+    background-color: #4968a3;
+    :hover {
+      background-color: rgba(73, 104, 163, 0.7);
+    }
+  }
+`;
 
 const genders = [
   {
