@@ -38,12 +38,14 @@ def list_events(request: Request):
 
 @router.get("/search", response_description="search", response_model=List[EventInDB])
 def search_events(request: Request, title="", descriptions="", start_dt="", end_dt="", category="", price="",
-                  location1_postcode="", location2_postcode=""):
+                  location1_postcode="", distance="", location=""):
     query = {}
     if len(title):
         query["title"] = re.compile(title)
     if len(descriptions):
         query["details"] = re.compile(descriptions)
+    if len(location):
+        query["address"] = re.compile(location)
     # if len(start_dt) and len(end_dt):
     #     query["start_dt"] = {"$lte": datetime.strptime(end_dt, "%Y-%m-%d %H:%M:%S")}
     #     query["end_dt"] = {"$gte": datetime.strptime(start_dt, "%Y-%m-%d %H:%M:%S")}
@@ -51,15 +53,39 @@ def search_events(request: Request, title="", descriptions="", start_dt="", end_
         query["category"] = re.compile(category)
     events = list(request.app.database["events"].find(query))
 
-    if len(location1_postcode) and len(location2_postcode):
-        events = list(filter(lambda event: abs(float(location2_postcode) - float(location1_postcode)) > event["postcode"], events))
     if len(price):
-        events = filter(lambda event: request.app.database["tickets"].find_one({"event_id": event["_id"]})['price'] <
-                        float(price), events)
+        event_list = []
+        for event in events:
+            ticket = request.app.database["tickets"].find_one({"event_id": str(event["_id"])})
+            if ticket:
+                if ticket['price'] < float(price):
+                    event_list.append(event)
+        events = event_list
+                # events = list(filter(lambda event: request.app.database["tickets"].find_one({"event_id": str(event["_id"])})['price'] <
+                #        float(price), events))
+
     if len(start_dt) and len(end_dt):
-        events = filter(lambda event: (fmt_date(event['end_dt']) > fmt_date(start_dt) and fmt_date(event['start_dt']) <
-                                       fmt_date(end_dt)), events)
-    print(events)
+        event_list = []
+        for event in events:
+            print(event['end_dt'])
+            event_end_dt = event['end_dt']
+            if isinstance(event['end_dt'], str):
+                event_end_dt = fmt_date(event['end_dt'])
+            event_start_dt = event['start_dt']
+            if isinstance(event['start_dt'], str):
+                event_start_dt = event['start_dt']
+            if (event_end_dt > fmt_date(start_dt)) and (event_start_dt < fmt_date(end_dt)):
+                event_list.append(event)
+
+        events = event_list
+        #events = list(filter(lambda event: ((event['end_dt'] > fmt_date(start_dt)) and (event['start_dt'] <
+        #                               fmt_date(end_dt))), events))
+
+    if len(location1_postcode):
+        events = list(
+            filter(lambda event: abs(float(event["postcode"]) - float(location1_postcode)) <= float(distance),
+                   events))
+    #print(events)
     return events
 
 
@@ -157,6 +183,11 @@ def delete_event(id: str, request: Request, response: Response, user: User = Dep
 
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Event with ID {id} not found")
 
+@router.put("/update/review")
+def update_event(id: str, request: Request, message: str):
+    myquery = { "_id": ObjectId(id) }
+    newvalues = { "$set": { "message": message } }
+    request.app.database["reviews"].update_one(myquery, newvalues)
 
 def fmt_date(date: str):
     return datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
