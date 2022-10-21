@@ -70,6 +70,10 @@ def whoami(current_user: User = Depends(get_current_user)):
 @router.post("/", response_description="Create a new user", status_code=status.HTTP_201_CREATED, response_model=UserWithAccess)
 def create_user(request: Request, user: UserInDB = Body(...)):
     user = jsonable_encoder(user)
+    
+    if found := request.app.database["users"].find_one({"email": user["email"]}) is not None: 
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=f"user with email already exists")
+    
     user["password"] = get_password_hash(user["password"])
     new_user = request.app.database["users"].insert_one(user)
     created_user = request.app.database["users"].find_one(
