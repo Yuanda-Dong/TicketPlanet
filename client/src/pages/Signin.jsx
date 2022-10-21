@@ -20,7 +20,7 @@ import GoogleSignupDialog from '../components/SignUp/GoogleSignupDialog';
 import { axiosInstance } from '../config';
 // redux import
 import { useDispatch } from 'react-redux';
-import { failedLogin, startLogin, successfulLogin } from '../redux/userSlice';
+import { failedLogin, startLogin, successfulLogin, storeToken } from '../redux/userSlice';
 import { useState } from 'react';
 
 export default function SignInSide() {
@@ -33,29 +33,6 @@ export default function SignInSide() {
   const signUp = (e) => {
     e.preventDefault();
     navigate('/signup');
-  };
-
-  const signInWithGoogle = () => {
-    signInWithPopup(auth, provider)
-      .then((user) => {
-        const userInfo = {
-          firstname: user._tokenResponse.firstName,
-          lastname: user._tokenResponse.lastName,
-          email: user.user.email,
-          password: user._tokenResponse.idToken,
-        };
-        setGoogleUserInfo(userInfo);
-        // TODO
-        // check if user has already registered with backend server
-        // if registered:
-        // get full user info:  token needed? or not?
-        // navigate('/')
-        // else
-        setOpenDialog(true);
-      })
-      .catch((e) => {
-        console.error(e);
-      });
   };
 
   const [info, setInfo] = useState({
@@ -99,10 +76,28 @@ export default function SignInSide() {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
-    handleSignin(data);
+    handleSignin({ email: data.get('email'), password: data.get('password') });
   };
 
-  const handleSignin = async (data) => {
+  const signInWithGoogle = () => {
+    signInWithPopup(auth, provider)
+      .then((user) => {
+        const userInfo = {
+          firstname: user._tokenResponse.firstName,
+          lastname: user._tokenResponse.lastName,
+          email: user.user.email,
+          password: user._tokenResponse.idToken.slice(0, 10),
+        };
+        setGoogleUserInfo(userInfo);
+
+        handleSignin({ email: userInfo.email, password: userInfo.password }, true);
+      })
+      .catch((e) => {
+        console.error(e);
+      });
+  };
+
+  const handleSignin = async (data, google = false) => {
     try {
       // fetch token
       let config = {
@@ -115,25 +110,26 @@ export default function SignInSide() {
         '/token',
         {
           grant_type: 'password',
-          username: data.get('email'),
-          password: data.get('password'),
+          username: data.email,
+          password: data.password,
         },
         config
       );
-      // store token in localStorage
-      localStorage.setItem('token', res.data.access_token);
-
+      // store token in redux
+      dispatch(storeToken(res.data.access_token));
       // fetch user info
       config = {
         headers: {
-          Authorization: `Bearer ${localStorage.token}`,
+          Authorization: `Bearer ${res.data.access_token}`,
         },
       };
       const user = await axiosInstance.get('/user/me', config);
       dispatch(successfulLogin(user.data));
       navigate('/');
     } catch (e) {
-      if (e.response) {
+      if (google) {
+        setOpenDialog(true);
+      } else if (e.response) {
         alert(e.response.data.detail);
       } else if (e.request) {
         console.error(e.request);

@@ -99,7 +99,7 @@ function SignUpForm2({ state }) {
         >
           <FormControlLabel value="female" control={<Radio />} label="Female" />
           <FormControlLabel value="male" control={<Radio />} label="Male" />
-          <FormControlLabel value="other" control={<Radio />} label="Other" />
+          <FormControlLabel value="nonbinary" control={<Radio />} label="Other" />
         </RadioGroup>
       </FormControl>
       <FormControl sx={{ mt: 1 }}>

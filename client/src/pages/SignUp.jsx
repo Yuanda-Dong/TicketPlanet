@@ -20,6 +20,8 @@ import { signInWithPopup } from 'firebase/auth';
 // axios baseUrl
 import { axiosInstance } from '../config';
 import GoogleSignupDialog from '../components/SignUp/GoogleSignupDialog';
+import { useDispatch } from 'react-redux';
+import { failedLogin, startLogin, successfulLogin, storeToken } from '../redux/userSlice';
 
 const steps = ['Register your account', 'Enter your details'];
 
@@ -35,6 +37,8 @@ function getStepContent(step, [state1, state2]) {
 }
 
 export default function SignUp() {
+  const dispatch = useDispatch();
+
   const [openDialog, setOpenDialog] = useState(false);
   const [googleUserInfo, setGoogleUserInfo] = useState({});
 
@@ -52,7 +56,6 @@ export default function SignUp() {
     e.preventDefault();
     if (activeStep === 1) {
       handleSignup();
-      setActiveStep(activeStep + 1);
     } else {
       setActiveStep(activeStep + 1);
     }
@@ -64,28 +67,24 @@ export default function SignUp() {
 
   const handleSignup = async () => {
     try {
-      console.log({
-        email: signupInfo.email,
-        first_name: signupInfo.firstname,
-        last_name: signupInfo.lastname,
-        password: signupInfo.password,
-        gender: profileInfo.gender === 'other' ? 'nobinary' : profileInfo.gender,
-        postcode: profileInfo.postcode,
-        age: profileInfo.age,
-      });
+      dispatch(startLogin());
       const res = await axiosInstance.post('/user/', {
         email: signupInfo.email,
         first_name: signupInfo.firstname,
         last_name: signupInfo.lastname,
         password: signupInfo.password,
-        gender: profileInfo.gender === 'other' ? 'nobinary' : profileInfo.gender,
+        gender: profileInfo.gender,
         postcode: profileInfo.postcode,
         age: profileInfo.age,
       });
-      console.log(res.data);
-      // navigate('/');
+
+      let { token, ...userData } = res.data;
+      dispatch(storeToken(token.access_token));
+      dispatch(successfulLogin(userData));
+      navigate('/');
     } catch (e) {
       console.error(e.response.data.detail);
+      dispatch(failedLogin());
     }
   };
 
@@ -93,10 +92,10 @@ export default function SignUp() {
     signInWithPopup(auth, provider)
       .then((user) => {
         const userInfo = {
-          firstname: user._tokenResponse.firstName,
-          lastname: user._tokenResponse.lastName,
+          first_name: user._tokenResponse.firstName,
+          last_name: user._tokenResponse.lastName,
           email: user.user.email,
-          password: user._tokenResponse.idToken,
+          password: user._tokenResponse.idToken.slice(0, 10),
         };
         setGoogleUserInfo(userInfo);
         setOpenDialog(true);

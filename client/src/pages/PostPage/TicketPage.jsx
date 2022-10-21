@@ -15,8 +15,10 @@ import CardContent from '@mui/material/CardContent';
 import { axiosInstance } from '../../config';
 import Modal from '@mui/material/Modal';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const TicketPage = () => {
+  const { token } = useSelector((state) => state.user);
 
   const navigate = useNavigate();
 
@@ -25,7 +27,7 @@ const TicketPage = () => {
 
   const config = {
     headers: {
-      Authorization: `Bearer ${localStorage.token}`,
+      Authorization: `Bearer ${token}`,
     },
   };
   const [ticket, setTicket] = React.useState({ t: { price: '', quantity: '', name: '' }, tickets: [] });
@@ -79,155 +81,158 @@ const TicketPage = () => {
   const add = () => {
     const newTickets = ticket.tickets;
 
-    if (ticket.t.name == ''){
-      alert("Ticket must have a name");
+    if (ticket.t.name == '') {
+      alert('Ticket must have a name');
       return;
     }
-    if (ticket.t.price == ''){
-      alert("Ticket must have a price");
+    if (ticket.t.price == '') {
+      alert('Ticket must have a price');
       return;
     }
 
-    if (!(!isNaN(ticket.t.price ) && Number(ticket.t.price ) > 0)){
-      alert("Ticket must have a valid price");
+    if (!(!isNaN(ticket.t.price) && Number(ticket.t.price) > 0)) {
+      alert('Ticket must have a valid price');
       return;
     }
-    if (ticket.t.quantity == ''){
-      alert("Ticket must have a quantity");
+    if (ticket.t.quantity == '') {
+      alert('Ticket must have a quantity');
       return;
     }
     const num = Number(ticket.t.quantity);
-    if ( !(Number.isInteger(num) && num > 0 )){
-      alert("Ticket must have a valid quantity");
+    if (!(Number.isInteger(num) && num > 0)) {
+      alert('Ticket must have a valid quantity');
       return;
     }
 
     newTickets.push(ticket.t);
     setTicket({ ...ticket, tickets: newTickets });
-    
+
     cancel();
     setOpen(false);
   };
   const goHome = () => {
     navigate('/dashboard/events');
-  }
+  };
   const fin = async () => {
-    for (let i = 0; i < ticket.tickets.length; i++){
-      try{
+    for (let i = 0; i < ticket.tickets.length; i++) {
+      try {
         const tik = ticket.tickets[i];
-        let res = await axiosInstance.post(`/ticket/e/${eventID}`,{ticket_name:tik.name,price:tik.price,availability:tik.quantity},config);
+        let res = await axiosInstance.post(
+          `/ticket/e/${eventID}`,
+          { ticket_name: tik.name, price: tik.price, availability: tik.quantity },
+          config
+        );
         console.log(res);
-      }catch(err){
+      } catch (err) {
         console.log(err);
       }
     }
     goHome();
-  }
+  };
   return (
     <div className="PostPage">
       <NavBar />
       <Container component="main" maxWidth="md" sx={{ mb: 0 }}>
         <Paper elevation={3} sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}>
-  
-            {/* TICKETs */}
-            <Grid item xs={12}>
-              <h3> Tickets</h3>
-            </Grid>
-            <Grid item xs={12}>
-              <div>
-                {ticket.tickets.map((e, idx) => (
-                  <Card key={idx} sx={{ minWidth: 250 }}>
-                    <CardContent>
-                      <Grid container spacing={1} direction="row" justifyContent="space-between" alignItems="flex-end">
-                        <Grid item xs={9}>
-                          <Typography gutterBottom variant="h5" component="div">
-                            {e.name}
-                          </Typography>
-                          <Typography variant="body2" color="text.secondary">
-                            Price: ${e.price}
-                          </Typography>
-                          <Typography variant="body2" color="text.secondary">
-                            Available quantity: {e.quantity}
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={3}>
-                          <Button
-                            variant="outlined"
-                            component="label"
-                            color="error"
-                            startIcon={<DeleteIcon />}
-                            onClick={(event) => removeTicket(event, idx)}
-                          >
-                            Remove
-                          </Button>
-                        </Grid>
-                      </Grid>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-
-              <div>
-                <Button fullWidth variant="outlined" onClick={handleOpen}>
-                  Add Tickets
-                </Button>
-                <Modal
-                  open={open}
-                  onClose={handleClose}
-                  aria-labelledby="modal-modal-title"
-                  aria-describedby="modal-modal-description"
-                >
-                  <Box sx={style}>
-                    <Grid container spacing={2}>
-                      <Grid item xs={12}>
-                        <Typography align="center" id="modal-modal-title" variant="h6" component="h2">
-                          Add Tickets
+          {/* TICKETs */}
+          <Grid item xs={12}>
+            <h3> Tickets</h3>
+          </Grid>
+          <Grid item xs={12}>
+            <div>
+              {ticket.tickets.map((e, idx) => (
+                <Card key={idx} sx={{ minWidth: 250 }}>
+                  <CardContent>
+                    <Grid container spacing={1} direction="row" justifyContent="space-between" alignItems="flex-end">
+                      <Grid item xs={9}>
+                        <Typography gutterBottom variant="h5" component="div">
+                          {e.name}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          Price: ${e.price}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          Available quantity: {e.quantity}
                         </Typography>
                       </Grid>
-                      <Grid item xs={12}>
-                          <TextField
-                            fullWidth
-                            id="standard-basic"
-                            label="Name: "
-                            variant="standard"
-                            value={ticket.t.name}
-                            margin="normal"
-                            onChange={setName}
-                          />
-                          <TextField
-                            fullWidth
-                            id="standard-basic"
-                            label="Price: "
-                            variant="standard"
-                            value={ticket.t.price}
-                            margin="normal"
-                            onChange={setPrice}
-                          />
-                          <TextField
-                            fullWidth
-                            id="standard-basic"
-                            label="Quantity: "
-                            variant="standard"
-                            value={ticket.t.quantity}
-                            margin="normal"
-                            onChange={setQuantity}
-                          />
-                      </Grid>
-                      <Grid item xs={10} mt={1}>
-                        <Button variant="contained" color="error" onClick={cancel}>
-                          Cancel
-                        </Button>
-                      </Grid>
-                      <Grid item xs={2} mt={1}>
-                        <Button variant="contained" onClick={add}>
-                          Add
+                      <Grid item xs={3}>
+                        <Button
+                          variant="outlined"
+                          component="label"
+                          color="error"
+                          startIcon={<DeleteIcon />}
+                          onClick={(event) => removeTicket(event, idx)}
+                        >
+                          Remove
                         </Button>
                       </Grid>
                     </Grid>
-                  </Box>
-                </Modal>
-              </div>
-            </Grid>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+
+            <div>
+              <Button fullWidth variant="outlined" onClick={handleOpen}>
+                Add Tickets
+              </Button>
+              <Modal
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+              >
+                <Box sx={style}>
+                  <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                      <Typography align="center" id="modal-modal-title" variant="h6" component="h2">
+                        Add Tickets
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <TextField
+                        fullWidth
+                        id="standard-basic"
+                        label="Name: "
+                        variant="standard"
+                        value={ticket.t.name}
+                        margin="normal"
+                        onChange={setName}
+                      />
+                      <TextField
+                        fullWidth
+                        id="standard-basic"
+                        label="Price: "
+                        variant="standard"
+                        value={ticket.t.price}
+                        margin="normal"
+                        onChange={setPrice}
+                      />
+                      <TextField
+                        fullWidth
+                        id="standard-basic"
+                        label="Quantity: "
+                        variant="standard"
+                        value={ticket.t.quantity}
+                        margin="normal"
+                        onChange={setQuantity}
+                      />
+                    </Grid>
+                    <Grid item xs={10} mt={1}>
+                      <Button variant="contained" color="error" onClick={cancel}>
+                        Cancel
+                      </Button>
+                    </Grid>
+                    <Grid item xs={2} mt={1}>
+                      <Button variant="contained" onClick={add}>
+                        Add
+                      </Button>
+                    </Grid>
+                  </Grid>
+                </Box>
+              </Modal>
+            </div>
+          </Grid>
           <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '20px', marginTop: '50px' }}>
             <Button sx={{ mt: '20px' }} variant="outlined" onClick={goHome}>
               Cancel

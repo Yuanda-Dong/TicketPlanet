@@ -43,7 +43,6 @@ const UserMenu = () => {
         break;
       case 'Logout':
         dispatch(logout());
-        localStorage.setItem('token', null);
         navigate('/');
 
         setAnchorElUser(null);
