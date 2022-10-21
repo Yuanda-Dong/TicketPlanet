@@ -134,7 +134,7 @@ export default function SignInSide() {
       } else if (e.request) {
         console.error(e.request);
       } else {
-        console.errorr('Error', e.message);
+        console.error('Error', e.message);
       }
       dispatch(failedLogin());
     }
