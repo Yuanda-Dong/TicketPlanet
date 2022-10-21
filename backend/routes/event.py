@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Body, Request, Response, HTTPException, status, Depends
 from fastapi.encoders import jsonable_encoder
+import pymongo
 from models.event import Event, EventInDB, EventUpdate
 from models.user import User
 from util.oAuth import get_current_user
@@ -24,6 +25,11 @@ def create_event(request: Request, event: Event = Body(...), user: User = Depend
 @router.get("/", response_description="Get all events", response_model=List[EventInDB])
 def list_events(request: Request):
     events = list(request.app.database["events"].find(limit=100))
+    return events
+
+@router.get("/upcoming", response_description="Get all events upcoming events", response_model=List[EventInDB])
+def list_events(pageSize: int, pageNum: int, request: Request):
+    events = list(request.app.database["events"].find(skip=pageNum*pageSize, limit=pageSize).sort([('start_dt', pymongo.ASCENDING)]))
     return events
 
 @router.get("/{id}", response_description="Get a single event by id", response_model=EventInDB)
