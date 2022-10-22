@@ -17,7 +17,6 @@ class Review(BaseModel): #use to get from frontend, and store in DB
     parent_id: Optional[str]  # base review: None, replies: id of base review
     reply_review_id: Optional[str]  #review id of reviews it replies to
     #reply_userId: Optional(str) # userId of the review replies to
-    createdAt:datetime  # DateTime created on server side
 
     class Config:
         allow_population_by_field_name = True

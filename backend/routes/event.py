@@ -8,7 +8,6 @@ from fastapi import APIRouter, Body, Request, Response, HTTPException, status, D
 from fastapi.encoders import jsonable_encoder
 from pymongo import ReturnDocument
 from models.event import Event, EventInDB, EventUpdate
-from models.review import ReviewResponse
 from models.user import User
 from util.oAuth import get_current_user
 
@@ -93,57 +92,6 @@ def search_events(request: Request, title="", descriptions="", start_dt="", end_
     return events
 
 
-@router.get("/review", response_description="Get event comments", response_model=List[ReviewResponse])
-def list_reviews(request: Request, id: str):
-    reviews = list(request.app.database["reviews"].find({"event_id": id}))
-    #print(reviews)
-    for review in reviews:
-        user = {"_id": review["user_id"]}
-        review["id"] = str(review["_id"])
-        review["username"] = request.app.database["users"].find_one(user)["first_name"]
-        if review["reply_review_id"]:
-            reply = {"_id": review["reply_review_id"]}
-            review["reply_username"] = request.app.database["users"].find_one(reply)["first_name"]
-
-    return reviews
-
-
-@router.post("/new/review")
-def new_review(request: Request, event_id: str, user_id: str, message: str,
-               parent_id=None, reply_review_id=None):
-    query = {
-        "event_id": event_id,
-        "user_id": user_id,
-        "message": message,
-        "parent_id": parent_id,
-        "reply_review_id": reply_review_id,
-        "createdAt": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-    }
-
-    request.app.database["reviews"].insert_one(query)
-    return "success"
-
-
-@router.delete("/delete/review")
-def delete_review(request: Request, id: str):
-    reply_reviews = list(request.app.database["reviews"].find({"parent_id": id}))
-    print(reply_reviews)
-    if reply_reviews:
-        for i in range(len(reply_reviews)):
-            print(reply_reviews[i])
-            prev_id= {"parent_id": str(dict(reply_reviews[i])["_id"])}
-            reply_to_reply_reviews = list(request.app.database["reviews"].find(prev_id))
-            #if reply_to_reply_reviews is not None:
-            reply_reviews = reply_reviews + reply_to_reply_reviews
-
-    for delete_review in reply_reviews:
-        print(delete_review)
-        request.app.database["reviews"].delete_one({"_id": dict(delete_review)["_id"]})
-
-    request.app.database["reviews"].delete_one({"_id": ObjectId(id)})
-    return "success"
-
-
 @router.get("/{id}", response_description="Get a single event by id", response_model=EventInDB)
 def find_event(id: str, request: Request):
     if (event := request.app.database["events"].find_one({"_id": id})) is not None:
@@ -187,11 +135,4 @@ def delete_event(id: str, request: Request, response: Response, user: User = Dep
 
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Event with ID {id} not found")
 
-@router.put("/update/review")
-def update_event(id: str, request: Request, message: str):
-    myquery = { "_id": ObjectId(id) }
-    newvalues = { "$set": { "message": message } }
-    request.app.database["reviews"].update_one(myquery, newvalues)
 
-def fmt_date(date: str):
-    return datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
