@@ -26,14 +26,15 @@ function Comment({
 }) {
   const navigate = useNavigate();
 
-  const isEditing = activeComment && activeComment.id === comment.id && activeComment.type === 'editing';
-  const isReplying = activeComment && activeComment.id === comment.id && activeComment.type === 'replying';
+  const isEditing = activeComment && activeComment.id === comment._id && activeComment.type === 'editing';
+  const isReplying = activeComment && activeComment.id === comment._id && activeComment.type === 'replying';
   const canModify = currentUserId === userId;
   const canReply = Boolean(currentUserId);
-  const replyId = parentId ? parentId : comment.id;
+  const replyId = parentId ? parentId : comment._id;
   // const navigateProfile = () => {
   //   navigate(`/profile/${userId}`);
   // };
+
   return (
     <Grid className="comment" container wrap="wrap" spacing={2}>
       <Grid item>
@@ -43,16 +44,16 @@ function Comment({
         <div className="comment-header">
           <div className="comment-content">
             <h4 className="comment-author">{comment.username || 'Unknown User'}</h4>
-            <div>{format(comment.createdAt)}</div>
+            <div>{format(comment.last_update_date)}</div>
           </div>
 
-          {canModify && <More handleEdit={setActiveComment} handleDelete={deleteComment} id={comment.id} />}
+          {canModify && <More handleEdit={setActiveComment} handleDelete={deleteComment} id={comment._id} />}
         </div>
         {!isEditing && (
           <div className="comment-text">
             {parentId !== comment.reply_review_id && parentId ? (
               <>
-                <span className="at_reply">{`@${comment.reply_username}`}</span>
+                <span className="at_reply">{`@${comment.replying_to_user}`}</span>
                 <span>{comment.message}</span>
               </>
             ) : (
@@ -65,7 +66,7 @@ function Comment({
             submitLabel="Update"
             hasCancelButton
             initialText={comment.message}
-            handleSubmit={(text) => updateComment(text, comment.id)}
+            handleSubmit={(text) => updateComment(text, comment._id)}
             handleCancel={() => {
               setActiveComment(null);
             }}
@@ -76,7 +77,7 @@ function Comment({
             <Button
               startIcon={<ReplyIcon />}
               className="comment-action"
-              onClick={() => setActiveComment({ id: comment.id, type: 'replying' })}
+              onClick={() => setActiveComment({ id: comment._id, type: 'replying' })}
             >
               Reply
             </Button>
@@ -89,7 +90,7 @@ function Comment({
             handleCancel={() => {
               setActiveComment(null);
             }}
-            handleSubmit={(text) => addComment(text, replyId, comment.id)}
+            handleSubmit={(text) => addComment(text, replyId, comment._id)}
           />
         )}
         {replies.length > 0 && (
@@ -105,7 +106,7 @@ function Comment({
                 updateComment={updateComment}
                 deleteComment={deleteComment}
                 addComment={addComment}
-                parentId={comment.id}
+                parentId={comment._id}
                 currentUserId={currentUserId}
               />
             ))}

@@ -4,16 +4,10 @@ import { useSelector } from 'react-redux';
 import CommentForm from './CommentForm';
 import Comment from './Comment';
 import './Comment.css';
-
-import {
-  getComments as getCommentsApi,
-  createComment as createCommentApi,
-  updateComment as updateCommentApi,
-  deleteComment as deleteCommentApi,
-} from './api.js';
+import { axiosInstance } from '../../config.js';
 
 const Comments = ({ eventId }) => {
-  const { currentUser } = useSelector((state) => state.user);
+  const { currentUser, token } = useSelector((state) => state.user);
   const [backendComments, setBackendComments] = useState([]);
   const [rootComments, setRootComments] = useState([]);
   const [activeComment, setActiveComment] = useState(null);
@@ -22,33 +16,45 @@ const Comments = ({ eventId }) => {
   const getReplies = (commentId) =>
     backendComments
       .filter((backendComment) => backendComment.parent_id === commentId)
-      .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+      .sort((a, b) => new Date(a.last_update_date).getTime() - new Date(b.last_update_date).getTime());
 
-  const addComment = (text, parent_id, replyId) => {
-    createCommentApi(text, eventId, currentUser._id, parent_id, replyId).then((comment) => {
-      setActiveComment(null);
-      setChange((prev) => !prev);
-    });
+  const addComment = async (text, parent_id, replyId) => {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    await axiosInstance.post(
+      `/review/${eventId}`,
+      {
+        parent_id: parent_id,
+        message: text,
+        reply_review_id: replyId,
+      },
+      config
+    );
+    setActiveComment(null);
+    setChange((prev) => !prev);
   };
 
-  const updateComment = (text, commentId) => {
-    updateCommentApi(commentId, text).then(() => {
-      setActiveComment(null);
-      setChange((prev) => !prev);
-    });
+  const updateComment = async (text, commentId) => {
+    await axiosInstance.put('/review', { id: commentId, message: text });
+    setActiveComment(null);
+    setChange((prev) => !prev);
   };
-  const deleteComment = (commentId) => {
+  const deleteComment = async (commentId) => {
     if (window.confirm('Are you sure you want to remove comment?')) {
-      deleteCommentApi(commentId);
+      await axiosInstance.delete('/review', {}, { params: { id: commentId } });
       setChange((prev) => !prev);
     }
   };
 
   useEffect(() => {
-    getCommentsApi(eventId).then((data) => {
-      setBackendComments(data);
-      const root = data.filter((backendComment) => backendComment.parent_id === null);
+    axiosInstance.get('/review', { params: { id: eventId } }).then((res) => {
+      setBackendComments(res.data);
+      const root = res.data.filter((backendComment) => backendComment.parent_id === null);
       setRootComments(root);
+      console.log(res.data);
     });
   }, [change]);
 
@@ -63,10 +69,10 @@ const Comments = ({ eventId }) => {
         <div className="comments-container">
           {rootComments.map((rootComment) => (
             <Comment
-              userId={rootComment.userId}
+              userId={rootComment.user_id}
               key={rootComment.id}
               comment={rootComment}
-              replies={getReplies(rootComment.id)}
+              replies={getReplies(rootComment._id)}
               activeComment={activeComment}
               setActiveComment={setActiveComment}
               addComment={addComment}

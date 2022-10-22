@@ -41,14 +41,14 @@ export default function More({ handleEdit, handleDelete, id }) {
         >
           Delete
         </MenuItem>
-        <MenuItem
+        {/* <MenuItem
           onClick={() => {
             handleEdit({ id, type: 'editing' });
             setAnchorEl(null);
           }}
         >
           Edit
-        </MenuItem>
+        </MenuItem> */}
       </Menu>
     </div>
   );
