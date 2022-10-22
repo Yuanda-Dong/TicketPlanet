@@ -2,8 +2,9 @@ from datetime import datetime
 import re
 # from datetime import datetime
 from typing import List
-from fastapi import APIRouter, Body, Depends, Request
+from fastapi import APIRouter, Body, Depends, HTTPException, Request, status
 from fastapi.encoders import jsonable_encoder
+from pymongo import ReturnDocument
 from models.review import Review, ReviewResponse, ReviewInDB, UpdateReview
 from models.user import User
 from util.oAuth import get_current_user
@@ -55,11 +56,20 @@ def delete_review(request: Request, id: str):
     return "success"
 
 
-# @router.put("/")
-# def update_event( request: Request, updates: UpdateReview = Body()):
-#     myquery = { "_id": ObjectId(updates.id) }
-#     newvalues = { "$set": { "message": updates.message } }
-#     request.app.database["reviews"].update_one(myquery, newvalues)
-
-def fmt_date(date: str):
-    return datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
+@router.put("/{review_id}", response_model=ReviewInDB)
+def update_event(review_id:str, request: Request, updated_review: UpdateReview, user: User = Depends(get_current_user)):
+    if (
+            existing_review := request.app.database["reviews"].find_one({"_id": review_id})
+    ) is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"review with ID {review_id} not found")
+        
+    if existing_review["user_id"] != user["_id"]:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                            detail=f"Only the owner of this review can edit it")
+    updated_review = jsonable_encoder(updated_review)  
+    updated_review["last_update_date"] = datetime.now()  
+        
+    updated_review = request.app.database["reviews"].find_one_and_update(
+        {"_id": review_id}, {"$set": updated_review}, return_document=ReturnDocument.AFTER
+    )
+    return updated_review
