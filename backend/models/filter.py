@@ -21,8 +21,8 @@ class Filter(BaseModel):
         allow_population_by_field_name = True
         schema_extra = {
             "example": {
-                "ticket_name": "General Admission",
-                "price": "15",
+                "title": "General Admission",
+                "details": "15",
                 "availability":"55"
             }
         }
