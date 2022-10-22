@@ -9,7 +9,6 @@ from typing import Optional, List, Dict
 
 class Review(BaseModel): #use to get from frontend, and store in DB
     id: str = Field(default_factory=uuid.uuid4, alias="_id")
-    event_id: str
     message: str
     parent_id: Optional[str]  # base review: None, replies: id of base review
     reply_review_id: Optional[str]  #review id of reviews it replies to
@@ -26,17 +25,9 @@ class Review(BaseModel): #use to get from frontend, and store in DB
                 "reply_review_id": ""
             }
         }
-
-# reviews = list(request.app.database["reviews"].find(limit=100))
-# for review in revews:
-#     review['username']= find_username_by_userId
-# username: "firstname lastname"
-# username: "firstname"
-#     review['reply_username'] = find_reply_username_by_reply_userId]
-# return reviews
-
 class ReviewInDB(Review):
     user_id: str
+    event_id: str
 
 
 class ReviewResponse(ReviewInDB): #use to send back to frontend
