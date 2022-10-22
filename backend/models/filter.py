@@ -21,9 +21,15 @@ class Filter(BaseModel):
         allow_population_by_field_name = True
         schema_extra = {
             "example": {
-                "ticket_name": "General Admission",
+                "title": "Test Event",
+                "details": "blocks",
+                "start_dt": "2022-10-11T12:55",
+                "end_dt": "2022-11-11T03:55",
+                "category":"Movies",
                 "price": "15",
-                "availability":"55"
+                "user_postcode":"2122",
+                "distance":"50",
+                "location": "Mars"
             }
         }
 
