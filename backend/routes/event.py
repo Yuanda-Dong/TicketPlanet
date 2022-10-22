@@ -6,12 +6,7 @@ from typing import List
 from bson import ObjectId
 from fastapi import APIRouter, Body, Request, Response, HTTPException, status, Depends
 from fastapi.encoders import jsonable_encoder
-<<<<<<< HEAD
-import pymongo
-=======
 from pymongo import ReturnDocument
-
->>>>>>> 94223da09fc532167550f97449de617e59bfbe74
 from models.event import Event, EventInDB, EventUpdate
 from models.review import ReviewResponse
 from models.user import User
