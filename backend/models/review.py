@@ -2,20 +2,18 @@
 from datetime import datetime
 import uuid
 from typing import Optional, List
-
-from bson import ObjectId
 from pydantic import BaseModel,Field
 from typing import Optional, List, Dict
 
 
 
 class Review(BaseModel): #use to get from frontend, and store in DB
-    _id : ObjectId
+    id: str = Field(default_factory=uuid.uuid4, alias="_id")
     event_id: str
-    user_id: str
     message: str
     parent_id: Optional[str]  # base review: None, replies: id of base review
     reply_review_id: Optional[str]  #review id of reviews it replies to
+    created_date: datetime = datetime.now()
     #reply_userId: Optional(str) # userId of the review replies to
 
     class Config:
@@ -23,41 +21,10 @@ class Review(BaseModel): #use to get from frontend, and store in DB
         schema_extra = {
             # base review by Mike
             "example": {
-                "id": "review1",
-                "event_id": "event1",
-                "user_id":"user1",
-                #"username":"Mike",
-                "message": "this is base review message by Mike",
-                "parent_id": None,
-                "reply_review_id": None,
-                #"reply_username":None,
-                "createdAt" :"Wed Oct 5 2022 18:47:10 GMT+1100",
-            },
-            
-            # reply review by Jennie to Mike
-            "example":{
-                "id": "review2",
-                "event_id": "event1",
-                "user_id":"user2",
-                #"username":"Jennie",
-                "message": "this is reply review message by Jennie",
-                "parent_id": "review1",
-                "reply_review_id": "review1",
-                #"reply_username":"Mike",
-                "createdAt" :"Wed Oct 5 2022 18:47:10 GMT+1100",
-            },
-
-            # nested reply review by Lisa to Jennie
-            "example":{
-                "id": "review3",
-                "event_id": "event1",
-                "user_id":"user3",
-                "username":"Lisa",
-                "message": "this is reply review message by Lisa",
-                "parent_id": "review1",
-                "reply_to_review_id": "review2",
-                #"reply_username":"Jennie",
-                "createdAt" :"Wed Oct 5 2022 18:47:10 GMT+1100",
+                "event_id": "",
+                "message": "This is some review",
+                "parent_id": "",
+                "reply_review_id": ""
             }
         }
 
@@ -69,10 +36,13 @@ class Review(BaseModel): #use to get from frontend, and store in DB
 #     review['reply_username'] = find_reply_username_by_reply_userId]
 # return reviews
 
-class ReviewResponse(Review): #use to send back to frontend
-    id : str
+class ReviewInDB(Review):
+    user_id: str
+
+
+class ReviewResponse(ReviewInDB): #use to send back to frontend
     username: str
-    reply_username: Optional[str]
+    replying_to_user: Optional[str]
 
 # @router.put('/{reviewId}')
 class UpdateReview(BaseModel): #use to update reviews in DB
