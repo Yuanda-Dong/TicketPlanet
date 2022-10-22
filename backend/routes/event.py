@@ -49,14 +49,18 @@ def search_events(request: Request, filter: Filter):
         query["details"] = re.compile(filter.details)
     if filter.location:
         query["address"] = re.compile(filter.location)
-    # if len(start_dt) and len(end_dt):
-    #     query["start_dt"] = {"$lte": datetime.strptime(end_dt, "%Y-%m-%d %H:%M:%S")}
-    #     query["end_dt"] = {"$gte": datetime.strptime(start_dt, "%Y-%m-%d %H:%M:%S")}
-    if filter.category:
-        query["category"] = re.compile(filter.category)
 
-    events = list(request.app.database["events"].find(query))
-    print(type(events[0]))
+    events = request.app.database["events"].find(query)
+    if filter.category:
+        event_list = []
+        for event in events:
+            for category in filter.category:
+                if category:
+                    event = request.app.database["event"].find({"category": category})
+                event_list.append(event)
+
+        events = event_list
+
     if filter.price:
         event_list = []
         for event in events:
@@ -77,26 +81,19 @@ def search_events(request: Request, filter: Filter):
 
     if filter.start_dt and filter.end_dt:
         event_list = []
+        print(events)
         for event in events:
-            print(type(event['end_dt']))
+            #print(type(event['end_dt']))
             event_end_dt = event['end_dt']
-            if isinstance(event['end_dt'], str):
+            if isinstance(event['end_dt'], datetime):
                 event_end_dt = event['end_dt']
             event_start_dt = event['start_dt']
-            if isinstance(event['start_dt'], str):
+            if isinstance(event['start_dt'], datetime):
                 event_start_dt = event['start_dt']
             if (event_end_dt > filter.start_dt) and (event_start_dt < filter.end_dt):
                 event_list.append(event)
-
         events = event_list
-        #events = list(filter(lambda event: ((event['end_dt'] > fmt_date(start_dt)) and (event['start_dt'] <
-        #                               fmt_date(end_dt))), events))
 
-    if len(location1_postcode):
-        events = list(
-            filter(lambda event: abs(float(event["postcode"]) - float(location1_postcode)) <= float(distance),
-                   events))
-    #print(events)
     return events
 
 
