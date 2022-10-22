@@ -61,38 +61,39 @@ def search_events(request: Request, filter: Filter):
 
         events = event_list
 
-    # if filter.price:
-    #     event_list = []
-    #     for event in events:
-    #         tickets = request.app.database["tickets"].find({"event_id": str(event["_id"])})
-    #         for ticket in tickets:
-    #             if ticket:
-    #                 if float(filter.price) < 100:
-    #                     if ticket['price'] < float(filter.price):
-    #                         if event not in event_list:
-    #                             event_list.append(event)
-    #                 if float(filter.price) == 100:
-    #                     if ticket['price'] >= float(filter.price):
-    #                         if event not in event_list:
-    #                             event_list.append(event)
-        # events = event_list
+    if filter.price:
+        event_list = []
+        for e in events:
+            for event in e:
+                tickets = request.app.database["tickets"].find({"event_id": str(event["_id"])})
+                for ticket in tickets:
+                    if ticket:
+                        if float(filter.price) < 100:
+                            if ticket['price'] < float(filter.price):
+                                if event not in event_list:
+                                    event_list.append(event)
+                        if float(filter.price) == 100:
+                            if ticket['price'] >= float(filter.price):
+                                if event not in event_list:
+                                    event_list.append(event)
+        events = event_list
                 # events = list(filter(lambda event: request.app.database["tickets"].find_one({"event_id": str(event["_id"])})['price'] <
                 #        float(price), events))
 
     if filter.start_dt and filter.end_dt:
         event_list = []
         print(events)
-        for event in events:
-            # print(type(event['end_dt']))
-            for e in event:
-                event_end_dt = e['end_dt']
-                if isinstance(e['end_dt'], datetime):
-                    event_end_dt = e['end_dt']
-                event_start_dt = e['start_dt']
-                if isinstance(e['start_dt'], datetime):
-                    event_start_dt = e['start_dt']
+        for e in events:
+            #print(type(event['end_dt']))
+            for event in e:
+                event_end_dt = event['end_dt']
+                if isinstance(event['end_dt'], datetime):
+                    event_end_dt = event['end_dt']
+                event_start_dt = event['start_dt']
+                if isinstance(event['start_dt'], datetime):
+                    event_start_dt = event['start_dt']
                 if (event_end_dt > filter.start_dt) and (event_start_dt < filter.end_dt):
-                    event_list.append(e)
+                    event_list.append(event)
         events = event_list
 
     return events
