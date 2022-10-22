@@ -2,19 +2,21 @@
 from datetime import datetime
 import uuid
 from typing import Optional, List
+
+from bson import ObjectId
 from pydantic import BaseModel,Field
 from typing import Optional, List, Dict
 
 
 
 class Review(BaseModel): #use to get from frontend, and store in DB
-    id: str = Field(default_factory=uuid.uuid4, alias="_id")
+    _id : ObjectId
     event_id: str
     user_id: str
     message: str
-    parent_id: Optional(str) # base review: None, replies: id of base review
-    reply_to_review_id: Optional(str) #review id of reviews it replies to
-    reply_userId: Optional(str) # userId of the review replies to
+    parent_id: Optional[str]  # base review: None, replies: id of base review
+    reply_review_id: Optional[str]  #review id of reviews it replies to
+    #reply_userId: Optional(str) # userId of the review replies to
     createdAt:datetime  # DateTime created on server side
 
     class Config:
@@ -25,11 +27,11 @@ class Review(BaseModel): #use to get from frontend, and store in DB
                 "id": "review1",
                 "event_id": "event1",
                 "user_id":"user1",
-                "username":"Mike",
+                #"username":"Mike",
                 "message": "this is base review message by Mike",
                 "parent_id": None,
-                "reply_to_review_id": None,
-                "reply_username":None,
+                "reply_review_id": None,
+                #"reply_username":None,
                 "createdAt" :"Wed Oct 5 2022 18:47:10 GMT+1100",
             },
             
@@ -38,11 +40,11 @@ class Review(BaseModel): #use to get from frontend, and store in DB
                 "id": "review2",
                 "event_id": "event1",
                 "user_id":"user2",
-                "username":"Jennie",
+                #"username":"Jennie",
                 "message": "this is reply review message by Jennie",
                 "parent_id": "review1",
-                "reply_to_review_id": "review1",
-                "reply_username":"Mike",
+                "reply_review_id": "review1",
+                #"reply_username":"Mike",
                 "createdAt" :"Wed Oct 5 2022 18:47:10 GMT+1100",
             },
 
@@ -55,7 +57,7 @@ class Review(BaseModel): #use to get from frontend, and store in DB
                 "message": "this is reply review message by Lisa",
                 "parent_id": "review1",
                 "reply_to_review_id": "review2",
-                "reply_username":"Jennie",
+                #"reply_username":"Jennie",
                 "createdAt" :"Wed Oct 5 2022 18:47:10 GMT+1100",
             }
         }
@@ -69,8 +71,9 @@ class Review(BaseModel): #use to get from frontend, and store in DB
 # return reviews
 
 class ReviewResponse(Review): #use to send back to frontend
+    id : str
     username: str
-    reply_to_username: Optional(str)
+    reply_username: Optional[str]
 
 # @router.put('/{reviewId}')
 class UpdateReview(BaseModel): #use to update reviews in DB
