@@ -21,7 +21,6 @@ class Review(BaseModel): #use to get from frontend, and store in DB
         schema_extra = {
             # base review by Mike
             "example": {
-                "event_id": "",
                 "message": "This is some review",
                 "parent_id": "",
                 "reply_review_id": ""

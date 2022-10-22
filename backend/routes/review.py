@@ -23,9 +23,10 @@ def list_reviews(request: Request, id: str):
     return reviews
 
 
-@router.post("/", response_description="Newly created Review", response_model=ReviewInDB)
-def new_review(request: Request, review: Review, user: User = Depends(get_current_user)):
+@router.post("/{event_id}", response_description="Newly created Review", response_model=ReviewInDB)
+def new_review(event_id:str,request: Request, review: Review, user: User = Depends(get_current_user)):
     review = jsonable_encoder(review)
+    review["event_id"] = event_id
     review["user_id"] = user["_id"]
     new_review = request.app.database["reviews"].insert_one(review)
     created_review= request.app.database["reviews"].find_one(
