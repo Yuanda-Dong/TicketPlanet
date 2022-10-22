@@ -1,13 +1,10 @@
-import re
 from datetime import datetime
+import re
 # from datetime import datetime
 from typing import List
-
-from bson import ObjectId
-from fastapi import APIRouter, Body, Request, Response, HTTPException, status, Depends
+from fastapi import APIRouter, Body, Depends, Request
 from fastapi.encoders import jsonable_encoder
-from pymongo import ReturnDocument
-from models.review import Review, ReviewResponse, UpdateReview
+from models.review import Review, ReviewResponse, ReviewInDB, UpdateReview
 from models.user import User
 from util.oAuth import get_current_user
 
@@ -18,32 +15,23 @@ def list_reviews(request: Request, id: str):
     reviews = list(request.app.database["reviews"].find({"event_id": id}))
     #print(reviews)
     for review in reviews:
-        user = {"_id": review["user_id"]}
-        review["id"] = str(review["_id"])
-        user_object = request.app.database["users"].find_one(user)
-        review["username"] = user_object["first_name"] + " " + user_object["last_name"] 
-        if review["reply_review_id"]:
-            user_id = request.app.database["reviews"].find_one({"_id": review["reply_review_id"]})["user_id"]
-            user={"_id": user_id}
-            user_object = request.app.database["users"].find_one(user)
-            review["reply_username"] = user_object["first_name"] + " " + user_object["last_name"] 
-
+        print(review)
+        user = request.app.database["users"].find_one({"_id": review["user_id"]})
+        replying_to = None if review["reply_review_id"] is None else request.app.database["users"].find_one({"_id": review["reply_review_id"]}) 
+        review["username"] = user["first_name"] + " " + user["last_name"]
+        review["replying_to_user"] = "" if replying_to is None else replying_to["first_name"] + " " + replying_to["last_name"]
     return reviews
 
 
-@router.post("/")
-def new_review(request: Request, review: Review = Body()):
-    query = {
-        "event_id": review.event_id,
-        "user_id": review.user_id,
-        "message": review.message,
-        "parent_id": review.parent_id,
-        "reply_review_id": review.reply_review_id,
-        "createdAt": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-    }
-
-    request.app.database["reviews"].insert_one(query)
-    return "success"
+@router.post("/", response_description="Newly created Review", response_model=ReviewInDB)
+def new_review(request: Request, review: Review, user: User = Depends(get_current_user)):
+    review = jsonable_encoder(review)
+    review["user_id"] = user["_id"]
+    new_review = request.app.database["reviews"].insert_one(review)
+    created_review= request.app.database["reviews"].find_one(
+        {"_id": new_review.inserted_id}
+    )
+    return created_review
 
 
 @router.delete("/")
@@ -66,11 +54,11 @@ def delete_review(request: Request, id: str):
     return "success"
 
 
-@router.put("/")
-def update_event( request: Request, updates: UpdateReview = Body()):
-    myquery = { "_id": ObjectId(updates.id) }
-    newvalues = { "$set": { "message": updates.message } }
-    request.app.database["reviews"].update_one(myquery, newvalues)
+# @router.put("/")
+# def update_event( request: Request, updates: UpdateReview = Body()):
+#     myquery = { "_id": ObjectId(updates.id) }
+#     newvalues = { "$set": { "message": updates.message } }
+#     request.app.database["reviews"].update_one(myquery, newvalues)
 
 def fmt_date(date: str):
     return datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
