@@ -25,7 +25,7 @@ class Filter(BaseModel):
                 "details": "blocks",
                 "start_dt": "2022-10-11T12:55",
                 "end_dt": "2022-11-11T03:55",
-                "category":"Movies",
+                "category":["Movies"],
                 "price": "15",
                 "user_postcode":"2122",
                 "distance":"50",
