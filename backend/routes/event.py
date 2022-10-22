@@ -59,14 +59,17 @@ def search_events(request: Request, title="", descriptions="", start_dt="", end_
     if len(price):
         event_list = []
         for event in events:
-            ticket = request.app.database["tickets"].find_one({"event_id": str(event["_id"])})
-            if ticket:
-                if float(price) < 100:
-                    if ticket['price'] < float(price):
-                        event_list.append(event)
-                if float(price) == 100:
-                    if ticket['price'] >= float(price):
-                        event_list.append(event)
+            tickets = request.app.database["tickets"].find({"event_id": str(event["_id"])})
+            for ticket in tickets:
+                if ticket:
+                    if float(price) < 100:
+                        if ticket['price'] < float(price):
+                            if event not in event_list:
+                                event_list.append(event)
+                    if float(price) == 100:
+                        if ticket['price'] >= float(price):
+                            if event not in event_list:
+                                event_list.append(event)
         events = event_list
                 # events = list(filter(lambda event: request.app.database["tickets"].find_one({"event_id": str(event["_id"])})['price'] <
                 #        float(price), events))
