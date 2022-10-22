@@ -18,15 +18,7 @@ const EventList = (props) => {
   const handleCloseNavMenu = () => {
     setanchoEl(null);
   };
-  const deleteHandler = (event) => {
-    handleCloseNavMenu();
-    console.log(event.currentTarget);
-    console.log('delete');
-  };
-  const operations = [
-    { id: 'Edit', to: '/edit' },
-    { id: 'Delete', handler: deleteHandler },
-  ];
+
   const publsihed_operations = [
     { id: 'Edit', to: `/edit/${props.eventInfo._id}` },
     { id: 'Cancel', to: '/cancel-event' },
@@ -50,12 +42,12 @@ const EventList = (props) => {
       onClose={handleCloseNavMenu}
     >
       {publsihed_operations.map((operation) => (
-            <Link key={operation.id} to={operation.to} style={{ color: 'inherit', textDecoration: 'none' }}>
-              <MenuItem>
-                <Typography textAlign="center">{operation.id}</Typography>
-              </MenuItem>
-            </Link>
-          ))}
+        <Link key={operation.id} to={operation.to} style={{ color: 'inherit', textDecoration: 'none' }}>
+          <MenuItem>
+            <Typography textAlign="center">{operation.id}</Typography>
+          </MenuItem>
+        </Link>
+      ))}
     </Menu>
   );
   return (
@@ -63,10 +55,10 @@ const EventList = (props) => {
       <div className="event-list-item">
         <div className="date">
           <span className="month">
-            {new Date(props.eventInfo.start_dt).toLocaleString("default", { month: "long" })}
+            {new Date(props.eventInfo.start_dt).toLocaleString('default', { month: 'long' })}
           </span>
           <span className="day">
-          {new Date(props.eventInfo.start_dt).toLocaleString("default", { day: "numeric" })}
+            {new Date(props.eventInfo.start_dt).toLocaleString('default', { day: 'numeric' })}
           </span>
         </div>
         <div className="event-info">
@@ -74,7 +66,7 @@ const EventList = (props) => {
             {props.eventInfo.title}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-          {props.eventInfo.address}
+            {props.eventInfo.address}
           </Typography>
         </div>
         <IconButton

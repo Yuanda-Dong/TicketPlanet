@@ -14,7 +14,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SendIcon from '@mui/icons-material/Send';
-import { EditorState,convertToRaw } from 'draft-js';
+import { EditorState, convertToRaw } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import Paper from '@mui/material/Paper';
@@ -27,7 +27,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Modal from '@mui/material/Modal';
 import { useNavigate, useParams } from 'react-router-dom';
-import { convertFromRaw,ContentState } from 'draft-js';
+import { convertFromRaw, ContentState } from 'draft-js';
 const EditPage = () => {
   const { token } = useSelector((state) => state.user);
   const navigate = useNavigate();
@@ -114,6 +114,8 @@ const EditPage = () => {
           case 'running':
             console.log('Upload is running');
             break;
+          default:
+            break;
         }
       },
       (error) => {
@@ -128,6 +130,8 @@ const EditPage = () => {
             break;
           case 'storage/unknown':
             // Unknown error occurred, inspect error.serverResponse
+            break;
+          default:
             break;
         }
       },
@@ -162,40 +166,40 @@ const EditPage = () => {
     setEditorState({
       editorState,
     });
-    setEvent((prev) => ({ ...prev, details: JSON.stringify(convertToRaw(editorState.getCurrentContent()))}));
+    setEvent((prev) => ({ ...prev, details: JSON.stringify(convertToRaw(editorState.getCurrentContent())) }));
   };
   const goHome = () => {
     navigate('/dashboard/events');
   };
 
   const goNext = async () => {
-    if (event.title == '') {
+    if (event.title === '') {
       alert('Event must have title');
       return;
     }
-    if (event.host_name == '') {
+    if (event.host_name === '') {
       alert('Event must have host');
       return;
     }
-    if (event.category == '') {
+    if (event.category === '') {
       alert('Event must have category');
       return;
     }
-    if (event.address == '') {
+    if (event.address === '') {
       alert('Event must have address');
       return;
     }
     const regex = /^\d{4}$/;
     let result = regex.test(event.postcode);
-    if (result == false) {
+    if (result === false) {
       alert('Event must have a valid postcode');
       return;
     }
-    if (event.start_dt == null) {
+    if (event.start_dt === null) {
       alert('Event must have a start datetime');
       return;
     }
-    if (event.end_dt == null) {
+    if (event.end_dt === null) {
       alert('Event must have an end datetime');
       return;
     }
@@ -203,29 +207,28 @@ const EditPage = () => {
       alert('Event must not end before it starts');
     }
     try {
-
-      await axiosInstance.put('/event/'+params.id, event, config);
+      await axiosInstance.put('/event/' + params.id, event, config);
       // await axiosInstance.post('/event/'+params.id, event, config);
       // for (const t in ticket){
       //   await axiosInstance.put('/ticket/'+t.id,t,config);
       // }
-      let res = await axiosInstance.get("/ticket/e/"+ params.id);
-      for (const t in res.data){
-        axiosInstance.delete('/ticket/'+res.data[t]._id, config);
+      let res = await axiosInstance.get('/ticket/e/' + params.id);
+      for (const t in res.data) {
+        axiosInstance.delete('/ticket/' + res.data[t]._id, config);
       }
-      
 
-      for (const t in ticket.tickets){
-        axiosInstance.post('/ticket/e/'+params.id,
-        {
-          "ticket_name": ticket.tickets[t].ticket_name,
-          "price": ticket.tickets[t].price,
-          "availability": ticket.tickets[t].availability,
-        }
-        ,config);
+      for (const t in ticket.tickets) {
+        axiosInstance.post(
+          '/ticket/e/' + params.id,
+          {
+            ticket_name: ticket.tickets[t].ticket_name,
+            price: ticket.tickets[t].price,
+            availability: ticket.tickets[t].availability,
+          },
+          config
+        );
       }
       navigate('/dashboard/events');
-      
     } catch (err) {
       console.log(err);
     }
@@ -268,11 +271,11 @@ const EditPage = () => {
   const add = () => {
     const newTickets = ticket.tickets;
 
-    if (ticket.t.ticket_name == '') {
+    if (ticket.t.ticket_name === '') {
       alert('Ticket must have a name');
       return;
     }
-    if (ticket.t.price == '') {
+    if (ticket.t.price === '') {
       alert('Ticket must have a price');
       return;
     }
@@ -281,7 +284,7 @@ const EditPage = () => {
       alert('Ticket must have a valid price');
       return;
     }
-    if (ticket.t.availability == '') {
+    if (ticket.t.availability === '') {
       alert('Ticket must have a quantity');
       return;
     }
@@ -300,18 +303,18 @@ const EditPage = () => {
   const params = useParams();
   React.useEffect(() => {
     async function fetchData() {
-      let res = await axiosInstance.get("/event/"+ params.id);
+      let res = await axiosInstance.get('/event/' + params.id);
       setEvent(res.data);
       // res = await axiosInstance.get("/ticket/e/"+params.id);
       // setPrice(Math.min(...(res.data.map(e=>e.price))));
       let dbState = convertFromRaw(JSON.parse(res.data.details));
-      setEditorState({editorState:EditorState.createWithContent(dbState)});
+      setEditorState({ editorState: EditorState.createWithContent(dbState) });
       // console.log(EditorState.createWithContent(dbState));
-      res = await axiosInstance.get("/ticket/e/"+ params.id);
-      setTicket({...ticket, tickets:res.data});
+      res = await axiosInstance.get('/ticket/e/' + params.id);
+      setTicket((prev) => ({ ...prev, tickets: res.data }));
     }
     fetchData();
-  }, []);
+  }, [params.id]);
 
   return (
     <div className="PostPage">
@@ -443,104 +446,104 @@ const EditPage = () => {
               />
             </Grid>
             {/* TICKETs */}
-          <Grid item xs={12}>
-            <h3> Tickets</h3>
-          </Grid>
-          <Grid item xs={12}>
-            <div>
-              {ticket.tickets.map((e, idx) => (
-                <Card key={idx} sx={{ minWidth: 250 }}>
-                  <CardContent>
-                    <Grid container spacing={1} direction="row" justifyContent="space-between" alignItems="flex-end">
-                      <Grid item xs={9}>
-                        <Typography gutterBottom variant="h5" component="div">
-                          {e.ticket_name}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                          Price: ${e.price}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                          Available quantity: {e.availability}
+            <Grid item xs={12}>
+              <h3> Tickets</h3>
+            </Grid>
+            <Grid item xs={12}>
+              <div>
+                {ticket.tickets.map((e, idx) => (
+                  <Card key={idx} sx={{ minWidth: 250 }}>
+                    <CardContent>
+                      <Grid container spacing={1} direction="row" justifyContent="space-between" alignItems="flex-end">
+                        <Grid item xs={9}>
+                          <Typography gutterBottom variant="h5" component="div">
+                            {e.ticket_name}
+                          </Typography>
+                          <Typography variant="body2" color="text.secondary">
+                            Price: ${e.price}
+                          </Typography>
+                          <Typography variant="body2" color="text.secondary">
+                            Available quantity: {e.availability}
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={3}>
+                          <Button
+                            variant="outlined"
+                            component="label"
+                            color="error"
+                            startIcon={<DeleteIcon />}
+                            onClick={(event) => removeTicket(event, idx)}
+                          >
+                            Remove
+                          </Button>
+                        </Grid>
+                      </Grid>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+
+              <div>
+                <Button fullWidth variant="outlined" onClick={handleOpen}>
+                  Add Tickets
+                </Button>
+                <Modal
+                  open={open}
+                  onClose={handleClose}
+                  aria-labelledby="modal-modal-title"
+                  aria-describedby="modal-modal-description"
+                >
+                  <Box sx={style}>
+                    <Grid container spacing={2}>
+                      <Grid item xs={12}>
+                        <Typography align="center" id="modal-modal-title" variant="h6" component="h2">
+                          Add Tickets
                         </Typography>
                       </Grid>
-                      <Grid item xs={3}>
-                        <Button
-                          variant="outlined"
-                          component="label"
-                          color="error"
-                          startIcon={<DeleteIcon />}
-                          onClick={(event) => removeTicket(event, idx)}
-                        >
-                          Remove
+                      <Grid item xs={12}>
+                        <TextField
+                          fullWidth
+                          id="standard-basic"
+                          label="Name: "
+                          variant="standard"
+                          value={ticket.t.ticket_name}
+                          margin="normal"
+                          onChange={setName}
+                        />
+                        <TextField
+                          fullWidth
+                          id="standard-basic"
+                          label="Price: "
+                          variant="standard"
+                          value={ticket.t.price}
+                          margin="normal"
+                          onChange={setPrice}
+                        />
+                        <TextField
+                          fullWidth
+                          id="standard-basic"
+                          label="Quantity: "
+                          variant="standard"
+                          value={ticket.t.availability}
+                          margin="normal"
+                          onChange={setQuantity}
+                        />
+                      </Grid>
+                      <Grid item xs={10} mt={1}>
+                        <Button variant="contained" color="error" onClick={cancel}>
+                          Cancel
+                        </Button>
+                      </Grid>
+                      <Grid item xs={2} mt={1}>
+                        <Button variant="contained" onClick={add}>
+                          Add
                         </Button>
                       </Grid>
                     </Grid>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-
-            <div>
-              <Button fullWidth variant="outlined" onClick={handleOpen}>
-                Add Tickets
-              </Button>
-              <Modal
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-              >
-                <Box sx={style}>
-                  <Grid container spacing={2}>
-                    <Grid item xs={12}>
-                      <Typography align="center" id="modal-modal-title" variant="h6" component="h2">
-                        Add Tickets
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <TextField
-                        fullWidth
-                        id="standard-basic"
-                        label="Name: "
-                        variant="standard"
-                        value={ticket.t.ticket_name}
-                        margin="normal"
-                        onChange={setName}
-                      />
-                      <TextField
-                        fullWidth
-                        id="standard-basic"
-                        label="Price: "
-                        variant="standard"
-                        value={ticket.t.price}
-                        margin="normal"
-                        onChange={setPrice}
-                      />
-                      <TextField
-                        fullWidth
-                        id="standard-basic"
-                        label="Quantity: "
-                        variant="standard"
-                        value={ticket.t.availability}
-                        margin="normal"
-                        onChange={setQuantity}
-                      />
-                    </Grid>
-                    <Grid item xs={10} mt={1}>
-                      <Button variant="contained" color="error" onClick={cancel}>
-                        Cancel
-                      </Button>
-                    </Grid>
-                    <Grid item xs={2} mt={1}>
-                      <Button variant="contained" onClick={add}>
-                        Add
-                      </Button>
-                    </Grid>
-                  </Grid>
-                </Box>
-              </Modal>
-            </div>
-          </Grid>
+                  </Box>
+                </Modal>
+              </div>
+            </Grid>
             <Grid item xs={12}>
               <h3> Image Upload</h3>
             </Grid>

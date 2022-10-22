@@ -30,12 +30,12 @@ function Comment({
   const canModify = currentUserId === userId;
   const canReply = Boolean(currentUserId);
   const replyId = parentId ? parentId : comment.id;
-  const navigateProfile = () => {
-    navigate(`/profile/${userId}`);
-  };
+  // const navigateProfile = () => {
+  //   navigate(`/profile/${userId}`);
+  // };
   return (
     <Grid className="comment" container wrap="wrap" spacing={2}>
-      <Grid item onClick={navigateProfile}>
+      <Grid item>
         {/* <Avatar>{getInitials(comment.username, comment.username)}</Avatar> */}
         <Avatar alt={comment.username} src="/" />
       </Grid>
@@ -50,13 +50,13 @@ function Comment({
         </div>
         {!isEditing && (
           <div className="comment-text">
-            {comment.parentId !== comment.reply_review_id && comment.parentId ? (
+            {parentId !== comment.reply_review_id && parentId ? (
               <>
-                <span className="at_reply">{`@${comment.replyUsername}`}</span>
-                <span>{comment.body}</span>
+                <span className="at_reply">{`@${comment.reply_username}`}</span>
+                <span>{comment.message}</span>
               </>
             ) : (
-              comment.body
+              comment.message
             )}
           </div>
         )}
@@ -64,7 +64,7 @@ function Comment({
           <CommentForm
             submitLabel="Update"
             hasCancelButton
-            initialText={comment.body}
+            initialText={comment.message}
             handleSubmit={(text) => updateComment(text, comment.id)}
             handleCancel={() => {
               setActiveComment(null);
@@ -89,14 +89,14 @@ function Comment({
             handleCancel={() => {
               setActiveComment(null);
             }}
-            handleSubmit={(text) => addComment(text, replyId, comment.username, comment.id)}
+            handleSubmit={(text) => addComment(text, replyId, comment.id)}
           />
         )}
         {replies.length > 0 && (
           <div className="replies">
             {replies.map((reply) => (
               <Comment
-                userId={reply.userId}
+                userId={reply.user_id}
                 key={reply.id}
                 comment={reply}
                 replies={[]}

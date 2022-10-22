@@ -11,7 +11,7 @@ export default function Gallery(props) {
           <img
             src={`${item}?w=164&h=164&fit=crop&auto=format`}
             srcSet={`${item}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-            alt="Gallery image"
+            alt="Event Gallery"
             loading="lazy"
           />
         </ImageListItem>

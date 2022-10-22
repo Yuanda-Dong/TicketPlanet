@@ -30,7 +30,7 @@ const TicketPage = () => {
       Authorization: `Bearer ${token}`,
     },
   };
-  const [ticket, setTicket] = React.useState({ t: { price: '', quantity: '', name: '' }, tickets: [] });
+  const [ticket, setTicket] = useState({ t: { price: '', quantity: '', name: '' }, tickets: [] });
 
   const style = {
     position: 'absolute',
@@ -81,11 +81,11 @@ const TicketPage = () => {
   const add = () => {
     const newTickets = ticket.tickets;
 
-    if (ticket.t.name == '') {
+    if (ticket.t.name === '') {
       alert('Ticket must have a name');
       return;
     }
-    if (ticket.t.price == '') {
+    if (ticket.t.price === '') {
       alert('Ticket must have a price');
       return;
     }
@@ -94,7 +94,7 @@ const TicketPage = () => {
       alert('Ticket must have a valid price');
       return;
     }
-    if (ticket.t.quantity == '') {
+    if (ticket.t.quantity === '') {
       alert('Ticket must have a quantity');
       return;
     }

@@ -21,15 +21,15 @@ export default function ForgotPassword() {
   });
   // { params: { email } }
 
-  const validateEmailBlur = email => {
-    console.log(email.target.value)
-    const regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  const validateEmailBlur = (email) => {
+    console.log(email.target.value);
+    const regex =
+      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     const result = regex.test(email.target.value);
-    if(result === true){
+    if (result) {
       setErrors((err) => ({ ...err, error1: { error: false, message: '' } }));
-    }
-    else{
-      console.log("Enter correct email address!")
+    } else {
+      console.log('Enter correct email address!');
       setErrors((err) => ({ ...err, error1: { error: true, message: 'Enter correct email address!' } }));
     }
   };
@@ -48,7 +48,6 @@ export default function ForgotPassword() {
     }, 1000);
   };
   const handleSend = (e) => {
-
     axiosInstance
       .post('/user/forgot-password', { email })
       .then((res) => {
@@ -100,12 +99,17 @@ export default function ForgotPassword() {
               setEmail(e.target.value);
             }}
             onBlur={validateEmailBlur}
-            helperText={(errors.error1.error && errors.error1.message) || (seconds && `Password reset email has been sent (${seconds}s)`)}
+            helperText={
+              (errors.error1.error && errors.error1.message) ||
+              (seconds && `Password reset email has been sent (${seconds}s)`)
+            }
           />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleSend} disabled={errors.error1.error}>Send</Button>
+          <Button onClick={handleSend} disabled={errors.error1.error}>
+            Send
+          </Button>
         </DialogActions>
       </Dialog>
     </div>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 // import ReactInputVerificationCode from 'react-input-verification-code';
 import { TextField } from '@mui/material';
@@ -98,12 +98,16 @@ export default function FindPassword() {
         } else {
           setErrors((err) => ({ ...err, error1: { error: false, message: '' } }));
         }
+        break;
       case 'repeat':
         if (passwords.new !== passwords.repeat) {
           setErrors((err) => ({ ...err, error2: { error: true, message: 'Passwords do not match' } }));
         } else {
           setErrors((err) => ({ ...err, error2: { error: false, message: '' } }));
         }
+        break;
+      default:
+        break;
     }
   };
 

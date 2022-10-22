@@ -63,12 +63,16 @@ export default function SignInSide() {
         } else {
           setErrors((err) => ({ ...err, error1: { error: false, message: '' } }));
         }
+        break;
       case 'password':
         if (info.password === '') {
           setErrors((err) => ({ ...err, error2: { error: true, message: 'Password can not be empty' } }));
         } else {
           setErrors((err) => ({ ...err, error2: { error: false, message: '' } }));
         }
+        break;
+      default:
+        break;
     }
   };
 

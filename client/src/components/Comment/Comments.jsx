@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Paper, Divider } from '@mui/material';
-
 import { useSelector } from 'react-redux';
-
 import CommentForm from './CommentForm';
 import Comment from './Comment';
 import './Comment.css';
@@ -23,11 +21,11 @@ const Comments = ({ eventId }) => {
 
   const getReplies = (commentId) =>
     backendComments
-      .filter((backendComment) => backendComment.parentId === commentId)
-      .sort((a, b) => new Date(a.update_time).getTime() - new Date(b.update_time).getTime());
+      .filter((backendComment) => backendComment.parent_id === commentId)
+      .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
 
-  const addComment = (text, parentId, replyUsername, replyId) => {
-    createCommentApi(text, eventId, parentId, replyUsername, replyId).then((comment) => {
+  const addComment = (text, parent_id, replyId) => {
+    createCommentApi(text, eventId, currentUser._id, parent_id, replyId).then((comment) => {
       setActiveComment(null);
       setChange((prev) => !prev);
     });
@@ -49,7 +47,7 @@ const Comments = ({ eventId }) => {
   useEffect(() => {
     getCommentsApi(eventId).then((data) => {
       setBackendComments(data);
-      const root = data.filter((backendComment) => backendComment.parentId === null);
+      const root = data.filter((backendComment) => backendComment.parent_id === null);
       setRootComments(root);
     });
   }, [change]);

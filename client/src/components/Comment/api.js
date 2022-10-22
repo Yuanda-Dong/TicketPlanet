@@ -1,3 +1,4 @@
+import { axiosInstance } from '../../config.js';
 const imgLink =
   'https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260';
 
@@ -55,33 +56,46 @@ let comments = [
 ];
 
 export const getComments = async (eventId) => {
-  return comments;
+  // return comments;
+  const res = await axiosInstance.get('/review', { params: { id: eventId } });
+  return res.data;
 };
 
-export const createComment = async (text, eventId, parentId = null, replyUsername, replyId) => {
-  const newComment = {
-    id: Math.random().toString(36).substr(2, 9),
-    body: text,
-    parentId,
-    userId: 'b181acc6-b50d-4938-951a-0b19a5ed59b0',
-    username: 'Serena',
+export const createComment = async (text, eventId, userId, parentId = null, replyId) => {
+  // const newComment = {
+  //   id: Math.random().toString(36).substr(2, 9),
+  //   body: text,
+  //   parentId,
+  //   userId: 'b181acc6-b50d-4938-951a-0b19a5ed59b0',
+  //   username: 'Serena',
+  //   reply_review_id: replyId,
+  //   replyUsername,
+  //   createdAt: new Date().toISOString(),
+  // };
+  // comments.push(newComment);
+  // return newComment;
+  const res = await axiosInstance.post('/review', {
+    event_id: eventId,
+    user_id: userId,
+    parent_id: parentId,
+    message: text,
     reply_review_id: replyId,
-    replyUsername,
-    createdAt: new Date().toISOString(),
-  };
-  comments.push(newComment);
-  return newComment;
+  });
+  return res.data;
 };
 
 export const updateComment = async (commentId, text) => {
-  comments = comments.map((comment) => {
-    if (comment.id === commentId) {
-      return { ...comment, body: text };
-    }
-    return comment;
-  });
+  // comments = comments.map((comment) => {
+  //   if (comment.id === commentId) {
+  //     return { ...comment, body: text };
+  //   }
+  //   return comment;
+  // });
+
+  axiosInstance.put('/event/update/review', { id: commentId, message: text });
 };
 
 export const deleteComment = async (commentId) => {
-  comments = comments.filter((comment) => comment.id !== commentId);
+  // comments = comments.filter((comment) => comment.id !== commentId);
+  axiosInstance.delete('/review', {}, { params: { id: commentId } });
 };

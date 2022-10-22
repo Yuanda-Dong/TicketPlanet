@@ -7,32 +7,32 @@ import Gallery from '../../components/Gallery/Gallery';
 import Comments from '../../components/Comment/Comments';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { axiosInstance } from "../../config";
+import { axiosInstance } from '../../config';
 import { convertFromRaw } from 'draft-js';
-import {stateToHTML} from 'draft-js-export-html';
+import { stateToHTML } from 'draft-js-export-html';
 import './EventDetail.css';
 import moment from 'moment';
 const EventDetail = (props) => {
   const params = useParams();
   const { currentUser } = useSelector((state) => state.user);
-  const [eventInfo,setEventInfo] = React.useState({});
-  const [price,setPrice] = React.useState('');
+  const [eventInfo, setEventInfo] = React.useState({});
+  const [price, setPrice] = React.useState('');
   React.useEffect(() => {
     async function fetchData() {
-      let res = await axiosInstance.get("/event/"+ params.id);
+      let res = await axiosInstance.get('/event/' + params.id);
       setEventInfo(res.data);
-      res = await axiosInstance.get("/ticket/e/"+params.id);
-      setPrice(Math.min(...(res.data.map(e=>e.price))));
+      res = await axiosInstance.get('/ticket/e/' + params.id);
+      setPrice(Math.min(...res.data.map((e) => e.price)));
     }
     fetchData();
-  }, []);
+  }, [params.id]);
 
   return (
     <>
       <NavBar />
       <div className="event-detail">
         <div className="img-container">
-          <img src={eventInfo.image_url } alt="Thumbnail image"/>
+          <img src={eventInfo.image_url} alt="Event Thumbnail" />
         </div>
         <div className="info">
           <div className="event-info">
@@ -44,14 +44,12 @@ const EventDetail = (props) => {
               </Button>
             </div>
 
-            <h3>
-              Category: {eventInfo.category}
-            </h3>
+            <h3>Category: {eventInfo.category}</h3>
           </div>
           <div className="ticket-info">
             <div className="ticket-box">
               <span>Tickets starting at</span>
-              <span>{price!='Infinity'?'$ ' +price:''}</span>
+              <span>{price !== 'Infinity' ? '$ ' + price : ''}</span>
               <Button variant="contained" className="buy">
                 Buy tickets
               </Button>
@@ -80,16 +78,19 @@ const EventDetail = (props) => {
         </div>
         <div className="highlight-container">
           <h2>Description</h2>
-          <p dangerouslySetInnerHTML={{__html: eventInfo.details?stateToHTML(convertFromRaw(JSON.parse(eventInfo.details))):""}}>
-          </p>
+          <p
+            dangerouslySetInnerHTML={{
+              __html: eventInfo.details ? stateToHTML(convertFromRaw(JSON.parse(eventInfo.details))) : '',
+            }}
+          ></p>
         </div>
-        <div className="gallery" >
-        <h2>Gallery</h2>  
-        {eventInfo.gallery?<Gallery galleryImages={eventInfo.gallery}></Gallery>:''}
+        <div className="gallery">
+          <h2>Gallery</h2>
+          {eventInfo.gallery ? <Gallery galleryImages={eventInfo.gallery}></Gallery> : ''}
         </div>
       </div>
       <div className="comments-section">
-        <Comments eventId="0" />
+        <Comments eventId={params.id} />
       </div>
     </>
   );

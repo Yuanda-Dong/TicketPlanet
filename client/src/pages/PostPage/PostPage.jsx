@@ -14,7 +14,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SendIcon from '@mui/icons-material/Send';
-import { EditorState,convertToRaw } from 'draft-js';
+import { EditorState, convertToRaw } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import Paper from '@mui/material/Paper';
@@ -45,19 +45,19 @@ const PostPage = () => {
     details: '',
   });
 
-  const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    pt: 2,
-    px: 4,
-    pb: 3,
-  };
+  // const style = {
+  //   position: 'absolute',
+  //   top: '50%',
+  //   left: '50%',
+  //   transform: 'translate(-50%, -50%)',
+  //   width: 400,
+  //   bgcolor: 'background.paper',
+  //   border: '2px solid #000',
+  //   boxShadow: 24,
+  //   pt: 2,
+  //   px: 4,
+  //   pb: 3,
+  // };
 
   const [progress, setProgress] = React.useState({ thumbnail: 100, gallery: 100 });
 
@@ -109,6 +109,8 @@ const PostPage = () => {
           case 'running':
             console.log('Upload is running');
             break;
+          default:
+            break;
         }
       },
       (error) => {
@@ -123,6 +125,8 @@ const PostPage = () => {
             break;
           case 'storage/unknown':
             // Unknown error occurred, inspect error.serverResponse
+            break;
+          default:
             break;
         }
       },
@@ -157,40 +161,40 @@ const PostPage = () => {
     setEditorState({
       editorState,
     });
-    setEvent((prev) => ({ ...prev, details: JSON.stringify(convertToRaw(editorState.getCurrentContent()))}));
+    setEvent((prev) => ({ ...prev, details: JSON.stringify(convertToRaw(editorState.getCurrentContent())) }));
   };
   const goHome = () => {
     navigate('/dashboard/events');
   };
 
   const goNext = async () => {
-    if (event.title == '') {
+    if (event.title === '') {
       alert('Event must have title');
       return;
     }
-    if (event.host_name == '') {
+    if (event.host_name === '') {
       alert('Event must have host');
       return;
     }
-    if (event.category == '') {
+    if (event.category === '') {
       alert('Event must have category');
       return;
     }
-    if (event.address == '') {
+    if (event.address === '') {
       alert('Event must have address');
       return;
     }
     const regex = /^\d{4}$/;
     let result = regex.test(event.postcode);
-    if (result == false) {
+    if (result === false) {
       alert('Event must have a valid postcode');
       return;
     }
-    if (event.start_dt == null) {
+    if (event.start_dt === null) {
       alert('Event must have a start datetime');
       return;
     }
-    if (event.end_dt == null) {
+    if (event.end_dt === null) {
       alert('Event must have an end datetime');
       return;
     }
