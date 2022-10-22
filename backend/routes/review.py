@@ -18,9 +18,10 @@ def list_reviews(request: Request, id: str):
     for review in reviews:
         print(review)
         user = request.app.database["users"].find_one({"_id": review["user_id"]})
-        replying_to = None if review["reply_review_id"] is None else request.app.database["users"].find_one({"_id": review["reply_review_id"]}) 
+        replying_to = None if review["reply_review_id"] is None else request.app.database["reviews"].find_one({"_id": review["reply_review_id"]}) 
         review["username"] = user["first_name"] + " " + user["last_name"]
-        review["replying_to_user"] = "" if replying_to is None else replying_to["first_name"] + " " + replying_to["last_name"]
+        replying_to_user = None if replying_to is None else request.app.database["users"].find_one({"_id": replying_to["user_id"]})
+        review["replying_to_user"] = "" if replying_to is None else replying_to_user["first_name"] + " " + replying_to_user["last_name"]
     return reviews
 
 
