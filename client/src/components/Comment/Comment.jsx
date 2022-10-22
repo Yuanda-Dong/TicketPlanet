@@ -7,8 +7,9 @@ import { format } from 'timeago.js';
 import More from './More';
 import './Comment.css';
 
-function getInitials(firstname, lastname) {
-  return `${firstname[0]}.${lastname[0]}`;
+function getInitials(username) {
+  let [firstname, lastname] = username.slice(' ');
+  return `${firstname}.${lastname}`;
 }
 
 function Comment({
@@ -36,8 +37,7 @@ function Comment({
   return (
     <Grid className="comment" container wrap="wrap" spacing={2}>
       <Grid item>
-        {/* <Avatar>{getInitials(comment.username, comment.username)}</Avatar> */}
-        <Avatar alt={comment.username} src="/" />
+        <Avatar>{getInitials(comment.username)}</Avatar>
       </Grid>
       <Grid justifyContent="left" item xs zeroMinWidth>
         <div className="comment-header">
