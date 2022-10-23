@@ -5,21 +5,31 @@ from pydantic import BaseModel
 
 
 class Filter(BaseModel):
-    start_date: Optional[datetime]
-    end_date: Optional[datetime]
+    title: Optional[str]
+    details: Optional[str]
+    start_dt: Optional[datetime]
+    end_dt: Optional[datetime]
     #reply_preview: str #first 50 characters
     category: Optional[List[str]]
-    start_price: Optional[float]
-    end_price: Optional[float]
-    city: Optional[str]
+    price: Optional[float]
+    user_postcode: Optional[str]
+    distance: Optional[str]
+    location: Optional[str]
+
 
     class Config:
         allow_population_by_field_name = True
         schema_extra = {
             "example": {
-                "ticket_name": "General Admission",
+                "title": "Test Event",
+                "details": "blocks",
+                "start_dt": "2022-10-11T12:55",
+                "end_dt": "2022-11-11T03:55",
+                "category":["Movies"],
                 "price": "15",
-                "availability":"55"
+                "user_postcode":"2122",
+                "distance":"50",
+                "location": "Mars"
             }
         }
 

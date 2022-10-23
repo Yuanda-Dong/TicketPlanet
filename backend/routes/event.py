@@ -10,6 +10,7 @@ from pymongo import ReturnDocument
 from models.event import Event, EventInDB, EventUpdate
 from models.user import User
 from util.oAuth import get_current_user
+from models.filter import Filter
 
 router = APIRouter()
 
@@ -39,56 +40,62 @@ def list_events(pageSize: int, pageNum: int, request: Request):
     return events
 
 
-@router.get("/search", response_description="search", response_model=List[EventInDB])
-def search_events(request: Request, title="", descriptions="", start_dt="", end_dt="", category="", price="",
-                  location1_postcode="", distance="", location=""):
+@router.post("/search", response_description="search", response_model=List[EventInDB])
+def search_events(request: Request, filter: Filter):
     query = {}
-    if len(title):
-        query["title"] = re.compile(title)
-    if len(descriptions):
-        query["details"] = re.compile(descriptions)
-    if len(location):
-        query["address"] = re.compile(location)
-    # if len(start_dt) and len(end_dt):
-    #     query["start_dt"] = {"$lte": datetime.strptime(end_dt, "%Y-%m-%d %H:%M:%S")}
-    #     query["end_dt"] = {"$gte": datetime.strptime(start_dt, "%Y-%m-%d %H:%M:%S")}
-    if len(category):
-        query["category"] = re.compile(category)
-    events = list(request.app.database["events"].find(query))
+    if filter.title:
+        query["title"] = re.compile(filter.title)
+    if filter.details:
+        query["details"] = re.compile(filter.details)
+    if filter.location:
+        query["address"] = re.compile(filter.location)
 
-    if len(price):
+    events = request.app.database["events"].find(query)
+    if filter.category:
         event_list = []
         for event in events:
-            ticket = request.app.database["tickets"].find_one({"event_id": str(event["_id"])})
-            if ticket:
-                if ticket['price'] < float(price):
-                    event_list.append(event)
+            for category in filter.category:
+                if category:
+                    event = request.app.database["event"].find({"category": category})
+                event_list.append(event)
+
+        events = event_list
+
+    if filter.price:
+        event_list = []
+        for e in events:
+            for event in e:
+                tickets = request.app.database["tickets"].find({"event_id": str(event["_id"])})
+                for ticket in tickets:
+                    if ticket:
+                        if float(filter.price) < 100:
+                            if ticket['price'] < float(filter.price):
+                                if event not in event_list:
+                                    event_list.append(event)
+                        if float(filter.price) == 100:
+                            if ticket['price'] >= float(filter.price):
+                                if event not in event_list:
+                                    event_list.append(event)
         events = event_list
                 # events = list(filter(lambda event: request.app.database["tickets"].find_one({"event_id": str(event["_id"])})['price'] <
                 #        float(price), events))
 
-    if len(start_dt) and len(end_dt):
+    if filter.start_dt and filter.end_dt:
         event_list = []
-        for event in events:
-            print(event['end_dt'])
-            event_end_dt = event['end_dt']
-            if isinstance(event['end_dt'], str):
-                event_end_dt = fmt_date(event['end_dt'])
-            event_start_dt = event['start_dt']
-            if isinstance(event['start_dt'], str):
+        print(events)
+        for e in events:
+            #print(type(event['end_dt']))
+            for event in e:
+                event_end_dt = event['end_dt']
+                if isinstance(event['end_dt'], datetime):
+                    event_end_dt = event['end_dt']
                 event_start_dt = event['start_dt']
-            if (event_end_dt > fmt_date(start_dt)) and (event_start_dt < fmt_date(end_dt)):
-                event_list.append(event)
-
+                if isinstance(event['start_dt'], datetime):
+                    event_start_dt = event['start_dt']
+                if (event_end_dt > filter.start_dt) and (event_start_dt < filter.end_dt):
+                    event_list.append(event)
         events = event_list
-        #events = list(filter(lambda event: ((event['end_dt'] > fmt_date(start_dt)) and (event['start_dt'] <
-        #                               fmt_date(end_dt))), events))
 
-    if len(location1_postcode):
-        events = list(
-            filter(lambda event: abs(float(event["postcode"]) - float(location1_postcode)) <= float(distance),
-                   events))
-    #print(events)
     return events
 
 
