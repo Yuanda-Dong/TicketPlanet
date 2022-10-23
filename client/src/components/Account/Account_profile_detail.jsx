@@ -1,11 +1,26 @@
-import {useState} from 'react';
-import {Box, Button as ButtonMui, Card, CardContent, CardHeader, Divider, Grid, TextField} from '@mui/material';
+import React, {useState} from 'react';
+import {
+	Box,
+	Button as ButtonMui,
+	Card,
+	CardContent,
+	CardHeader,
+	Divider,
+	Grid,
+	Snackbar,
+	TextField
+} from '@mui/material';
 import {useDispatch, useSelector} from 'react-redux';
 import styled from 'styled-components';
 import './Account.css';
 import {axiosInstance} from "../../config";
 import {useNavigate} from "react-router-dom";
 import {successfulLogin} from "../../redux/userSlice";
+import MuiAlert from "@mui/material/Alert";
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+	return <MuiAlert elevation={6} ref={ref} variant={"filled"} {...props}/>
+})
 
 const Button = styled(ButtonMui)`
   && {
@@ -59,6 +74,7 @@ const ageGroups = [
 export const PersonalInformation = (props) => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
+	const [changeInfo, setChangeInfo] = useState(false);
 	const {currentUser, token} = useSelector((state) => state.user);
 	const config = {
 		headers: {
@@ -81,6 +97,13 @@ export const PersonalInformation = (props) => {
 		});
 	};
 
+	const handleClose = (event, reason) => {
+		if (reason === 'clickaway') {
+			return
+		}
+		setChangeInfo(false)
+	}
+
 	const updateData = async () => {
 		try {
 			let config = {
@@ -91,7 +114,7 @@ export const PersonalInformation = (props) => {
 			const res = await axiosInstance.put(`/user/${currentUser._id}`, values, config)
 			console.log('data', res.data)
 			dispatch(successfulLogin(res.data))
-			navigate('/account-setting')
+			setChangeInfo(true)
 		} catch (e) {
 			if (e.response) {
 				alert(e.response.data.detail);
@@ -105,6 +128,9 @@ export const PersonalInformation = (props) => {
 
 	return (
 		<form autoComplete="off" noValidate {...props}>
+			{changeInfo && <Snackbar open={changeInfo} autoHideDuration={6000} onClose={handleClose}>
+				<Alert onClose={handleClose} severity={"success"} sx={{width: '100%'}}>Personal information updated successfully
+				</Alert></Snackbar>}
 			<Card>
 				<CardHeader subheader="The information can be edited" title="Personal Information"/>
 				<Divider/>
