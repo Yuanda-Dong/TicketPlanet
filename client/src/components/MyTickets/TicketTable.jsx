@@ -1,3 +1,4 @@
+import * as React from 'react';
 import {useState} from 'react';
 import {
 	alpha,
@@ -21,12 +22,12 @@ import {
 	Tooltip,
 	Typography
 } from '@mui/material';
-
-import DetailsTwoToneIcon from '@mui/icons-material/DetailsTwoTone';
-import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 import {Label} from "./Label";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import DetailsTwoToneIcon from "@mui/icons-material/DetailsTwoTone";
+import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
+import PropTypes from "prop-types";
 
 const getStatusLabel = (ticketOrderStatus) => {
 	const map = {
@@ -61,13 +62,136 @@ const applyPagination = (ticketOrders, page, limit) => {
 	return ticketOrders.slice(page * limit, page * limit + limit);
 };
 
-const TicketRow = (props) => {
-	const {row} = props;
+function TicketRow(props) {
+	const {ticketRow} = props;
+	const [open, setOpen] = useState(false)
+	return (
+		<React.Fragment>
+			<TableRow hover key={ticketRow.id}>
+				<TableCell>
+					<IconButton aria-label={'expend row'} size={"small"} onClick={() => setOpen(!open)}>
+						{open ? <KeyboardArrowUpIcon/> : <KeyboardArrowDownIcon/>}
+					</IconButton>
+				</TableCell>
+				<TableCell>
+					<Typography variant="body1" fontWeight="bold" color='#223354' gutterBottom noWrap>
+						{ticketRow.ticket_name}
+					</Typography>
+				</TableCell>
+				<TableCell>
+					<Typography variant="body1" fontWeight="bold" color='#223354' gutterBottom noWrap>
+						{ticketRow.start_dt}
+					</Typography>
+					<Typography variant="body1" fontWeight="bold" color='#223354' gutterBottom noWrap>
+						{ticketRow.end_dt}
+					</Typography>
+				</TableCell>
+				<TableCell align="right">
+					<Typography variant="body1" fontWeight="bold" color='#223354' gutterBottom noWrap>
+						{ticketRow.amount}
+					</Typography>
+				</TableCell>
+				<TableCell align="right">
+					<Typography variant="body1" fontWeight="bold" color='#223354' gutterBottom noWrap>
+						{ticketRow.price}
+					</Typography>
+				</TableCell>
+				<TableCell align="right">
+					{getStatusLabel(ticketRow.status)}
+				</TableCell>
+				<TableCell align="right">
+					<Tooltip title="Event Detail" arrow>
+						<IconButton
+							sx={{
+								'&:hover': {
+									background: alpha('#5569ff', 0.1)
+								},
+								color: '#5569ff'
+							}}
+							color="inherit"
+							size="small"
+						>
+							<DetailsTwoToneIcon fontSize="small"/>
+						</IconButton>
+					</Tooltip>
+					<Tooltip title="Delete Tickets" arrow>
+						<IconButton
+							sx={{
+								'&:hover': {background: alpha('#FF1943', 0.1)},
+								color: '#FF1943'
+							}}
+							color="inherit"
+							size="small"
+						>
+							<DeleteTwoToneIcon fontSize="small"/>
+						</IconButton>
+					</Tooltip>
+				</TableCell>
+			</TableRow>
+			<TableRow>
+				<TableCell style={{paddingBottom: 0, paddingTop: 0}} colSpan={6}>
+					<Collapse in={open} timeout={'auto'} unmountOnExit>
+						<Box sx={{margin: 1}}>
+							<Typography variant={"h6"} gutterBottom component='div'>
+								Ticket Detail
+							</Typography>
+							<Table>
+								<TableHead>
+									<TableRow>
+										<TableCell>EVENT TITLE</TableCell>
+										<TableCell>CATEGORY</TableCell>
+										<TableCell>ADDRESS</TableCell>
+										<TableCell align={"right"}>POSTCODE</TableCell>
+										<TableCell align={"right"}>SECTION</TableCell>
+										<TableCell align={"right"}>SEAT</TableCell>
+									</TableRow>
+								</TableHead>
+								<TableBody>
+									{ticketRow.detail.map((detail) => (
+										<TableRow>
+											<TableCell>
+												<Typography variant="body1" fontWeight="bold" color gutterBottom noWrap>
+													{detail.title}
+												</Typography>
+											</TableCell>
+											<TableCell>{detail.category}</TableCell>
+											<TableCell>{detail.address}</TableCell>
+											<TableCell align={"right"}>{detail.postcode}</TableCell>
+											<TableCell align={"right"}>{detail.seat_number}</TableCell>
+											<TableCell align={"right"}>{detail.section_number}</TableCell>
+										</TableRow>
+									))}
+								</TableBody>
+							</Table>
+						</Box>
+					</Collapse>
+				</TableCell>
+			</TableRow>
+		</React.Fragment>)
+}
 
+TicketRow.propTypes = {
+	ticketRow: PropTypes.shape({
+		ticket_name: PropTypes.string.isRequired,
+		start_dt: PropTypes.string.isRequired,
+		end_dt: PropTypes.string.isRequired,
+		amount: PropTypes.number.isRequired,
+		price: PropTypes.number.isRequired,
+		status: PropTypes.string.isRequired,
+		detail: PropTypes.arrayOf(
+			PropTypes.shape({
+				title: PropTypes.string.isRequired,
+				category: PropTypes.string.isRequired,
+				address: PropTypes.string,
+				postcode: PropTypes.number.isRequired,
+				seat_number: PropTypes.number,
+				section_number: PropTypes.number,
+			})
+		).isRequired,
+	}).isRequired,
 }
 
 const TicketTable = ({ticketOrders}) => {
-	const [open, setOpen] = useState(false)
 	const [page, setPage] = useState(0);
 	const [limit, setLimit] = useState(5);
 	const [filters, setFilters] = useState({
@@ -157,112 +281,9 @@ const TicketTable = ({ticketOrders}) => {
 						</TableRow>
 					</TableHead>
 					<TableBody>
-						{paginatedTicketOrders.map((ticketOrder) => {
-							return (
-								<>
-									<TableRow hover key={ticketOrder.id}>
-										<TableCell>
-											<IconButton aria-label={'expend row'} size={"small"} onClick={() => setOpen(!open)}>
-												{open ? <KeyboardArrowUpIcon/> : <KeyboardArrowDownIcon/>}
-											</IconButton>
-										</TableCell>
-										<TableCell>
-											<Typography variant="body1" fontWeight="bold" color='#223354' gutterBottom noWrap>
-												{ticketOrder.ticket_name}
-											</Typography>
-										</TableCell>
-										<TableCell>
-											<Typography variant="body1" fontWeight="bold" color='#223354' gutterBottom noWrap>
-												{ticketOrder.start_dt}
-											</Typography>
-											<Typography variant="body1" fontWeight="bold" color='#223354' gutterBottom noWrap>
-												{ticketOrder.end_dt}
-											</Typography>
-										</TableCell>
-										<TableCell align="right">
-											<Typography variant="body1" fontWeight="bold" color='#223354' gutterBottom noWrap>
-												{ticketOrder.amount}
-											</Typography>
-										</TableCell>
-										<TableCell align="right">
-											<Typography variant="body1" fontWeight="bold" color='#223354' gutterBottom noWrap>
-												{ticketOrder.price}
-											</Typography>
-										</TableCell>
-										<TableCell align="right">
-											{getStatusLabel(ticketOrder.status)}
-										</TableCell>
-										<TableCell align="right">
-											<Tooltip title="Event Detail" arrow>
-												<IconButton
-													sx={{
-														'&:hover': {
-															background: alpha('#5569ff', 0.1)
-														},
-														color: '#5569ff'
-													}}
-													color="inherit"
-													size="small"
-												>
-													<DetailsTwoToneIcon fontSize="small"/>
-												</IconButton>
-											</Tooltip>
-											<Tooltip title="Delete Tickets" arrow>
-												<IconButton
-													sx={{
-														'&:hover': {background: alpha('#FF1943', 0.1)},
-														color: '#FF1943'
-													}}
-													color="inherit"
-													size="small"
-												>
-													<DeleteTwoToneIcon fontSize="small"/>
-												</IconButton>
-											</Tooltip>
-										</TableCell>
-									</TableRow>
-									<TableRow>
-										<TableCell style={{paddingBottom: 0, paddingTop: 0}} colSpan={6}>
-											<Collapse in={open} timeout={'auto'} unmountOnExit>
-												<Box sx={{margin: 1}}>
-													<Typography variant={"h6"} gutterBottom component='div'>
-														Ticket Detail
-													</Typography>
-													<Table>
-														<TableHead>
-															<TableRow>
-																<TableCell>EVENT TITLE</TableCell>
-																<TableCell>CATEGORY</TableCell>
-																<TableCell>ADDRESS</TableCell>
-																<TableCell align={"right"}>POSTCODE</TableCell>
-																<TableCell align={"right"}>SECTION</TableCell>
-																<TableCell align={"right"}>SEAT</TableCell>
-															</TableRow>
-														</TableHead>
-														<TableBody>
-															{ticketOrder.detail.map((order) => (
-																<TableRow>
-																	<TableCell>
-																		<Typography variant="body1" fontWeight="bold" color gutterBottom noWrap>
-																			{order.title}
-																		</Typography>
-																	</TableCell>
-																	<TableCell>{order.category}</TableCell>
-																	<TableCell>{order.address}</TableCell>
-																	<TableCell align={"right"}>{order.postcode}</TableCell>
-																	<TableCell align={"right"}>{order.seat_number}</TableCell>
-																	<TableCell align={"right"}>{order.section_number}</TableCell>
-																</TableRow>
-															))}
-														</TableBody>
-													</Table>
-												</Box>
-											</Collapse>
-										</TableCell>
-									</TableRow>
-								</>
-							);
-						})}
+						{paginatedTicketOrders.map((ticketOrder) => (
+							<TicketRow ticketRow={ticketOrder}/>
+						))}
 					</TableBody>
 				</Table>
 			</TableContainer>
