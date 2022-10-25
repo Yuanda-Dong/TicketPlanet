@@ -93,7 +93,7 @@ def search_events(request: Request, filter: Filter):
                                 event_list.append(event)
         events = event_list
 
-    # datetime filte
+    # datetime filter
     if filter.start_dt and filter.end_dt:
         event_list = []
         print(events)
