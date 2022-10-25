@@ -2,21 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0222c4da-208d-460a-a275-b4a4564e6eeb" name="Changes" comment="updated review.py">
-      <change afterPath="$PROJECT_DIR$/data/postcode.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/util/postcode_to_distance.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/backend.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/postcode data/distance.ipynb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/postcode data/postcode.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/postcode data/pp.gz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/event.py" beforeDir="false" afterPath="$PROJECT_DIR$/routes/event.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/review.py" beforeDir="false" afterPath="$PROJECT_DIR$/routes/review.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/util/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/util/app.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/util/send_email.py" beforeDir="false" afterPath="$PROJECT_DIR$/util/send_email.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

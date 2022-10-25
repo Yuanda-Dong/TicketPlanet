@@ -58,3 +58,4 @@ reset_template = """
 </body>
 </html>
     """
+
