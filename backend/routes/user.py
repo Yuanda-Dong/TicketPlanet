@@ -1,25 +1,26 @@
+import os
+import sys
+import uuid
+from datetime import datetime, timedelta
+from typing import List
+
 from fastapi import APIRouter, Body, Request, Response, HTTPException, status, Depends
 from fastapi.encoders import jsonable_encoder
-from util.send_email import password_reset, reset_template
-import uuid
-from fastapi.security import  OAuth2PasswordRequestForm
-from typing import List, Union
-from util.oAuth import  authenticate_user, get_password_hash, create_access_token, get_current_user #,oauth
-from util.app import app
-from datetime import datetime, timedelta
-import os
-from starlette.responses import HTMLResponse, RedirectResponse
-from authlib.integrations.starlette_client import OAuthError
+from fastapi.security import OAuth2PasswordRequestForm
 from pymongo import ReturnDocument
-from models.user import User, UserUpdate, UserInDB, ForgetPassword, ResetPassword, UserWithAccess
-from models.token import Token, TokenData
 
-import sys
-sys.path.append("..models") # Adds higher directory to python modules path.
+from models.token import Token
+from models.user import User, UserUpdate, UserInDB, ForgetPassword, ResetPassword, UserWithAccess, UpdatePassword
+from util.app import app
+from util.oAuth import authenticate_user, get_password_hash, create_access_token, get_current_user, \
+    verify_password  # ,oauth
+from util.send_email import password_reset, reset_template
+
+sys.path.append("..models")  # Adds higher directory to python modules path.
 
 router = APIRouter()
 
-    
+
 @app.post("/token", response_model=Token)
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
     user = authenticate_user(form_data.username, form_data.password)
@@ -35,6 +36,7 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
         data={"sub": user["email"]}, expires_delta=access_token_expires
     )
     return {"access_token": access_token, "token_type": "bearer"}
+
 
 # @app.get('/google/login')
 # async def login(request: Request):
@@ -61,25 +63,27 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
 
 #####
 
-#Routes
+# Routes
 
 @router.get("/me", response_model=User)
 def whoami(current_user: User = Depends(get_current_user)):
     return current_user
 
-@router.post("/", response_description="Create a new user", status_code=status.HTTP_201_CREATED, response_model=UserWithAccess)
+
+@router.post("/", response_description="Create a new user", status_code=status.HTTP_201_CREATED,
+             response_model=UserWithAccess)
 def create_user(request: Request, user: UserInDB = Body(...)):
     user = jsonable_encoder(user)
-    
-    if found := request.app.database["users"].find_one({"email": user["email"]}) is not None: 
+
+    if found := request.app.database["users"].find_one({"email": user["email"]}) is not None:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=f"user with email already exists")
-    
+
     user["password"] = get_password_hash(user["password"])
     new_user = request.app.database["users"].insert_one(user)
     created_user = request.app.database["users"].find_one(
         {"_id": new_user.inserted_id}
     )
-    
+
     access_token_expires = timedelta(minutes=int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES")))
     access_token = create_access_token(
         data={"sub": user["email"]}, expires_delta=access_token_expires
@@ -88,10 +92,12 @@ def create_user(request: Request, user: UserInDB = Body(...)):
     created_user["token"] = token
     return created_user
 
+
 @router.get("/", response_description="Get all users", response_model=List[User])
 def list_users(request: Request, user: User = Depends(get_current_user)):
     users = list(request.app.database["users"].find(limit=100))
     return users
+
 
 @router.get("/{id}", response_description="Get a single user by id", response_model=User)
 def find_user(id: str, request: Request, user: User = Depends(get_current_user)):
@@ -99,21 +105,24 @@ def find_user(id: str, request: Request, user: User = Depends(get_current_user))
         return user
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"user with ID {id} not found")
 
+
 @router.put("/{id}", response_description="Update a user", response_model=UserInDB)
-def update_user(id: str, request: Request, updates: UserUpdate, auth:User = Depends(get_current_user)):
+def update_user(id: str, request: Request, updates: UserUpdate, auth: User = Depends(get_current_user)):
     if auth["_id"] != id:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=f"Only the user can edit their details")
     updates = {k: v for k, v in updates.dict().items() if v is not None}
     if len(updates) >= 1:
-        updated_result = request.app.database["users"].find_one_and_update({"_id": id}, {"$set": updates}, return_document=ReturnDocument.AFTER)
+        updated_result = request.app.database["users"].find_one_and_update({"_id": id}, {"$set": updates},
+                                                                           return_document=ReturnDocument.AFTER)
         return updated_result
 
     if (
-        existing_user := request.app.database["users"].find_one({"_id": id})
+            existing_user := request.app.database["users"].find_one({"_id": id})
     ) is not None:
         return existing_user
 
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"User with ID {id} not found")
+
 
 @router.delete("/{id}", response_description="Delete a user")
 def delete_user(id: str, request: Request, response: Response, user: User = Depends(get_current_user)):
@@ -124,7 +133,6 @@ def delete_user(id: str, request: Request, response: Response, user: User = Depe
         return response
 
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"User with ID {id} not found")
-
 
 
 @router.post("/forgot-password")
@@ -143,11 +151,11 @@ async def forgot_password(request: Request, email: ForgetPassword):
     timestamp = datetime.timestamp(now)
     # create all the information about reset code in database
     reset_code_dic = {
-            "time": timestamp,
-            "code": reset_code,
-            "email": email,
-            "fail count": 3,
-            "status": "unfinished"
+        "time": timestamp,
+        "code": reset_code,
+        "email": email,
+        "fail count": 3,
+        "status": "unfinished"
     }
     reset_code_result = request.app.database["forgot_pwd"].insert_one(reset_code_dic)
 
@@ -162,21 +170,23 @@ async def forgot_password(request: Request, email: ForgetPassword):
     #                         detail="reset password token has expired, please request a new one")
     return {
         "reset_code": reset_code,
-        "code":200,
+        "code": 200,
         "message": "We've sent an email with instruction to reset your password"
     }
 
+
 @router.post("/reset-password")
 # async def reset_password(request: Request, reset_password_token: str, new_password: str, confirm_password: str):
-async def reset_password(request: Request, body : ResetPassword):
+async def reset_password(request: Request, body: ResetPassword):
     reset_password_token = body.reset_password_token
     new_password = body.new_password
-    confirm_password=body.confirm_password
+    confirm_password = body.confirm_password
     # Check valid reset password token
     reset_token = request.app.database["forgot_pwd"].find_one({"code": reset_password_token})
     print(reset_token["status"])
     if reset_token is None or reset_token["code"] != reset_password_token:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="reset password token has expired, please request a new one")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail="reset password token has expired, please request a new one")
     if reset_token["status"] == "finished":
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail="reset password token has expired, please request a new one")
@@ -184,12 +194,14 @@ async def reset_password(request: Request, body : ResetPassword):
     now = datetime.now()
     timestamp = datetime.timestamp(now)
     code_timestamp = reset_token["time"]
-    if int(timestamp - code_timestamp) > 1*60*60: # 1 hours
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="reset password token has expired, please request a new one")
+    if int(timestamp - code_timestamp) > 1 * 60 * 60:  # 1 hours
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail="reset password token has expired, please request a new one")
 
     # Check both new & confirm password are match
     if new_password != confirm_password:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="reset password token has expired, please request a new one")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail="reset password token has expired, please request a new one")
     # Reset new password
     forgot_password_object = ForgetPassword(**reset_token)
     email = forgot_password_object.email
@@ -197,11 +209,11 @@ async def reset_password(request: Request, body : ResetPassword):
 
     # Update password in db
     update_password = request.app.database["users"].update_one(
-        {"email": email}, {"$set": {"password": new_hashed_password} }
+        {"email": email}, {"$set": {"password": new_hashed_password}}
     )
 
     # update the reset_token status in mongodb
-    Disable_reset_code = request.app.database["forgot_pwd"].update_one( # delete_one
+    Disable_reset_code = request.app.database["forgot_pwd"].update_one(  # delete_one
         {"code": reset_password_token}, {"$set": {"status": "finished"}}
     )
 
@@ -210,6 +222,33 @@ async def reset_password(request: Request, body : ResetPassword):
         "message": "Password has been reset successfully"
     }
 
+
+@router.post("/update-password")
+async def update_password(request: Request, body: UpdatePassword, auth: User = Depends(get_current_user)):
+    if auth["_id"] != body.id:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=f"Only the user can edit their details")
+    current_password = body.current_password
+    new_password = body.new_password
+    confirm_password = body.confirm_password
+    user = request.app.database["users"].find_one({"_id": body.id})
+    if new_password != confirm_password:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail="New password is not equal to confirm password, please try again")
+    if new_password == current_password:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail="The new password cannot be the same as the current password. Enter a new password")
+    if verify_password(current_password, user["password"]):
+        update_password = request.app.database["users"].update_one(
+            {"_id": body.id}, {"$set": {"password": get_password_hash(new_password)}}
+        )
+    else:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"Incorrect current password, please try again")
+
+    return {
+        "code": 200,
+        "message": "Password has been reset successfully"
+    }
 
 # @router.post("/routes/check-code")
 # async def reset_password(request: Request, reset_password_token: str):

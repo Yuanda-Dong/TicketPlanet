@@ -25,6 +25,7 @@ Users can update their personal information.
 
 Week 6
 I completed the web design of the My Tickets page.
+Complete the function of updating the password in the login state
 We had a meeting with teammates to discuss what everyone had accomplished and what to do next.
 Everyone's problems are discussed and resolved.
 

@@ -9,7 +9,8 @@ import {
 	Grid,
 	IconButton,
 	InputAdornment,
-	OutlinedInput
+	OutlinedInput,
+	Snackbar
 } from '@mui/material';
 import React, {useState} from 'react';
 import './Account.css';
@@ -18,6 +19,9 @@ import styled from 'styled-components';
 import {Visibility, VisibilityOff} from "@mui/icons-material";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
+import {useSelector} from "react-redux";
+import MuiAlert from "@mui/material/Alert";
+import {axiosInstance} from "../../config";
 
 const Button = styled(ButtonMui)`
   && {
@@ -30,7 +34,19 @@ const Button = styled(ButtonMui)`
   }
 `;
 
+const Alert = React.forwardRef(function Alert(props, ref) {
+	return <MuiAlert elevation={6} ref={ref} variant={"filled"} {...props}/>
+})
+
 const ResetPassword = () => {
+	const [changePassword, setChangePassword] = useState(false);
+	const {currentUser, token} = useSelector((state) => state.user);
+	const config = {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	};
+
 	const [passwords, setPasswords] = useState({
 		current: '',
 		new: '',
@@ -73,10 +89,35 @@ const ResetPassword = () => {
 		event.preventDefault();
 	};
 
-	const handleSubmit = (e) => {
-		e.preventDefault();
-		// TODO
-	};
+	const handleClose = (event, reason) => {
+		if (reason === 'clickaway') {
+			return
+		}
+		setChangePassword(false)
+	}
+
+	const updateData = async () => {
+		try {
+			const res = await axiosInstance.post(
+				`/user/update-password`,
+				{
+					id: currentUser._id,
+					current_password: passwords.current,
+					new_password: passwords.new,
+					confirm_password: passwords.repeat
+				}, config)
+			console.log(res.data)
+			setChangePassword(true)
+		} catch (e) {
+			if (e.response) {
+				alert(e.response.data.detail);
+			} else if (e.request) {
+				console.error(e.request);
+			} else {
+				console.error('Error', e.message);
+			}
+		}
+	}
 
 	const handleBlur = (e) => {
 		const item = e.target.name;
@@ -105,7 +146,10 @@ const ResetPassword = () => {
 	};
 
 	return (
-		<form autoComplete="off" noValidate onSubmit={handleSubmit}>
+		<form autoComplete="off" noValidate>
+			{changePassword && <Snackbar open={changePassword} autoHideDuration={6000} onClose={handleClose}>
+				<Alert onClose={handleClose} severity={"success"} sx={{width: '100%'}}>Password updated successfully!
+				</Alert></Snackbar>}
 			<Card>
 				<CardHeader subheader="Update password" title="Password"/>
 				<Divider/>
@@ -224,7 +268,7 @@ const ResetPassword = () => {
 						p: 2,
 					}}
 				>
-					<Button color="primary" variant="contained" type="submit">
+					<Button color="primary" variant="contained" onClick={updateData}>
 						Update
 					</Button>
 				</Box>

@@ -14,7 +14,6 @@ import {useDispatch, useSelector} from 'react-redux';
 import styled from 'styled-components';
 import './Account.css';
 import {axiosInstance} from "../../config";
-import {useNavigate} from "react-router-dom";
 import {successfulLogin} from "../../redux/userSlice";
 import MuiAlert from "@mui/material/Alert";
 
@@ -73,7 +72,6 @@ const ageGroups = [
 
 export const PersonalInformation = (props) => {
 	const dispatch = useDispatch();
-	const navigate = useNavigate();
 	const [changeInfo, setChangeInfo] = useState(false);
 	const {currentUser, token} = useSelector((state) => state.user);
 	const config = {
@@ -106,11 +104,6 @@ export const PersonalInformation = (props) => {
 
 	const updateData = async () => {
 		try {
-			let config = {
-				headers: {
-					Authorization: `Bearer ${token}`,
-				},
-			};
 			const res = await axiosInstance.put(`/user/${currentUser._id}`, values, config)
 			console.log('data', res.data)
 			dispatch(successfulLogin(res.data))
@@ -129,7 +122,8 @@ export const PersonalInformation = (props) => {
 	return (
 		<form autoComplete="off" noValidate {...props}>
 			{changeInfo && <Snackbar open={changeInfo} autoHideDuration={6000} onClose={handleClose}>
-				<Alert onClose={handleClose} severity={"success"} sx={{width: '100%'}}>Personal information updated successfully
+				<Alert onClose={handleClose} severity={"success"} sx={{width: '100%'}}>Personal information updated
+					successfully!
 				</Alert></Snackbar>}
 			<Card>
 				<CardHeader subheader="The information can be edited" title="Personal Information"/>
