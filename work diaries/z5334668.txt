@@ -1,11 +1,31 @@
 Week 1
-Group formed. Determine the responsibilities of each member. Together with the team members, I present some user stories of the proposal. Discussed all available software tools and libraries that we could use for the project. Determine the front-end web page style.
+Group formed.
+Determine the responsibilities of each member.
+Together with the team members, I present some user stories of the proposal.
+Discussed all available software tools and libraries that we could use for the project.
+Determine the front-end web page style.
 
 Week 2
-We discussed each individual's task for project proposal during the group meeting, and discussed the novel functionality. I organize the user stories that have been discussed.
+We discussed each individual's task for project proposal during the group meeting, and discussed the novel functionality.
+I organize the user stories that have been discussed.
 
 Week 3
-Complete the User Stories and Sprints section of the proposal with Naixin Li, and organize jira. Organize the proposal format.
+Complete the User Stories and Sprints section of the proposal with Naixin Li, and organize jira.
+Organize the proposal format.
 
 Week 4
-Improve the front-end part of the signup page. Design and complete the UI of Postpage. Complete the payment page section.
+Improve the front-end part of the signup page.
+Design and complete the UI of Postpage.
+Complete the payment page section.
+
+Week 5
+A retrospective meeting was held with the team members after presentation A to discuss relevant issues and complete the report.
+I completed the web design of the Account page.
+Users can update their personal information.
+
+Week 6
+I completed the web design of the My Tickets page.
+We had a meeting with teammates to discuss what everyone had accomplished and what to do next.
+Everyone's problems are discussed and resolved.
+
+Week 7
