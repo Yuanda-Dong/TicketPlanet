@@ -36,6 +36,13 @@ const  EventCard = (props) => {
           <Typography gutterBottom variant="h5" component="div">
           {props.eventInfo.title}
           </Typography>
+
+
+          <Typography variant="body2" color="text.secondary">
+          {props.eventInfo.category}
+          </Typography>
+
+
           <Typography variant="body2" color="text.secondary">
             <LocationOnIcon />
             {props.eventInfo.address}
