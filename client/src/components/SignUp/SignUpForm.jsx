@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
@@ -9,11 +9,43 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
+import { ValidatePassword, ValidateEmail } from '../../helper.js';
 
 function SignUpForm1({ state }) {
   const handler = (e) => {
     // console.log(state[0]);
     state[1]({ ...state[0], [e.target.name]: e.target.value });
+  };
+  const [errors, setErrors] = useState({
+    email: {
+      error: false,
+      message: '',
+    },
+    password: {
+      error: false,
+      message: '',
+    },
+  });
+
+  const handleError = (e) => {
+    switch (e.target.name) {
+      case 'email':
+        if (!ValidateEmail(state[0].email)) {
+          setErrors((prev) => ({ ...prev, email: { error: true, message: 'Please enter a valid email' } }));
+        } else {
+          setErrors((prev) => ({ ...prev, email: { error: false, message: '' } }));
+        }
+        break;
+      case 'password':
+        if (!ValidatePassword(state[0].password)) {
+          setErrors((prev) => ({ ...prev, password: { error: true, message: 'Please enter a valid password' } }));
+        } else {
+          setErrors((prev) => ({ ...prev, password: { error: false, message: '' } }));
+        }
+        break;
+      default:
+        break;
+    }
   };
   return (
     <Container component="main" maxWidth="xs">
@@ -49,6 +81,9 @@ function SignUpForm1({ state }) {
             name="email"
             label="Email Address"
             autoComplete="email"
+            onBlur={handleError}
+            error={errors.email.error}
+            helperText={errors.email.error && errors.email.message}
             value={state[0].email}
             onChange={handler}
           />
@@ -62,6 +97,9 @@ function SignUpForm1({ state }) {
             type="password"
             id="password"
             autoComplete="new-password"
+            onBlur={handleError}
+            error={errors.password.error}
+            helperText={errors.password.error && errors.password.message}
             value={state[0].password}
             onChange={handler}
           />
