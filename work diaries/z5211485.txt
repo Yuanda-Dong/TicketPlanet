@@ -12,3 +12,6 @@ I completed the signin and signup pages, as well as landing page, event detail p
 
 Week 5
 I completed the API connection for signin and signup using email, and connected to firebase for google signin. I also fixed the hook handler for Event Post page.
+
+Week 6
+I completed the Review components and finished the API integration. I also attended the group meeting with other members to add story points to our sprint2 user stories, and allocate tasks to all members.
