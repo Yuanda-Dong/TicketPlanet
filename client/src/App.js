@@ -16,6 +16,7 @@ import EditPage from './pages/EditPage/EditPage';
 import FindPassword from './pages/FindPassword';
 import Account from './pages/Account';
 import TicketPage from './pages/PostPage/TicketPage';
+import SeatMap from './components/SeatSelection/SeatMap';
 function App() {
   return (
     <BrowserRouter>
@@ -40,6 +41,7 @@ function App() {
           <Route path="edit/:id/" element={<EditPage />} />
           <Route path="my-tickets" element={<MyTickets />} />
           <Route path="/tickets/:id/" element={<TicketPage />} />
+          <Route path="test" element={<SeatMap />} />
         </Route>
       </Routes>
       <Footer />
