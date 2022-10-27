@@ -8,8 +8,8 @@ import More from './More';
 import './Comment.css';
 
 function getInitials(username) {
-  let [firstname, lastname] = username.slice(' ');
-  return `${firstname}.${lastname}`;
+  let [firstname, lastname] = username.split(' ');
+  return `${firstname[0]}.${lastname[0]}`;
 }
 
 function Comment({
