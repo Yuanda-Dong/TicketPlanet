@@ -9,6 +9,9 @@ export const searchSlice = createSlice({
     updateContent: (state, action) => {
       state.searchContent = action.payload;
     },
+    clearContent: (state) => {
+      state.searchContent = null;
+    },
   },
 });
 
