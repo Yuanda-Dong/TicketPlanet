@@ -5,6 +5,7 @@ import { TextField } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import { axiosInstance } from '../config';
+import { ValidatePassword } from '../helper';
 import Alert from '@mui/material/Alert';
 
 const Container = styled.div`
@@ -95,6 +96,8 @@ export default function FindPassword() {
       case 'new':
         if (passwords.new === '') {
           setErrors((err) => ({ ...err, error1: { error: true, message: 'New Password can not be empty' } }));
+        } else if (!ValidatePassword(passwords.new)) {
+          setErrors((err) => ({ ...err, error1: { error: true, message: 'Please enter a valid password' } }));
         } else {
           setErrors((err) => ({ ...err, error1: { error: false, message: '' } }));
         }
