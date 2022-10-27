@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="0222c4da-208d-460a-a275-b4a4564e6eeb" name="Changes" comment="updated review.py">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/util/send_email.py" beforeDir="false" afterPath="$PROJECT_DIR$/util/send_email.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
