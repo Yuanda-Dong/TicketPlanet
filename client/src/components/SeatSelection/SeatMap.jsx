@@ -1,24 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ButtonGroup, Button } from '@mui/material';
 import styled from 'styled-components';
-
-const ticketType = [
-  {
-    name: 'Ticket 1',
-    color: '#702626',
-    hover: '#5c3838',
-  },
-  {
-    name: 'Ticket 2',
-    color: '#26702b',
-    hover: '#385c44',
-  },
-  {
-    name: 'Ticket 3',
-    color: '#263470',
-    hover: '#383f5c',
-  },
-];
+// import { ThemeProvider } from 'styled-components';
 
 const Row = styled.div`
   display: flex;
@@ -26,10 +9,10 @@ const Row = styled.div`
 const Seat = styled.div`
   width: 50px;
   height: 50px;
-  background-color: ${(props) => (props.selected ? ticketType.find((e) => e.name == props.type).color : '#c0acac')};
+  background-color: ${(props) => (props.selected ? props.theme.color : '#c0acac')};
   margin: 5px;
   :hover {
-    background-color: ${(props) => (props.selected ? ticketType.find((e) => e.name == props.type).hover : '#a78f8f')};
+    background-color: ${(props) => (props.selected ? props.theme.hover : '#a78f8f')};
   }
   pointer-events: ${(props) => props.disabled && 'none'};
 `;
@@ -37,6 +20,23 @@ const Seat = styled.div`
 const SeatMap = () => {
   // props
   const dim = [5, 10];
+  const ticketType = [
+    {
+      name: 'Ticket 1',
+      color: '#702626',
+      hover: '#5c3838',
+    },
+    {
+      name: 'Ticket 2',
+      color: '#26702b',
+      hover: '#385c44',
+    },
+    {
+      name: 'Ticket 3',
+      color: '#263470',
+      hover: '#383f5c',
+    },
+  ];
 
   let rowId = -1;
   const [mapGrid, setMapGrid] = useState(
@@ -93,6 +93,7 @@ const SeatMap = () => {
               onClick={handleSelect}
               selected={seat.selected}
               type={seat.type}
+              theme={ticketType.find((e) => e.name === seat.type)}
             />
           ))}
         </Row>
