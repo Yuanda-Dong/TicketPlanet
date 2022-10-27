@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
@@ -8,8 +8,9 @@ import EventCard from '../EventCard/EventCard';
 import Button from '@mui/material/Button';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-
+import { axiosInstance } from '../../config';
 import './LandingMain.css';
+
 
 export default function LandingMain() {
   const [value, setValue] = React.useState('1');
@@ -19,7 +20,16 @@ export default function LandingMain() {
     setValue(newValue);
   };
 
-  const events = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+  const [events, setEvents] = useState([]);
+
+
+  useEffect(() => {
+    async function fetchData() {
+      let res = await axiosInstance.get('/event/upcoming?pageSize=12&pageNum=0');
+      setEvents(res.data);
+    }
+    fetchData();
+  }, []);
 
   return (
     <Box className="landing_main_container">
@@ -33,7 +43,7 @@ export default function LandingMain() {
         <TabPanel value="1">
           <div className="events-container">
             {events.map((e) => (
-              <EventCard key={e} id={e} />
+              <EventCard key={e._id} eventInfo={e} />
             ))}
           </div>
 
@@ -46,7 +56,7 @@ export default function LandingMain() {
         <TabPanel value="2">
           <div className="events-container">
             {events.map((e) => (
-              <EventCard key={e} id={e} />
+              <EventCard key={e._id} eventInfo={e}/>
             ))}
           </div>
         </TabPanel>

@@ -5,17 +5,18 @@ import CardMedia from '@mui/material/CardMedia';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import Typography from '@mui/material/Typography';
 import { useNavigate } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 import './EventCard.css';
 
-export default function EventCard({ id }) {
+const  EventCard = (props) => {
   const navigate = useNavigate();
 
   const viewEvent = (e) => {
-    navigate(`/event/${e.currentTarget.id}`);
+    navigate(`/event/${props.eventInfo._id}`);
   };
   return (
-    <Card id={id} sx={{ maxWidth: 345 }} className="event-card" onClick={viewEvent}>
+    <Card id={props.eventInfo._id} sx={{ maxWidth: 345 }} className="event-card" onClick={viewEvent}>
       <CardMedia
         component="img"
         height="250"
@@ -24,19 +25,20 @@ export default function EventCard({ id }) {
       />
       <CardContent>
         <div className="date">
-          <span className="month">Nov</span>
-          <span className="day">13</span>
+          <span className="month">
+          {new Date(props.eventInfo.start_dt).toLocaleString('default', { month: 'long' })}
+          </span>
+          <span className="day">
+          {new Date(props.eventInfo.start_dt).toLocaleString('default', { day: 'numeric' })}
+          </span>
         </div>
         <div className="event-info">
           <Typography gutterBottom variant="h5" component="div">
-            Event Title
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            Event price
+          {props.eventInfo.title}
           </Typography>
           <Typography variant="body2" color="text.secondary">
             <LocationOnIcon />
-            Event Location
+            {props.eventInfo.address}
           </Typography>
         </div>
       </CardContent>
@@ -47,3 +49,8 @@ export default function EventCard({ id }) {
     </Card>
   );
 }
+
+export default EventCard;
+EventCard.propTypes = {
+  eventInfo: PropTypes.object,
+};

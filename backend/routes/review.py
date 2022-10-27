@@ -18,7 +18,7 @@ def list_reviews(request: Request, id: str):
     reviews = list(request.app.database["reviews"].find({"event_id": id}))
     #print(reviews)
     for review in reviews:
-        print(review)
+        # print(review)
         user = request.app.database["users"].find_one({"_id": review["user_id"]})
         replying_to = None if review["reply_review_id"] is None else request.app.database["reviews"].find_one({"_id": review["reply_review_id"]}) 
         review["username"] = user["first_name"] + " " + user["last_name"]
