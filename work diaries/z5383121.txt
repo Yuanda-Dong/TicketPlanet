@@ -19,3 +19,10 @@ Had a meeting with the back-end team to decide the data models we need for sprin
 Week 5 
 Did a prototype on post event page
 Did a prototype on edit event page
+A retrospective meeting was held with the team members after presentation A to discuss relevant issues and complete the report.
+
+Week 6 
+Complete API calls for post/edit events on the front end
+
+Week 7 
+Complete API calls for search/upcomming events on the front end 

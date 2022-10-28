@@ -13,3 +13,12 @@ Week 4
 Met with team member to discuss demo
 Completed forgot password and reset password features and dependencies 
 Updated user model
+
+Week 5
+Completed Search and review 
+Update filter and review model
+
+Week 6
+Update Search and review 
+Update filter and review model
+Attended the group meeting with other members
