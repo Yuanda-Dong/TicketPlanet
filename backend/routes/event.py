@@ -44,19 +44,37 @@ def list_events(pageSize: int, pageNum: int, request: Request):
 
 @router.post("/search", response_description="search", response_model=List[EventInDB])
 def search_events(request: Request, filter: Filter):
-    query = {}
+    events_list = []
 
-    # title filter
-    if filter.title:
-        query["title"] = re.compile(filter.title)
-    # details filter
-    if filter.details:
-        query["details"] = re.compile(filter.details)
-    # address filter
-    if filter.location:
-        query["address"] = re.compile(filter.location)
+    # # title filter
+    # if filter.title:
+    #     query["title"] = re.compile(filter.title)
+    # # details filter
+    # if filter.details:
+    #     query["details"] = re.compile(filter.details)
+    # # address filter
+    # if filter.location:
+    #     query["address"] = re.compile(filter.location)
 
-    events = list(request.app.database["events"].find(query))
+    # events = list(request.app.database["events"].find(query))
+
+    if filter.fuzzy:
+        # address filter
+        query = {"address": re.compile(filter.fuzzy)}
+        events_list.extend(list(request.app.database["events"].find(query)))
+        # details filter
+        query = {"details": re.compile(filter.fuzzy)}
+        events_list.extend(list(request.app.database["events"].find(query)))
+        # title filter
+        query = {"title": re.compile(filter.fuzzy)}
+        events_list.extend(list(request.app.database["events"].find(query)))
+
+        events = []
+        for i in events_list:
+            if i not in events:
+                events.append(i)
+    else:
+        events = list(request.app.database["events"].find({}))
 
     # category filter
     if filter.category:
@@ -96,7 +114,6 @@ def search_events(request: Request, filter: Filter):
     # datetime filter
     if filter.start_dt and filter.end_dt:
         event_list = []
-        print(events)
         for event in events:
             event_end_dt = event['end_dt']
             if isinstance(event['end_dt'], str):
@@ -108,6 +125,7 @@ def search_events(request: Request, filter: Filter):
                 event_list.append(event)
         events = event_list
 
+    # print(events)
     return events
 
 

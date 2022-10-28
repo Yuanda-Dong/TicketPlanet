@@ -15,6 +15,7 @@ class Filter(BaseModel):
     user_postcode: Optional[str]
     distance: Optional[str]
     location: Optional[str]
+    fuzzy: Optional[str]
 
 
     class Config:
@@ -29,7 +30,8 @@ class Filter(BaseModel):
                 "price": "15",
                 "user_postcode":"2122",
                 "distance":"50",
-                "location": "Mars"
+                "location": "Mars",
+                "fuzzy": ""
             }
         }
 
