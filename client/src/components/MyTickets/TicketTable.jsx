@@ -28,6 +28,7 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import DetailsTwoToneIcon from "@mui/icons-material/DetailsTwoTone";
 import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
 import PropTypes from "prop-types";
+import {useNavigate} from "react-router-dom";
 
 const getStatusLabel = (ticketOrderStatus) => {
 	const map = {
@@ -63,8 +64,14 @@ const applyPagination = (ticketOrders, page, limit) => {
 };
 
 function TicketRow(props) {
+	const navigate = useNavigate();
 	const {ticketRow} = props;
 	const [open, setOpen] = useState(false)
+
+	const handleClickEventDetail = () => {
+		navigate(`/event/${ticketRow.event_id}`);
+	}
+
 	return (
 		<React.Fragment>
 			<TableRow hover key={ticketRow.id}>
@@ -102,30 +109,26 @@ function TicketRow(props) {
 				<TableCell align="right">
 					<Tooltip title="Event Detail" arrow>
 						<IconButton
-							sx={{
-								'&:hover': {
-									background: alpha('#5569ff', 0.1)
-								},
-								color: '#5569ff'
-							}}
+							sx={{'&:hover': {background: alpha('#5569ff', 0.1)}, color: '#5569ff'}}
 							color="inherit"
 							size="small"
-						>
+							onClick={handleClickEventDetail}>
 							<DetailsTwoToneIcon fontSize="small"/>
 						</IconButton>
 					</Tooltip>
-					<Tooltip title="Delete Tickets" arrow>
+					{ticketRow.status === 'passed' ? (<Tooltip title="Delete booking" arrow>
 						<IconButton
-							sx={{
-								'&:hover': {background: alpha('#FF1943', 0.1)},
-								color: '#FF1943'
-							}}
+							sx={{'&:hover': {background: alpha('#FF1943', 0.1)}, color: '#FF1943'}}
 							color="inherit"
-							size="small"
-						>
+							size="small">
 							<DeleteTwoToneIcon fontSize="small"/>
-						</IconButton>
-					</Tooltip>
+						</IconButton></Tooltip>) : <Tooltip title="Cancel booking" arrow>
+						<IconButton
+							sx={{'&:hover': {background: alpha('#FF1943', 0.1)}, color: '#FF1943'}}
+							color="inherit"
+							size="small">
+							<DeleteTwoToneIcon fontSize="small"/>
+						</IconButton></Tooltip>}
 				</TableCell>
 			</TableRow>
 			<TableRow>
@@ -173,6 +176,7 @@ function TicketRow(props) {
 TicketRow.propTypes = {
 	ticketRow: PropTypes.shape({
 		ticket_name: PropTypes.string.isRequired,
+		event_id: PropTypes.string.isRequired,
 		start_dt: PropTypes.string.isRequired,
 		end_dt: PropTypes.string.isRequired,
 		amount: PropTypes.number.isRequired,
@@ -265,7 +269,6 @@ const TicketTable = ({ticketOrders}) => {
 				}
 				title="Recent Tickets"
 			/>
-			{/*)}*/}
 			<Divider/>
 			<TableContainer>
 				<Table>
