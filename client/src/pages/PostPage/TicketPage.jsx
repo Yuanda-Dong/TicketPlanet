@@ -10,12 +10,14 @@ import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import Paper from '@mui/material/Paper';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
+import Divider from '@mui/material/Divider';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import { axiosInstance } from '../../config';
 import Modal from '@mui/material/Modal';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import SeatMap from '../../components/SeatSelection/SeatMap';
 
 const TicketPage = () => {
   const { token } = useSelector((state) => state.user);
@@ -31,6 +33,8 @@ const TicketPage = () => {
     },
   };
   const [ticket, setTicket] = useState({ t: { price: '', quantity: '', name: '' }, tickets: [] });
+
+  const [confirm, setConfirm] = useState(false);
 
   const style = {
     position: 'absolute',
@@ -129,10 +133,11 @@ const TicketPage = () => {
     }
     goHome();
   };
+
   return (
     <div className="PostPage">
       <NavBar />
-      <Container component="main" maxWidth="md" sx={{ mb: 0 }}>
+      <Container component="main" maxWidth="md" sx={{ mb: 0, minHeight: '100vh' }}>
         <Paper elevation={3} sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}>
           {/* TICKETs */}
           <Grid item xs={12}>
@@ -233,14 +238,31 @@ const TicketPage = () => {
               </Modal>
             </div>
           </Grid>
-          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '20px', marginTop: '50px' }}>
+          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '20px', margin: '50px 0px' }}>
             <Button sx={{ mt: '20px' }} variant="outlined" onClick={goHome}>
               Cancel
             </Button>
-            <Button sx={{ mt: '20px' }} variant="contained" onClick={fin}>
-              Finish
+
+            <Button
+              sx={{ mt: '20px' }}
+              variant="contained"
+              onClick={() => {
+                setConfirm(true);
+              }}
+            >
+              Confirm
             </Button>
           </div>
+          <Divider />
+          {confirm && (
+            <Box>
+              <SeatMap tickets={ticket.tickets} />
+            </Box>
+          )}
+          <Divider />
+          <Button fullWidth sx={{ mt: '20px' }} variant="contained" onClick={fin}>
+            Finish
+          </Button>
         </Paper>
       </Container>
     </div>
