@@ -41,7 +41,7 @@ const Sidebar = () => {
       <div className="sidebar">
           <h2>Filters</h2>
         <Divider variant="middle" />
-          <h4>Distance </h4>
+          <h4>Distance <Checkbox /> </h4>
         <Box sx={{ width: 180 }}>
         <Slider
             defaultValue={20}
@@ -51,7 +51,7 @@ const Sidebar = () => {
         />
         </Box>
         <Divider variant="middle" />
-          <h4>Categories</h4>
+          <h4>Categories <Checkbox /></h4>
         <FormGroup>
         <FormControlLabel control={<Checkbox defaultChecked />} label="Movies" />
         <FormControlLabel control={<Checkbox />} label="Concert" />
@@ -60,7 +60,7 @@ const Sidebar = () => {
         <FormControlLabel control={<Checkbox />} label="Other" />
         </FormGroup>
         <Divider variant="middle" />
-          <h4>Price </h4>
+          <h4>Price <Checkbox /></h4>
         <Box sx={{ width: 180 }}>
         <Slider
             defaultValue={20}

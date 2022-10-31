@@ -70,8 +70,11 @@ const EventDetail = (props) => {
             <div className="item">
               <LocationOnOutlinedIcon fontSize="large" />
               <div className="item-content">
-                <span>Location</span>
-                <span>{eventInfo.address}</span>
+                <div><span>Location: </span>
+                <span>{eventInfo.address}</span></div>
+                <div><span>Postcode: </span>
+                <span>{eventInfo.postcode}</span></div>
+                
               </div>
             </div>
           </div>
