@@ -4,8 +4,13 @@ from util.oAuth import get_current_user
 from fastapi import APIRouter, Body, Request, Response, HTTPException, status, Depends
 from fastapi.encoders import jsonable_encoder
 from typing import List
+import os
 from pymongo import ReturnDocument
+import stripe 
+
+stripe.api_key = os.getenv("STRIPE_API_KEY")
 router = APIRouter()
+
 
 @router.post("/e/{event_id}", response_description="Add ticket to event", status_code=status.HTTP_201_CREATED, response_model=TicketInDB)
 def create_ticket(event_id: str, request: Request, ticket: Ticket = Body(...), user: User = Depends(get_current_user)):
@@ -77,6 +82,7 @@ def delete_ticket(id: str, request: Request, response: Response, user: User = De
             pass
         
         delete_result = request.app.database["tickets"].delete_one({"_id": id})
+        # refund if active 
         if delete_result.deleted_count == 1:
             response.status_code = status.HTTP_204_NO_CONTENT
             return response
@@ -84,11 +90,11 @@ def delete_ticket(id: str, request: Request, response: Response, user: User = De
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Ticket with ID {id} not found")
     
 @router.post("/buy/{id}", response_description="Buy a ticket", response_model=TicketInDB)
-def delete_ticket(id: str, quantity: int, request: Request, response: Response):
+def delete_ticket(id: str, quantity: int, request: Request, response: Response, user:User = Depends(get_current_user)):
     if(
         found_ticket := request.app.database["tickets"].find_one({"_id": id})
     ) is not None: 
-        ## this is a dummy method that will just check quantity and decrement for now
+        ## first decrement the tickets so you lock the tickets to the payment intent
         if found_ticket["availability"] >= quantity:
             found_ticket["avialability"] -= quantity
             updated_ticket = request.app.database["tickets"].update_one(

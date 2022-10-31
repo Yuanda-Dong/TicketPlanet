@@ -23,3 +23,15 @@ Week 4
 - Completed event model and crud 
 - began google auth login 
 - met with team mates to discuss demo
+
+Week 5 
+- Fixed review models 
+- Began payments 
+- created upcoming event route 
+- optimised sign up route
+
+
+Week 6
+- Continued working on payments
+
+Week 7

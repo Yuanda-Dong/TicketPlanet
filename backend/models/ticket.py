@@ -42,4 +42,5 @@ class TicketInstance(BaseModel):
     section_number: Optional[str]
     user_id: str
     status: TicketStatus = "deactive"
+    event_id: str
     
