@@ -17,12 +17,15 @@ const Notice = styled.div`
 const Row = styled.div`
   display: flex;
   width: min-content;
-  max-width: 100%;
+  /* overflow: scroll; */
+  overflow: visible;
   height: min-content;
 `;
 const Seat = styled.div`
-  width: 50px;
-  height: 50px;
+  width: 55px;
+  height: 55px;
+  line-height: 55px;
+  text-align: center;
   background-color: ${(props) => (props.selected ? props.theme.color : '#b3b3b3')};
   margin: 5px;
   :hover {
@@ -40,6 +43,8 @@ const Dimension = styled.div`
 
 const SeatMapContainer = styled.div`
   margin: 20px auto;
+  max-height: 1200px;
+  overflow: scroll;
 `;
 
 const SeatMap = ({ tickets }) => {
@@ -248,7 +253,9 @@ const SeatMap = ({ tickets }) => {
                 selected={seat.selected}
                 type={seat.type}
                 theme={ticketType.find((e) => e.name === seat.type)}
-              />
+              >
+                {`${seat.rowId + 1}-${seat.colId + 1}`}
+              </Seat>
             ))}
           </Row>
         ))}
