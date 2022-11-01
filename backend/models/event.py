@@ -25,6 +25,7 @@ class Event(BaseModel):
     details: Optional[str]
     image_url: Optional[str]
     gallery: Optional[List[str]]
+    published: bool = False
     
     @validator('postcode')
     def postcode_must_be_4_digts(cls, v):
@@ -81,6 +82,7 @@ class EventUpdate(BaseModel):
     details: Optional[str]
     image_url: Optional[str]
     gallery: Optional[List[str]]
+    published: Optional[bool] = False
     
     @validator('postcode')
     def postcode_must_be_4_digts(cls, v):
