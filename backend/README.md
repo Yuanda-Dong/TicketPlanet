@@ -51,3 +51,9 @@ Our backend is implemented on [Railway](https://railway.app) using a [FastAPI](h
 #### Simulating Events
 - You can simulate events using `stripe trigger <event>` e.g. `stripe trigger payment_intent.succeeded`
     
+#### Session Checkout 
+- Use the following details to complete a test Checkout 
+  - Enter `4242 4242 4242 4242` as the card number
+  - Enter any future date for card expiry
+  - Enter any 3-digit number for CVV
+   -Enter any billing postal code (`90210`)
