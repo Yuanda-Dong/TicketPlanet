@@ -72,7 +72,7 @@ class PaymentMode(str, Enum):
 class LineItems(BaseModel):
     price_data: PriceData
     quantity: int
-    @validator('quant')
+    @validator('quantity')
     def quant_must_be_positive(cls, v):
         if v < 1:
             raise ValueError('quantity must be positive')
