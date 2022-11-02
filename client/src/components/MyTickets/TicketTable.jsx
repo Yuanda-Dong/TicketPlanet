@@ -39,6 +39,10 @@ const getStatusLabel = (ticketOrderStatus) => {
 		pending: {
 			text: 'Pending',
 			color: 'warning'
+		},
+		canceled: {
+			text: 'Canceled',
+			color: 'error'
 		}
 	};
 
@@ -116,13 +120,13 @@ function TicketRow(props) {
 							<DetailsTwoToneIcon fontSize="small"/>
 						</IconButton>
 					</Tooltip>
-					{ticketRow.status === 'passed' ? (<Tooltip title="Delete booking" arrow>
+					{ticketRow.status === 'pending' ? (<Tooltip title="Cancel booking" arrow>
 						<IconButton
 							sx={{'&:hover': {background: alpha('#FF1943', 0.1)}, color: '#FF1943'}}
 							color="inherit"
 							size="small">
 							<DeleteTwoToneIcon fontSize="small"/>
-						</IconButton></Tooltip>) : <Tooltip title="Cancel booking" arrow>
+						</IconButton></Tooltip>) : <Tooltip title="Delete booking" arrow>
 						<IconButton
 							sx={{'&:hover': {background: alpha('#FF1943', 0.1)}, color: '#FF1943'}}
 							color="inherit"
@@ -160,8 +164,8 @@ function TicketRow(props) {
 											<TableCell>{detail.category}</TableCell>
 											<TableCell>{detail.address}</TableCell>
 											<TableCell align={"right"}>{detail.postcode}</TableCell>
-											<TableCell align={"right"}>{detail.seat_number}</TableCell>
 											<TableCell align={"right"}>{detail.section_number}</TableCell>
+											<TableCell align={"right"}>{detail.seat_number}</TableCell>
 										</TableRow>
 									))}
 								</TableBody>
@@ -188,8 +192,8 @@ TicketRow.propTypes = {
 				category: PropTypes.string.isRequired,
 				address: PropTypes.string,
 				postcode: PropTypes.number.isRequired,
-				seat_number: PropTypes.number,
-				section_number: PropTypes.number,
+				seat_number: PropTypes.string.isRequired,
+				section_number: PropTypes.string.isRequired,
 			})
 		).isRequired,
 	}).isRequired,
@@ -214,6 +218,10 @@ const TicketTable = ({ticketOrders}) => {
 		{
 			id: 'pending',
 			name: 'Pending'
+		},
+		{
+			id: 'canceled',
+			name: 'Canceled'
 		},
 	];
 
