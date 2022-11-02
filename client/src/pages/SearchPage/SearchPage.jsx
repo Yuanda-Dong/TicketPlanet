@@ -1,8 +1,7 @@
-import React, { useState, useEffect  } from "react";
-import Sidebar from "../../components/Sidebar/Sidebar";
+import React, {useEffect, useState} from "react";
 import EventCard from "../../components/EventCard/EventCard";
 import "./SearchPage.css";
-import { useLocation } from "react-router-dom";
+import {Link, useLocation, useNavigate} from "react-router-dom";
 import Box from "@mui/material/Box";
 import Slider from "@mui/material/Slider";
 import FormGroup from "@mui/material/FormGroup";
@@ -13,23 +12,26 @@ import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import MenuIcon from '@mui/icons-material/Menu';
-import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { Button, Divider } from '@mui/material';
+import {useSelector} from 'react-redux';
+import {Button, Divider} from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import TextField from '@mui/material/TextField';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { useNavigate } from 'react-router-dom';
+import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs';
+import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
+import {DatePicker} from '@mui/x-date-pickers/DatePicker';
 import UserMenu from '../../components/Navbar/UserMenu';
-import { axiosInstance } from '../../config';
+import {axiosInstance} from '../../config';
 
 const SearchPage = () => {
-  const { currentUser } = useSelector((state) => state.user);
-  const [checkBox,setCheckBox] = useState([false,false,false]);
+  const {currentUser} = useSelector((state) => state.user);
+  const [checkBox, setCheckBox] = useState([false, false, false]);
 
-  const [value,setValue] = useState({distance:20, price:20,category:["Movies"], user_postcode: currentUser? currentUser.postcode:null});
+  const [value, setValue] = useState({
+    distance: 20,
+    price: 20,
+    category: ["Movies"],
+    user_postcode: currentUser ? currentUser.postcode : null
+  });
 
   const [events, setEvents] = useState([]);
 
@@ -244,7 +246,6 @@ const SearchPage = () => {
             </div>
           </div>
         </div>
-        /// sidebar
         <div className="sidebar">
           <h2>Filters</h2>
           <Divider variant="middle" />
@@ -279,20 +280,22 @@ const SearchPage = () => {
           <h4>
             Price <Checkbox checked={checkBox[2]} onChange= {(event)=>{setCheckBox([checkBox[0],checkBox[1],event.target.checked])}}/>
           </h4>
-          <Box sx={{ width: 180 }}>
+          <Box sx={{width: 180}}>
             <Slider
               defaultValue={20}
               step={10}
               valueLabelDisplay="auto"
               marks={marks2}
-              onChange={(event)=>{setValue({...value,price:event.target.value})}}
+              onChange={(event) => {
+                setValue({...value, price: event.target.value})
+              }}
             />
           </Box>
         </div>
-        <div className="events">
-        {
-          events.map((e)=>(<EventCard eventInfo={e} key = {e._id}/>))
-        }
+        <div className="Events">
+          {
+            events.map((e) => (<EventCard eventInfo={e} key={e._id}/>))
+          }
         </div> 
       </div>
     </>
