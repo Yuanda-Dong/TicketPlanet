@@ -53,7 +53,16 @@ class TicketPayment(BaseModel):
 class ProductData(BaseModel):
     name: str 
     description: Optional[str]
-    images: Optional[List[AnyUrl]]
+    images: Optional[List[str]]
+
+    class Config:
+        allow_population_by_field_name = True
+        schema_extra = {
+            "example": {
+                "name": "General Admission",
+                "description": "The Wiggles are the premier Australian Rockband"
+            }
+        }
     
 
 class PriceData(BaseModel):
@@ -65,6 +74,14 @@ class PriceData(BaseModel):
         if v < 20:
             raise ValueError('minimum price is 20c')
         return v
+    class Config:
+        allow_population_by_field_name = True
+        schema_extra = {
+            "example": {
+                "currency": "aud",
+                "unit_amount": 1500
+            }
+        }
     
 class PaymentMode(str, Enum):
     payment='payment'
@@ -77,13 +94,50 @@ class LineItems(BaseModel):
         if v < 1:
             raise ValueError('quantity must be positive')
         return v
+
+    class Config:
+        allow_population_by_field_name = True
+        schema_extra = {
+            "example": {
+                "quantity": 1
+            }
+        }
     
 
 class TicketPaymentSession(BaseModel):
-    cancel_url: AnyUrl
-    success_url: AnyUrl
-    mode: PaymentMode
+    cancel_url: str
+    success_url: str
+    mode: str
     customer_email: str
+    line_items: List[LineItems]
+
+    class Config:
+        allow_population_by_field_name = True
+        schema_extra = {
+            "example": {
+                "cancel_url": "http:localhost:8000/docs",
+                "success_url": "http:localhost:8000/docs",
+                "mode": "payment",
+                "customer_email": "dylan.oldfield@yahoo.com",
+                "line_items": [
+                    {
+                        'quantity': 1,
+                        'price_data': {
+                            'currency': 'aud',
+                            'unit_amount': 1500,
+                            'product_data':{
+                                'name': 'General Admission',
+                                'description': "The Wiggles are the premier Australian Rockband"
+                            }
+                        
+                        }
+                    } 
+                ]
+            }
+        }
+
+class TicketSessionReturn(TicketPaymentSession):
+    id: str
 
 class PaymentIntentReturn(BaseModel):
     clientSecret: str

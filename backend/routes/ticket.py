@@ -1,6 +1,6 @@
 from models.ticket import Ticket, TicketUpdate, TicketInDB
 from models.user import User
-from models.payment import TicketPaymentIntent, PaymentIntentReturn, TicketPaymentSession
+from models.payment import TicketPaymentIntent, PaymentIntentReturn, TicketPaymentSession, TicketSessionReturn
 from util.oAuth import get_current_user
 from fastapi import APIRouter, Body, Request, Response, HTTPException, status, Depends
 from fastapi.encoders import jsonable_encoder
@@ -90,105 +90,77 @@ def delete_ticket(id: str, request: Request, response: Response, user: User = De
            
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Ticket with ID {id} not found")
         
-@router.post("/buy/{id}", response_description="Buy a ticket", status_code=status.HTTP_201_CREATED,
+@router.post("/session/{id}", response_description="Buy a ticket", status_code=status.HTTP_201_CREATED,
              response_model=PaymentIntentReturn)
-def buy_ticket(id: str, payment: TicketPaymentIntent, request: Request, user: User = Depends(get_current_user)):
+def buy_ticket(id: str, payment: TicketPaymentSession, request: Request):
     if(
         found_ticket := request.app.database["tickets"].find_one({"_id": id})
     ) is not None: 
+        print(os.getenv("STRIPE_API_KEY"))
         ## first decrement the tickets so you lock the tickets to the payment intent
-        if found_ticket["availability"] >= payment.metadata.quantity:
-            updated_ticket = adjust_ticket_availability(id, found_ticket, -payment.metadata.quantity, request)
+        if found_ticket["availability"] >= payment.line_items[0].quantity:
+            updated_ticket = adjust_ticket_availability(id, found_ticket, -payment.line_items[0].quantity, request)
             
             #create physical ticket ids
             
+            print(jsonable_encoder(payment))
+            
             #payment intent
             try: 
-                payment_intent = stripe.PaymentIntent.create(
-                    amount=payment.amount,
-                    currency=payment.currency,
-                    payment_method_types=['card'],
-                    metadata=jsonable_encoder(payment.metadata)
+                payment_intent = stripe.checkout.Session.create(
+                    cancel_url = payment.cancel_url,
+                    success_url = payment.success_url,
+                    mode=payment.mode,
+                    customer_email = payment.customer_email,
+                    line_items = jsonable_encoder(payment.line_items)
                 )
                 return {'clientSecret': payment_intent.client_secret}   # attached physical ticket 
             
             except stripe.error.StripeError as e:
-                adjust_ticket_availability(id, updated_ticket, payment.metadata.quantity, request)
+                adjust_ticket_availability(id, found_ticket, payment.line_items[0].quantity, request)
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
                                     detail=e.user_message)
             except Exception as e: 
-                adjust_ticket_availability(id, updated_ticket, payment.metadata.quantity, request)
+                adjust_ticket_availability(id, found_ticket, payment.line_items[0].quantity, request)
                 raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
            
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=f"Ticket with ID {id} does not have enough availability")
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Ticket with ID {id} not found")
     
     
-@router.post("/buy/{id}", response_description="Buy a ticket", status_code=status.HTTP_201_CREATED,
-             response_model=PaymentIntentReturn)
-def buy_ticket(id: str, payment: TicketPaymentIntent, request: Request, user: User = Depends(get_current_user)):
-    if(
-        found_ticket := request.app.database["tickets"].find_one({"_id": id})
-    ) is not None: 
-        ## first decrement the tickets so you lock the tickets to the payment intent
-        if found_ticket["availability"] >= payment.metadata.quantity:
-            updated_ticket = adjust_ticket_availability(id, found_ticket, -payment.metadata.quantity, request)
-            
-            #create physical ticket ids
-            
-            #payment intent
-            try: 
-                payment_intent = stripe.PaymentIntent.create(
-                    amount=payment.amount,
-                    currency=payment.currency,
-                    payment_method_types=['card'],
-                    metadata=jsonable_encoder(payment.metadata)
-                )
-                return {'clientSecret': payment_intent.client_secret}   # attached physical ticket 
-            
-            except stripe.error.StripeError as e:
-                adjust_ticket_availability(id, updated_ticket, payment.metadata.quantity, request)
-                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
-                                    detail=e.user_message)
-            except Exception as e: 
-                adjust_ticket_availability(id, updated_ticket, payment.metadata.quantity, request)
-                raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
-           
-        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=f"Ticket with ID {id} does not have enough availability")
-    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Ticket with ID {id} not found")
 
-# @router.post("/buy/{id}", response_description="Buy a ticket", status_code=status.HTTP_201_CREATED,
-#              response_model=PaymentIntentReturn)
-# def buy_ticket(id: str, payment: TicketPaymentIntent, request: Request, user: User = Depends(get_current_user)):
-#     if(
-#         found_ticket := request.app.database["tickets"].find_one({"_id": id})
-#     ) is not None: 
-#         ## first decrement the tickets so you lock the tickets to the payment intent
-#         if found_ticket["availability"] >= payment.metadata.quantity:
-#             updated_ticket = adjust_ticket_availability(id, found_ticket, -payment.metadata.quantity, request)
+@router.post("/buy/{id}", response_description="Buy a ticket", status_code=status.HTTP_201_CREATED,
+             response_model=PaymentIntentReturn)
+def buy_ticket(id: str, payment: TicketPaymentIntent, request: Request, user: User = Depends(get_current_user)):
+    if(
+        found_ticket := request.app.database["tickets"].find_one({"_id": id})
+    ) is not None: 
+        ## first decrement the tickets so you lock the tickets to the payment intent
+        if found_ticket["availability"] >= payment.metadata.quantity:
+            updated_ticket = adjust_ticket_availability(id, found_ticket, -payment.metadata.quantity, request)
             
-#             #create physical ticket ids
+            #create physical ticket ids
             
-#             #payment intent
-#             try: 
-#                 payment_intent = stripe.PaymentIntent.create(
-#                     amount=payment.amount,
-#                     currency=payment.currency,
-#                     payment_method_types=['card'],
-#                     metadata=jsonable_encoder(payment.metadata)
-#                 )
-#                 return {'clientSecret': payment_intent.client_secret}   # attached physical ticket 
+            #payment intent
+            try: 
+                payment_intent = stripe.PaymentIntent.create(
+                    amount=payment.amount,
+                    currency=payment.currency,
+                    payment_method_types=['card'],
+                    metadata=jsonable_encoder(payment.metadata)
+                )
+                return {'clientSecret': payment_intent.client_secret}   # attached physical ticket 
             
-#             except stripe.error.StripeError as e:
-#                 adjust_ticket_availability(id, updated_ticket, payment.metadata.quantity, request)
-#                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
-#                                     detail=e.user_message)
-#             except Exception as e: 
-#                 adjust_ticket_availability(id, updated_ticket, payment.metadata.quantity, request)
-#                 raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            except stripe.error.StripeError as e:
+                adjust_ticket_availability(id, updated_ticket, payment.metadata.quantity, request)
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                                    detail=e.user_message)
+            except Exception as e: 
+                adjust_ticket_availability(id, updated_ticket, payment.metadata.quantity, request)
+                raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
            
-#         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=f"Ticket with ID {id} does not have enough availability")
-#     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Ticket with ID {id} not found")
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=f"Ticket with ID {id} does not have enough availability")
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Ticket with ID {id} not found")
     
     
 def adjust_ticket_availability(id: str, ticket:TicketInDB, quantity:int, request:Request):
