@@ -25,7 +25,6 @@ export default function LandingMain() {
     async function fetchData() {
       let res = await axiosInstance.get('/event/upcoming?pageSize=12&pageNum=0');
       setEvents(res.data);
-      console.log(res.data);
     }
     fetchData();
   }, []);

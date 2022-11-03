@@ -1,4 +1,4 @@
-.search_container {
+.search_bar_container {
   width: 70%;
   height: 70px;
   display: flex;
@@ -7,14 +7,15 @@
   border-radius: 5px;
 }
 
-.search_container .search_box {
+.search_bar_container .search_box {
   display: flex;
   align-items: center;
   flex: 1;
   justify-content: space-between;
+  position: relative;
 }
 
-.header .search_container .search_box .search_date_text {
+.search_bar_container .search_box .search_date_text {
   width: 60%;
   margin-left: 20px;
   color: #7b7b7b;
@@ -22,20 +23,20 @@
   cursor: pointer;
 }
 
-.header .search_container .search_box .date_picker {
+.search_bar_container .search_box .date_picker {
   /* background: #000; */
   position: absolute;
   top: 70px;
   z-index: 3;
 }
 
-.search_container .search_box .search,
+.search_bar_container .search_box .search,
 .search_box fieldset {
   flex: 1;
   border: none;
 }
 
-.search_container .search_box input {
+.search_bar_container .search_box input {
   font-size: 18px;
   background-color: transparent;
   color: #7b7b7b;
@@ -43,13 +44,8 @@
   margin-left: 20px;
 }
 
-.search_container .search_box .search_button {
+.search_bar_container .search_box .search_button {
   width: 100px;
   margin: 0 20px;
   background-color: #576f9d;
-}
-
-.search_container .search_box .search .MuiOutlinedInput-root {
-  display: flex;
-  flex-direction: row-reverse;
 }
