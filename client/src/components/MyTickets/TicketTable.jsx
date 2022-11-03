@@ -29,6 +29,13 @@ import DetailsTwoToneIcon from "@mui/icons-material/DetailsTwoTone";
 import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
 import PropTypes from "prop-types";
 import {useNavigate} from "react-router-dom";
+import DialogTitle from "@mui/material/DialogTitle";
+import Dialog from "@mui/material/Dialog";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogActions from "@mui/material/DialogActions";
+import Button from "@mui/material/Button";
+import Grid from "@mui/material/Grid";
 
 const getStatusLabel = (ticketOrderStatus) => {
 	const map = {
@@ -39,6 +46,10 @@ const getStatusLabel = (ticketOrderStatus) => {
 		pending: {
 			text: 'Pending',
 			color: 'warning'
+		},
+		canceled: {
+			text: 'Canceled',
+			color: 'error'
 		}
 	};
 
@@ -67,6 +78,14 @@ function TicketRow(props) {
 	const navigate = useNavigate();
 	const {ticketRow} = props;
 	const [open, setOpen] = useState(false)
+	const [DeleteOpen, setDeleteOpen] = useState(false);
+	const handleClickDeleteOpen = () => {
+		setDeleteOpen(true);
+	};
+
+	const handleDeleteClose = () => {
+		setDeleteOpen(false);
+	};
 
 	const handleClickEventDetail = () => {
 		navigate(`/event/${ticketRow.event_id}`);
@@ -107,29 +126,50 @@ function TicketRow(props) {
 					{getStatusLabel(ticketRow.status)}
 				</TableCell>
 				<TableCell align="right">
-					<Tooltip title="Event Detail" arrow>
-						<IconButton
-							sx={{'&:hover': {background: alpha('#5569ff', 0.1)}, color: '#5569ff'}}
-							color="inherit"
-							size="small"
-							onClick={handleClickEventDetail}>
-							<DetailsTwoToneIcon fontSize="small"/>
-						</IconButton>
-					</Tooltip>
-					{ticketRow.status === 'passed' ? (<Tooltip title="Delete booking" arrow>
-						<IconButton
-							sx={{'&:hover': {background: alpha('#FF1943', 0.1)}, color: '#FF1943'}}
-							color="inherit"
-							size="small">
-							<DeleteTwoToneIcon fontSize="small"/>
-						</IconButton></Tooltip>) : <Tooltip title="Cancel booking" arrow>
-						<IconButton
-							sx={{'&:hover': {background: alpha('#FF1943', 0.1)}, color: '#FF1943'}}
-							color="inherit"
-							size="small">
-							<DeleteTwoToneIcon fontSize="small"/>
-						</IconButton></Tooltip>}
-				</TableCell>
+					<Grid container spacing={1}>
+						<Grid item xs={6}>
+							<Tooltip title="Event Detail" arrow>
+								<IconButton
+									sx={{'&:hover': {background: alpha('#5569ff', 0.1)}, color: '#5569ff'}}
+									color="inherit"
+									size="small"
+									onClick={handleClickEventDetail}>
+									<DetailsTwoToneIcon fontSize="small"/>
+								</IconButton>
+							</Tooltip></Grid>
+						{ticketRow.status === 'pending' ? (<Grid item xs={6}><Tooltip title="Cancel booking" arrow>
+							<IconButton
+								sx={{'&:hover': {background: alpha('#FF1943', 0.1)}, color: '#FF1943'}}
+								color="inherit"
+								size="small">
+								<DeleteTwoToneIcon fontSize="small"/>
+							</IconButton></Tooltip></Grid>) : <Grid item xs={6}>
+							<Tooltip title="Delete booking" arrow>
+								<IconButton
+									sx={{'&:hover': {background: alpha('#FF1943', 0.1)}, color: '#FF1943'}}
+									color="inherit"
+									size="small" onClick={handleClickDeleteOpen}>
+									<DeleteTwoToneIcon fontSize="small"/>
+								</IconButton></Tooltip><Dialog
+							open={DeleteOpen}
+							onClose={handleDeleteClose}
+							aria-labelledby="alert-dialog-title"
+							aria-describedby="alert-dialog-description"
+						>
+							<DialogTitle id="alert-dialog-title">
+								{"Delete Ticket"}
+							</DialogTitle>
+							<DialogContent>
+								<DialogContentText id="alert-dialog-description">
+									Are you sure you need to delete this ticket record?
+								</DialogContentText>
+							</DialogContent>
+							<DialogActions>
+								<Button onClick={handleDeleteClose}>Disagree</Button>
+								<Button onClick={handleDeleteClose} autoFocus>Agree</Button>
+							</DialogActions>
+						</Dialog></Grid>}
+					</Grid></TableCell>
 			</TableRow>
 			<TableRow>
 				<TableCell style={{paddingBottom: 0, paddingTop: 0}} colSpan={6}>
@@ -160,8 +200,8 @@ function TicketRow(props) {
 											<TableCell>{detail.category}</TableCell>
 											<TableCell>{detail.address}</TableCell>
 											<TableCell align={"right"}>{detail.postcode}</TableCell>
-											<TableCell align={"right"}>{detail.seat_number}</TableCell>
 											<TableCell align={"right"}>{detail.section_number}</TableCell>
+											<TableCell align={"right"}>{detail.seat_number}</TableCell>
 										</TableRow>
 									))}
 								</TableBody>
@@ -188,8 +228,8 @@ TicketRow.propTypes = {
 				category: PropTypes.string.isRequired,
 				address: PropTypes.string,
 				postcode: PropTypes.number.isRequired,
-				seat_number: PropTypes.number,
-				section_number: PropTypes.number,
+				seat_number: PropTypes.string.isRequired,
+				section_number: PropTypes.string.isRequired,
 			})
 		).isRequired,
 	}).isRequired,
@@ -214,6 +254,10 @@ const TicketTable = ({ticketOrders}) => {
 		{
 			id: 'pending',
 			name: 'Pending'
+		},
+		{
+			id: 'canceled',
+			name: 'Canceled'
 		},
 	];
 

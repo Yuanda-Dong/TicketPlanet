@@ -4,11 +4,11 @@ import Header from '../../components/Header/Header';
 import LandingMain from '../../components/LandingMain/LandingMain';
 const Landing = () => {
   return (
-    <>
+    <div>
       <Navbar />
       <Header />
       <LandingMain />
-    </>
+    </div>
   );
 };
 

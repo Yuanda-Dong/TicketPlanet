@@ -11,6 +11,22 @@
   display: flex;
   align-items: center;
   flex: 1;
+  justify-content: space-between;
+}
+
+.header .search_container .search_box .search_date_text {
+  width: 60%;
+  margin-left: 20px;
+  color: #7b7b7b;
+  word-spacing: 20px;
+  cursor: pointer;
+}
+
+.header .search_container .search_box .date_picker {
+  /* background: #000; */
+  position: absolute;
+  top: 70px;
+  z-index: 3;
 }
 
 .search_container .search_box .search,
