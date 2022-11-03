@@ -4,7 +4,7 @@ import SearchPage from './pages/SearchPage/SearchPage';
 import SignInSide from './pages/Signin';
 import SignUp from './pages/SignUp';
 import EventDetail from './pages/EventDetail/EventDetail';
-import {BrowserRouter, Route, Routes} from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import MyTickets from './pages/MyTickets/MyTickets';
 import Dashboard from './pages/Dashboard/Dashboard.jsx';
 import Events from './components/Dashboard/Events';
@@ -18,7 +18,7 @@ import TicketPage from './pages/PostPage/TicketPage';
 import SeatMap from './components/SeatSelection/SeatMap';
 import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css'; // theme css file
-import NotFound from "./pages/404";
+import NotFound from './pages/404';
 
 function App() {
   return (
@@ -35,17 +35,17 @@ function App() {
           <Route exact path="event">
             <Route path=":id" element={<EventDetail />} />
           </Route>
-          <Route path="dashboard" element={<Dashboard/>}>
-            <Route path="events" element={<Events/>}/>
-            <Route path="reports" element={<Reports/>}/>
+          <Route path="dashboard" element={<Dashboard />}>
+            <Route path="events" element={<Events />} />
+            <Route path="reports" element={<Reports />} />
           </Route>
           {/* <Route path="payment" element={<Payment />} /> */}
-          <Route path="post" element={<PostPage/>}/>
-          <Route path="edit/:id/" element={<EditPage/>}/>
-          <Route path="my-tickets" element={<MyTickets/>}/>
-          <Route path="/tickets/:id/" element={<TicketPage/>}/>
-          <Route path="test" element={<SeatMap/>}/>
-          <Route path="*" element={<NotFound/>}/>
+          <Route path="post" element={<PostPage />} />
+          <Route path="edit/:id/" element={<EditPage />} />
+          <Route path="my-tickets" element={<MyTickets />} />
+          <Route path="/tickets/:id/" element={<TicketPage />} />
+          <Route path="test" element={<SeatMap />} />
+          <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
       <Footer />
