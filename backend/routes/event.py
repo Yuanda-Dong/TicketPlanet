@@ -15,6 +15,9 @@ from util.oAuth import get_current_user
 from models.filter import Filter
 from util.postcode_to_distance import distance_post
 import dateutil
+
+from util.send_email import event_update_notice, event_update_template
+
 router = APIRouter()
 
 
@@ -154,7 +157,7 @@ def find_event(id: str, request: Request):
 
 
 @router.put("/{id}", response_description="Update an event", response_model=EventInDB)
-def update_event(id: str, request: Request, event: EventUpdate, user: User = Depends(get_current_user)):
+async def update_event(id: str, request: Request, event: EventUpdate, user: User = Depends(get_current_user)):
     if (
             existing_event := request.app.database["events"].find_one({"_id": id})
     ) is None:
@@ -170,6 +173,8 @@ def update_event(id: str, request: Request, event: EventUpdate, user: User = Dep
         updated_result = request.app.database["events"].find_one_and_update(
             {"_id": id}, {"$set": event}, return_document=ReturnDocument.AFTER
         )
+        # send email
+        await event_update_notice(request, id)
         return updated_result
     return existing_event
 
@@ -190,3 +195,7 @@ def delete_event(id: str, request: Request, response: Response, user: User = Dep
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Event with ID {id} not found")
 
 
+# @router.get("/testEventUpdateNotice/")
+# async def test(id: str, request: Request):
+#     # send email
+#     await event_update_notice(request, id)

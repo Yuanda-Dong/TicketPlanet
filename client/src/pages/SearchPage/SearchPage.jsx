@@ -19,16 +19,15 @@ const SearchPage = () => {
 
   const [events, setEvents] = useState([]);
 
-  // const { keyword, from,to } = useLocation();
   const { state } = useLocation();
   const [value, setValue] = useState({
     distance: 20,
     price: 20,
     category: ['Movies'],
     user_postcode: currentUser ? currentUser.postcode : null,
-    fuzzy: state.fuzzy,
-    start_dt: state.start_dt,
-    end_dt: state.end_dt,
+    fuzzy: state?.fuzzy,
+    start_dt: state?.start_dt,
+    end_dt: state?.end_dt,
   });
 
   const cat = (label) => {
@@ -42,10 +41,8 @@ const SearchPage = () => {
   };
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     async function fetchData() {
-      if (state) {
-        setValue({ ...state, ...value });
-      }
       let res = await axiosInstance.post('/event/search', state);
       setEvents(res.data);
     }
