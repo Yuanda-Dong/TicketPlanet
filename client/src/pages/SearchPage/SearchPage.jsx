@@ -25,9 +25,9 @@ const SearchPage = () => {
     price: 20,
     category: ['Movies'],
     user_postcode: currentUser ? currentUser.postcode : null,
-    fuzzy: state.fuzzy,
-    start_dt: state.start_dt,
-    end_dt: state.end_dt,
+    fuzzy: state?.fuzzy,
+    start_dt: state?.start_dt,
+    end_dt: state?.end_dt,
   });
 
   const cat = (label) => {
@@ -39,9 +39,9 @@ const SearchPage = () => {
     }
     setValue({ ...value, category: copy });
   };
-  console.log(state);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     async function fetchData() {
       let res = await axiosInstance.post('/event/search', state);
       setEvents(res.data);

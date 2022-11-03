@@ -28,9 +28,9 @@
 
 .Events {
   display: flex;
-  top: 10vh;
+  /* top: 10vh; */
   /* margin-left: 300px; */
   flex-wrap: wrap;
-  min-height: 120vh;
+  /* min-height: 120vh; */
   margin-top: 20px;
 }

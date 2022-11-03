@@ -45,7 +45,12 @@ export default function LandingMain() {
             ))}
           </div>
 
-          <Link style={{ textDecoration: 'none' }} className="link" to={'/search'}>
+          <Link
+            style={{ textDecoration: 'none' }}
+            className="link"
+            to={'/search'}
+            state={{ fuzzy: '', start_dt: null, end_dt: null }}
+          >
             <Button variant="contained" className="loadmore">
               Load More
             </Button>
