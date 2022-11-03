@@ -33,11 +33,12 @@ const Search = ({ value, setValue, handleSubmit }) => {
   const wrapperRef = useRef(null);
   const [openDate, setOpenDate] = useState(false);
   useOutsideAlerter(wrapperRef, setOpenDate);
+  // console.log(value.start_dt);
 
   const [date, setDate] = useState([
     {
-      startDate: null,
-      endDate: null,
+      startDate: value.start_dt ? new Date(value.start_dt) : null,
+      endDate: value.end_dt ? new Date(value.end_dt) : null,
       key: 'selection',
     },
   ]);
@@ -73,7 +74,9 @@ const Search = ({ value, setValue, handleSubmit }) => {
           <div ref={wrapperRef} className="date_picker">
             <DateRange
               editableDateInputs={true}
-              onChange={(item) => setDate([item.selection])}
+              onChange={(item) => {
+                setDate([item.selection]);
+              }}
               moveRangeOnFirstSelection={false}
               ranges={date}
             />
