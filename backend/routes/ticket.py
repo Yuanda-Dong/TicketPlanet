@@ -7,7 +7,9 @@ from fastapi.encoders import jsonable_encoder
 from typing import List
 import os
 from pymongo import ReturnDocument
-import stripe 
+import stripe
+
+from util.send_email import buy_notice
 
 stripe.api_key = os.getenv("STRIPE_API_KEY")
 router = APIRouter()
@@ -131,7 +133,7 @@ def buy_ticket(id: str, payment: TicketPaymentSession, request: Request):
 
 @router.post("/buy/{id}", response_description="Buy a ticket", status_code=status.HTTP_201_CREATED,
              response_model=PaymentIntentReturn)
-def buy_ticket(id: str, payment: TicketPaymentIntent, request: Request, user: User = Depends(get_current_user)):
+async def buy_ticket(id: str, payment: TicketPaymentIntent, request: Request, user: User = Depends(get_current_user)):
     if(
         found_ticket := request.app.database["tickets"].find_one({"_id": id})
     ) is not None: 
@@ -149,6 +151,7 @@ def buy_ticket(id: str, payment: TicketPaymentIntent, request: Request, user: Us
                     payment_method_types=['card'],
                     metadata=jsonable_encoder(payment.metadata)
                 )
+                await buy_notice(request, found_ticket["event_id"], user["_id"])
                 return {'clientSecret': payment_intent.client_secret}   # attached physical ticket 
             
             except stripe.error.StripeError as e:
