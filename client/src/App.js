@@ -17,6 +17,9 @@ import FindPassword from './pages/FindPassword';
 import Account from './pages/Account';
 import TicketPage from './pages/PostPage/TicketPage';
 import SeatMap from './components/SeatSelection/SeatMap';
+import 'react-date-range/dist/styles.css'; // main style file
+import 'react-date-range/dist/theme/default.css'; // theme css file
+
 function App() {
   return (
     <BrowserRouter>

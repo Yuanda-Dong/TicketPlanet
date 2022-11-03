@@ -11,7 +11,6 @@ import { useSelector } from 'react-redux';
 import { axiosInstance } from '../../config';
 import './LandingMain.css';
 
-
 export default function LandingMain() {
   const [value, setValue] = React.useState('1');
   const { currentUser } = useSelector((state) => state.user);
@@ -22,11 +21,11 @@ export default function LandingMain() {
 
   const [events, setEvents] = useState([]);
 
-
   useEffect(() => {
     async function fetchData() {
       let res = await axiosInstance.get('/event/upcoming?pageSize=12&pageNum=0');
       setEvents(res.data);
+      console.log(res.data);
     }
     fetchData();
   }, []);
@@ -56,7 +55,7 @@ export default function LandingMain() {
         <TabPanel value="2">
           <div className="events-container">
             {events.map((e) => (
-              <EventCard key={e._id} eventInfo={e}/>
+              <EventCard key={e._id} eventInfo={e} />
             ))}
           </div>
         </TabPanel>
