@@ -195,3 +195,7 @@ def delete_event(id: str, request: Request, response: Response, user: User = Dep
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Event with ID {id} not found")
 
 
+# @router.get("/testEventUpdateNotice/")
+# async def test(id: str, request: Request):
+#     # send email
+#     await event_update_notice(request, id)

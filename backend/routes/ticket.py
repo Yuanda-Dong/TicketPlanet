@@ -184,3 +184,7 @@ def create_physical_tickets(baseticket:str, event_id: str, quantity: int, userId
     
     
     return
+
+# @router.get("/testBuyNotice/")
+# async def hello(request: Request, id: str, user: str):
+#     await buy_notice(request, id, user)
