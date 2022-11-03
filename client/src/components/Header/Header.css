@@ -17,21 +17,33 @@
   color: #3c4b69;
 }
 
-.header .search_container {
+.header .header_search {
   position: absolute;
-  width: 80%;
-  height: 70px;
+  width: 100%;
   bottom: -50px;
   display: flex;
-  background-color: white;
-  border: 3px solid #3c4b69;
-  border-radius: 5px;
+  justify-content: center;
 }
 
-.header .search_container .search_box {
+/* .header .search_container .search_box {
   display: flex;
   align-items: center;
   flex: 1;
+  justify-content: space-between;
+} */
+
+/* .header .search_container .search_box .search_date_text {
+  width: 60%;
+  margin-left: 20px;
+  color: #7b7b7b;
+  word-spacing: 20px;
+  cursor: pointer;
+} */
+
+/* .header .search_container .search_box .date_picker {
+  position: absolute;
+  top: 70px;
+  z-index: 3;
 }
 
 .header .search_container .search_box .search,
@@ -57,4 +69,4 @@
 .header .search_container .search_box .search .MuiOutlinedInput-root {
   display: flex;
   flex-direction: row-reverse;
-}
+} */
