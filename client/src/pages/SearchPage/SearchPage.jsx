@@ -19,7 +19,6 @@ const SearchPage = () => {
 
   const [events, setEvents] = useState([]);
 
-  // const { keyword, from,to } = useLocation();
   const { state } = useLocation();
   const [value, setValue] = useState({
     distance: 20,
@@ -40,12 +39,10 @@ const SearchPage = () => {
     }
     setValue({ ...value, category: copy });
   };
+  console.log(state);
 
   useEffect(() => {
     async function fetchData() {
-      if (state) {
-        setValue({ ...state, ...value });
-      }
       let res = await axiosInstance.post('/event/search', state);
       setEvents(res.data);
     }

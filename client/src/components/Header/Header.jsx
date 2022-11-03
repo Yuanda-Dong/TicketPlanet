@@ -11,7 +11,7 @@ import './Header.css';
 
 const Header = () => {
   const navigate = useNavigate();
-  const [searchValue, setSearchValue] = useState({ fuzzy: '', start_dt: '', end_dt: '' });
+  const [searchValue, setSearchValue] = useState({ fuzzy: '', start_dt: null, end_dt: null });
 
   function jump_to_search() {
     navigate('/search', {
