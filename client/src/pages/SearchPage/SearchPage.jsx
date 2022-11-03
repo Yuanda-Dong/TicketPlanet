@@ -7,39 +7,29 @@ import Slider from '@mui/material/Slider';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import MenuIcon from '@mui/icons-material/Menu';
 import NavBar from '../../components/Navbar/NavBar';
 import { useSelector } from 'react-redux';
 import { Button, Divider } from '@mui/material';
 import Search from '../../components/SearchBar/SearchBar';
-import SearchIcon from '@mui/icons-material/Search';
-import UserMenu from '../../components/Navbar/UserMenu';
-import { DateRange } from 'react-date-range';
-import { format } from 'date-fns';
 import { axiosInstance } from '../../config';
 
 const SearchPage = () => {
   const { currentUser } = useSelector((state) => state.user);
   const [checkBox, setCheckBox] = useState([false, false, false]);
 
+  const [events, setEvents] = useState([]);
+
+  // const { keyword, from,to } = useLocation();
+  const { state } = useLocation();
   const [value, setValue] = useState({
     distance: 20,
     price: 20,
     category: ['Movies'],
     user_postcode: currentUser ? currentUser.postcode : null,
-    fuzzy: '',
-    start_dt: '',
-    end_dt: '',
+    fuzzy: state.fuzzy,
+    start_dt: state.start_dt,
+    end_dt: state.end_dt,
   });
-
-  const [events, setEvents] = useState([]);
-
-  // const { keyword, from,to } = useLocation();
-  const { state } = useLocation();
 
   const cat = (label) => {
     let copy = value.category;

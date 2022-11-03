@@ -36,7 +36,7 @@ const Search = ({ value, setValue, handleSubmit }) => {
 
   const [date, setDate] = useState([
     {
-      startDate: new Date(),
+      startDate: null,
       endDate: null,
       key: 'selection',
     },
@@ -65,10 +65,9 @@ const Search = ({ value, setValue, handleSubmit }) => {
             setOpenDate(true);
           }}
         >
-          {`${format(date[0].startDate ? date[0].startDate : new Date(), 'dd/MM/yyyy')} to ${format(
-            date[0].endDate ? date[0].endDate : new Date(),
-            'dd/MM/yyyy'
-          )}`}
+          {`${date[0].startDate ? format(date[0].startDate, 'dd/MM/yyyy') : 'Start'} to ${
+            date[0].startDate ? format(date[0].endDate, 'dd/MM/yyyy') : 'End'
+          }`}
         </span>
         {openDate && (
           <div ref={wrapperRef} className="date_picker">
