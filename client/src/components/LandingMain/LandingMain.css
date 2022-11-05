@@ -3,11 +3,14 @@
   background-repeat: no-repeat;
   background-size: cover; */
   width: 100vw;
+  /* height: 70px; */
 }
 
 .landing_main_container .MuiTabs-root {
   width: 100%;
 }
+/* .landing_main_container .MuiTabs-root .MuiTabs-scroller {
+} */
 
 .landing_main_container .MuiTabs-root .MuiTabs-flexContainer {
   justify-content: space-evenly;

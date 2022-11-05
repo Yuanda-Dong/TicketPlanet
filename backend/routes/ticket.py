@@ -8,7 +8,9 @@ from fastapi.encoders import jsonable_encoder
 from typing import List, Optional, Tuple
 import os
 from pymongo import ReturnDocument
-import stripe 
+import stripe
+
+from util.send_email import buy_notice
 
 stripe.api_key = os.getenv("STRIPE_API_KEY")
 router = APIRouter()
@@ -132,6 +134,39 @@ def buy_ticket(id: str, payment: TicketPaymentSession, request: Request):
         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=f"Ticket with ID {id} does not have enough availability")
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Ticket with ID {id} not found")
 
+@router.post("/buy/{id}", response_description="Buy a ticket", status_code=status.HTTP_201_CREATED,
+             response_model=PaymentIntentReturn)
+async def buy_ticket(id: str, payment: TicketPaymentIntent, request: Request, user: User = Depends(get_current_user)):
+    if(
+        found_ticket := request.app.database["tickets"].find_one({"_id": id})
+    ) is not None: 
+        ## first decrement the tickets so you lock the tickets to the payment intent
+        if found_ticket["availability"] >= payment.metadata.quantity:
+            updated_ticket = adjust_ticket_availability(id, found_ticket, -payment.metadata.quantity, request)
+            
+            #create physical ticket ids
+            
+            #payment intent
+            try: 
+                payment_intent = stripe.PaymentIntent.create(
+                    amount=payment.amount,
+                    currency=payment.currency,
+                    payment_method_types=['card'],
+                    metadata=jsonable_encoder(payment.metadata)
+                )
+                await buy_notice(request, found_ticket["event_id"], user["_id"])
+                return {'clientSecret': payment_intent.client_secret}   # attached physical ticket 
+            
+            except stripe.error.StripeError as e:
+                adjust_ticket_availability(id, updated_ticket, payment.metadata.quantity, request)
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                                    detail=e.user_message)
+            except Exception as e: 
+                adjust_ticket_availability(id, updated_ticket, payment.metadata.quantity, request)
+                raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
+           
+        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=f"Ticket with ID {id} does not have enough availability")
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Ticket with ID {id} not found")
     
 def adjust_ticket_availability(id: str, ticket:TicketInDB, request:Request):
         updated_ticket = request.app.database["tickets"].update_one(
@@ -216,3 +251,8 @@ def create_physical_tickets(baseticket:str, event_id: str, userId: str, request:
 #         raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=f"Ticket with ID {id} does not have enough availability")
 #     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Ticket with ID {id} not found")
     
+    return
+
+# @router.get("/testBuyNotice/")
+# async def hello(request: Request, id: str, user: str):
+#     await buy_notice(request, id, user)

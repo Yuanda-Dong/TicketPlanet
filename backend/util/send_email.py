@@ -1,5 +1,6 @@
 from fastapi_mail import FastMail, MessageSchema, ConnectionConfig
 from typing import List
+from fastapi import Request
 
 # from starlette.config import Config
 #
@@ -7,8 +8,8 @@ from typing import List
 
 
 conf = ConnectionConfig(
-    MAIL_USERNAME= "zyvp_dp@163.com",
-    MAIL_PASSWORD= "MSYGSKNSXKWKOPER", #"2017lnxLnx", #"mlztnzzmpntswgqt",
+    MAIL_USERNAME="zyvp_dp@163.com",
+    MAIL_PASSWORD="MSYGSKNSXKWKOPER",  # "2017lnxLnx", #"mlztnzzmpntswgqt",
     MAIL_FROM="zyvp_dp@163.com",
     MAIL_PORT=25,  # SSL = False, Port=25 || Port=465
     MAIL_SERVER="smtp.163.com",
@@ -30,7 +31,6 @@ async def password_reset(subject: str, recipient: List, content: str):
     fm = FastMail(conf)
     result = await fm.send_message(message)
     print(result)
-
 
 
 reset_template = """
@@ -59,3 +59,91 @@ reset_template = """
 </html>
     """
 
+
+async def event_update_notice(request: Request, event_id: str):
+    # sending email to user while the event has been updated
+    # get updated event info
+    updated_event = request.app.database["events"].find_one({"_id": event_id})
+    # get booked user email list
+    recipient = []
+    users = request.app.database["book"].find({"event_id": event_id}, {"user_id": 1})
+    for user in users:
+        user_email = request.app.database["users"].find_one({"_id": user["user_id"]})["email"]
+        recipient.append(user_email)
+    content = event_update_template.format(updated_event['title'], event_id)
+
+    message = MessageSchema(
+        subject="Event update notice",
+        recipients=recipient,
+        html=content,
+        subtype="html"
+    )
+    fm = FastMail(conf)
+    result = await fm.send_message(message)
+    print(result)
+
+
+event_update_template = '''
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>event update</title>
+</head>
+<body>
+  <div>
+    <h1>Event {0:} has been updated</h1>
+    <h1>Please click the link below to check the latest information</h1>
+    <a style="display: block; margin: 0 auto; border: none; background-color: rgba(255, 214, 10, 1); color: white; width: 80px; line-height: 24px; padding: 10px; font-size: 24px; border-radius: 10px; cursor: pointer; text-decoration: none;" 
+      href="http://localhost:3000/event/{1:}" 
+      target="_blank"
+    >
+        link
+    </a>
+  </div>
+</body>
+</html>
+
+'''
+
+
+async def buy_notice(request: Request, event_id: str, user_id: str):
+    # get event
+    buy_event = request.app.database["events"].find_one({"_id": event_id})
+    # get buyer
+    user_email = request.app.database["users"].find_one({"_id": user_id})["email"]
+    recipient = [user_email]
+    content = buy_template.format(buy_event['title'], event_id)
+    message = MessageSchema(
+        subject="Book event notice",
+        recipients=recipient,
+        html=content,
+        subtype="html"
+    )
+    fm = FastMail(conf)
+    result = await fm.send_message(message)
+    print(result)
+
+
+buy_template = '''
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>event update</title>
+</head>
+<body>
+  <div>
+    <h1>Thank you for booking event {0:}</h1>
+    <h1>Please click the link below to check the latest information</h1>
+    <a style="display: block; margin: 0 auto; border: none; background-color: rgba(255, 214, 10, 1); color: white; width: 80px; line-height: 24px; padding: 10px; font-size: 24px; border-radius: 10px; cursor: pointer; text-decoration: none;" 
+      href="http://localhost:3000/event/{1:}" 
+      target="_blank"
+    >
+        link
+    </a>
+  </div>
+</body>
+</html>
+
+'''

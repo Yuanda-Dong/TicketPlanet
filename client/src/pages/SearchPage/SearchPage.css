@@ -1,116 +1,36 @@
-.events{
-    display: flex;
-    top: 10vh;
-    position: inherit;
-    margin-left: 300px;
-    flex-wrap: wrap;
+.search_main {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 50px;
 }
+
 .sidebar {
-    width: 250px;
-    height: 90vh;
-    position: absolute;
-    left: 0;
-    top: 10vh;
-    background-color: #eee;
-    z-index: 2;
+  min-width: 250px;
+  min-height: 120vh;
+  /* position: absolute; */
+  flex: 2;
+  /* left: 0;
+  top: 10vh; */
+  background-color: #eee;
+  z-index: 2;
+  padding-left: 25px;
 }
 
-.app_bar {
-    background-color: #3c4b69;
-    height: 10vh;
-  }
-  
-  .app_bar .wrapper {
-    height: 100%;
-    margin: 0 2rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    color: white;
-  }
-  
-  .app_bar .wrapper .logo {
-    font-weight: 700;
-    letter-spacing: 0.3rem;
-    color: white;
-    font-family: 'monospace';
-  }
-  
-  .app_bar .wrapper .page_nav {
-    gap: 3rem;
-  }
-  
-  .app_bar .wrapper .create-event {
-    color: white;
-    background-color: #4968a3;
-  }
-  
-  .app_bar .wrapper .button_group {
-    display: flex;
-    gap: 1rem;
-    /* justify-content: space-between; */
-  }
-  
-  .app_bar .wrapper .button_group .login {
-    color: white;
-    border-color: inherit;
-  }
-  
-  .app_bar .wrapper .button_group .login:hover {
-    background-color: #707b90;
-  }
-  
-  .app_bar .wrapper .button_group .signup {
-    color: white;
-    background-color: #576f9d;
-  }
-  
-  .app_bar .wrapper .button_group .signup:hover {
-    background-color: #707b90;
-  }
-  
-  .app_bar .link {
-    text-decoration: none;
-  }
-  
+.right_main {
+  margin-top: 20px;
+  flex: 8;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* background-color: red; */
+}
 
-  .search_container {
-    width: 70%;
-    height: 70px;
-    display: flex;
-    background-color: white;
-    border: 3px solid #3c4b69;
-    border-radius: 5px;
-  }
-  
-  .search_container .search_box {
-    display: flex;
-    align-items: center;
-    flex: 1;
-  }
-  
-  .search_container .search_box .search,
-  .search_box fieldset {
-    flex: 1;
-    border: none;
-  }
-  
-  .search_container .search_box input {
-    font-size: 18px;
-    background-color: transparent;
-    color: #7b7b7b;
-    outline: none;
-    margin-left: 20px;
-  }
-  
-  .search_container .search_box .search_button {
-    width: 100px;
-    margin: 0 20px;
-    background-color: #576f9d;
-  }
-  
-  .search_container .search_box .search .MuiOutlinedInput-root {
-    display: flex;
-    flex-direction: row-reverse;
-  }
-  
+.Events {
+  display: flex;
+  /* top: 10vh; */
+  /* margin-left: 300px; */
+  flex-wrap: wrap;
+  /* min-height: 120vh; */
+  margin-top: 20px;
+}

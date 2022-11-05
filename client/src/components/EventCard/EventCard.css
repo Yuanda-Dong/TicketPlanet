@@ -1,6 +1,7 @@
 .event-card {
   margin: 10px 20px;
   width: 600px;
+  max-height: 55vh;
 }
 .event-card:hover {
   cursor: pointer;

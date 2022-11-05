@@ -11,7 +11,6 @@ import { useSelector } from 'react-redux';
 import { axiosInstance } from '../../config';
 import './LandingMain.css';
 
-
 export default function LandingMain() {
   const [value, setValue] = React.useState('1');
   const { currentUser } = useSelector((state) => state.user);
@@ -21,7 +20,6 @@ export default function LandingMain() {
   };
 
   const [events, setEvents] = useState([]);
-
 
   useEffect(() => {
     async function fetchData() {
@@ -47,7 +45,12 @@ export default function LandingMain() {
             ))}
           </div>
 
-          <Link style={{ textDecoration: 'none' }} className="link" to={'/search'}>
+          <Link
+            style={{ textDecoration: 'none' }}
+            className="link"
+            to={'/search'}
+            state={{ fuzzy: '', start_dt: null, end_dt: null }}
+          >
             <Button variant="contained" className="loadmore">
               Load More
             </Button>
@@ -56,7 +59,7 @@ export default function LandingMain() {
         <TabPanel value="2">
           <div className="events-container">
             {events.map((e) => (
-              <EventCard key={e._id} eventInfo={e}/>
+              <EventCard key={e._id} eventInfo={e} />
             ))}
           </div>
         </TabPanel>
