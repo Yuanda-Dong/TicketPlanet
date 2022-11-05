@@ -1,6 +1,7 @@
 import math
 import re
 from datetime import datetime
+from tkinter import S
 # from datetime import datetime
 from typing import List
 
@@ -9,7 +10,7 @@ from bson import ObjectId
 from fastapi import APIRouter, Body, Request, Response, HTTPException, status, Depends
 from fastapi.encoders import jsonable_encoder
 from pymongo import ReturnDocument
-from models.event import Event, EventInDB, EventUpdate
+from models.event import Event, EventInDB, EventUpdate, SeatPlan, SeatPlanInDB
 from models.user import User
 from util.oAuth import get_current_user
 from models.filter import Filter
@@ -190,3 +191,66 @@ def delete_event(id: str, request: Request, response: Response, user: User = Dep
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Event with ID {id} not found")
 
 
+@router.post("/seats/{id}", response_description="Add seating plan to event", status_code=status.HTTP_201_CREATED, response_model=SeatPlanInDB)
+def add_seat_plan(id: str, seat_plan:SeatPlan, request: Request, user: User = Depends(get_current_user)):
+    if (
+            found_event := request.app.database["events"].find_one({"_id": id})
+            
+    ) is not None:
+        if found_event["host_id"] != user["_id"]:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                                detail=f"Only the owner of this event can add a seating plan")
+        if found_event['published'] == True:
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                                detail=f"You cannot add a seat plan to an already published event")
+    seat_plan = jsonable_encoder(seat_plan)
+    seat_plan['event_id'] = id
+    new_plan = request.app.database["seat_plan"].insert_one(seat_plan)
+    created_plan = request.app.database["seat_plan"].find_one(
+        {"_id": new_plan.inserted_id}
+    )
+    
+    found_event["seat_plan"] = new_plan.inserted_id
+    
+    request.app.database["events"].find_one_and_update(
+            {"_id": id}, {"$set": found_event}, return_document=ReturnDocument.AFTER
+        )
+    
+    return created_plan
+    
+@router.get("/seats/{id}", response_description="Add seating plan to event", status_code=status.HTTP_201_CREATED, response_model=SeatPlanInDB)
+def get_seat_plan(id: str, request: Request):
+    if (
+            found_event := request.app.database["events"].find_one({"_id": id})
+            
+    ) is not None:
+        if 'seat_plan' not in found_event:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                                detail=f"This event does not have a seat plan")
+                                
+    found_plan = request.app.database["seat_plan"].find_one(
+        {"_id": found_event['seat_plan']}
+    )
+    
+    return found_plan
+    
+@router.put("/seats/{id}", response_description="Add seating plan to event", status_code=status.HTTP_201_CREATED, response_model=SeatPlanInDB)
+def update_seat_plan(id: str, seat_plan:SeatPlan, request: Request, user: User = Depends(get_current_user)):
+    if (
+            found_event := request.app.database["events"].find_one({"_id": id})
+            
+    ) is not None:
+        if found_event["host_id"] != user["_id"]:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                                detail=f"Only the owner of this event can add a seating plan")
+        if found_event['published'] == True:
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                                detail=f"You cannot add a seat plan to an already published event")
+    seat_plan = jsonable_encoder(seat_plan)
+    seat_plan['event_id'] = id
+    updated_plan = request.app.database["seat_plan"].find_one_and_update(
+        {"_id": id}, {"$set": seat_plan}
+    )
+
+    return updated_plan
+    

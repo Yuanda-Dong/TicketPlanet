@@ -26,6 +26,7 @@ class Event(BaseModel):
     image_url: Optional[str]
     gallery: Optional[List[str]]
     published: bool = False
+    seat_plan: Optional[str]
     
     @validator('postcode')
     def postcode_must_be_4_digts(cls, v):
@@ -46,7 +47,8 @@ class Event(BaseModel):
                 "end_dt": "2022-11-11T03:55",
                 "details:": "",
                 "image_url": "https://images.app.goo.gl/3TLpJJwGzicrDLN78",
-                "gallery": ["https://images.app.goo.gl/3TLpJJwGzicrDLN78", "https://images.app.goo.gl/3TLpJJwGzicrDLN78"]         
+                "gallery": ["https://images.app.goo.gl/3TLpJJwGzicrDLN78", "https://images.app.goo.gl/3TLpJJwGzicrDLN78"],
+                "published": False
             }
         }
         
@@ -83,6 +85,7 @@ class EventUpdate(BaseModel):
     image_url: Optional[str]
     gallery: Optional[List[str]]
     published: Optional[bool] = False
+    seat_plan: Optional[str]
     
     @validator('postcode')
     def postcode_must_be_4_digts(cls, v):
@@ -106,7 +109,50 @@ class EventUpdate(BaseModel):
             }
         }
 
+class Seat(BaseModel):
+    type_id: Optional[str] = ""
+    ticket_id: Optional[str] = ""
+    active: bool = True 
 
+class SeatPlan(BaseModel):
+    id: str = Field(default_factory=uuid.uuid4, alias="_id")
+    seats: List[List[Seat]] #starts 0-0
+    
+    class Config:
+        allow_population_by_field_name = True
+        schema_extra = {
+            "example":{
+                  "seats": [
+                    [
+                      {
+                        "type_id": "fb158264-9ff7-43c2-8754-5902b5bf3073",
+                        "ticket_id": "",
+                        "active": True
+                      },
+                      {
+                        "type_id": "fb158264-9ff7-43c2-8754-5902b5bf3073",
+                        "ticket_id": "",
+                        "active": True
+                      },
+                      {
+                        "type_id": "fb158264-9ff7-43c2-8754-5902b5bf3073",
+                        "ticket_id": "",
+                        "active": True
+                      },
+                      {
+                        "type_id": "fb158264-9ff7-43c2-8754-5902b5bf3073",
+                        "ticket_id": "",
+                        "active": True
+                      }
+                    ]
+                  ]
+                }
+        }
+class SeatPlanInDB(SeatPlan):
+    event_id: str
+    
+    
+    
 # Event: event_id, title, host, start dateTime, end dateTime, description, thumbnail (photo shown in card), gallery (optional, list of photos), video(optional), categories, location attendants:[Users], reviews
 
 # Ticket: event_id, types, price, #of_tickets, 

@@ -32,16 +32,15 @@ class TicketUpdate(BaseModel):
 
 class TicketStatus(str, Enum):
     active="active"
-    decativate = "deactive"
+    deactive = "deactive"
     refunded = "refunded"
 
 class TicketInstance(BaseModel):
     id: str = Field(default_factory=uuid.uuid4, alias="_id")
     base_id: str
-    seat: Optional[int]
-    section: Optional[str]
+    seat: Optional[str]
     user_id: str
-    status: TicketStatus = "deactive"
+    status: TicketStatus = TicketStatus.deactive
     event_id: str
     
 
@@ -51,15 +50,5 @@ class TicketInstance(BaseModel):
 # setter method will be backend 
 # need update 
 
-class Seat(BaseModel):
-    name: str # 0-0
-    type_id: str
-    taken: bool = False
-    active: bool = True 
 
-class SeatPlan(BaseModel):
-    id: str = Field(default_factory=uuid.uuid4, alias="_id")
-    event_id: str 
-    seats: List[List[Seat]] #starts 0-0
-    
     
