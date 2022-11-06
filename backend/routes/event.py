@@ -49,14 +49,16 @@ def list_events(pageSize: int, pageNum: int, request: Request):
 
 
 ### publish event route 
-@router.get("/published", response_description="Get all events", response_model=List[EventInDB])
-def list_events(request: Request):
-    #filter published = True
-    events = list(request.app.database["events"].find({"published": True}, limit=100))
+@router.get("/published", response_description="Get all published events", response_model=List[EventInDB])
+def list_published_events(request: Request):
+    events = list(request.app.database["events"].find({"published": True}))
     return events
 
-
-### get unpublished route 
+### get unpublished route
+@router.get("/unpublished", response_description="Get all unpublished events", response_model=List[EventInDB])
+def list_unpublished_events(request: Request):
+    events = list(request.app.database["events"].find({"published": False}))
+    return events
 
 @router.post("/publish/{id}", response_description="Publish Event", response_model=EventInDB)
 def publish_event(id: str, request: Request, user:User=Depends(get_current_user)):
@@ -104,7 +106,6 @@ def unpublish_event(id: str, request: Request, user:User=Depends(get_current_use
 @router.post("/search", response_description="search", response_model=List[EventInDB])
 def search_events(request: Request, filter: Filter):
     events_list = []
-
     # # title filter
     # if filter.title:
     #     query["title"] = re.compile(filter.title)
