@@ -20,6 +20,7 @@ import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css'; // theme css file
 import NotFound from './pages/404';
 import SeatCreationPage from './pages/PostPage/SeatCreationPage';
+import TicketPrice from './components/Ticket/TicketPrice';
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
           <Route path="account-setting" element={<Account />} />
           <Route exact path="event">
             <Route path=":id" element={<EventDetail />} />
+            <Route path="price/:id" element={<TicketPrice />} />
           </Route>
           <Route path="dashboard" element={<Dashboard />}>
             <Route path="events" element={<Events />} />

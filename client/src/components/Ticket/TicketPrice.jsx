@@ -1,0 +1,91 @@
+import React from 'react';
+import NavBar from "../Navbar/NavBar";
+import PriceCard from "./PriceCard";
+import {alpha, Box, Card, Container, Divider, IconButton, Typography} from "@mui/material";
+import CardMedia from "@mui/material/CardMedia";
+import CardContent from "@mui/material/CardContent";
+import {useNavigate, useParams} from "react-router-dom";
+import {axiosInstance} from "../../config";
+import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
+import moment from "moment/moment";
+import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
+import ArrowCircleLeftOutlinedIcon from '@mui/icons-material/ArrowCircleLeftOutlined';
+import Paper from "@mui/material/Paper";
+import './TicketPrice.css'
+
+function TicketPrice(props) {
+	const navigate = useNavigate();
+	const params = useParams();
+	const [eventInfo, setEventInfo] = React.useState({});
+	const [priceInfo, setPriceInfo] = React.useState([]);
+	React.useEffect(() => {
+		async function fetchData() {
+			let resE = await axiosInstance.get('/event/' + params.id);
+			setEventInfo(resE.data);
+			const resP = await axiosInstance.get('/ticket/e/' + params.id);
+			setPriceInfo(resP.data)
+			console.log(priceInfo)
+		}
+
+		fetchData();
+	}, [params.id]);
+
+	const handleClickBack = () => {
+		navigate(`/event/${eventInfo._id}`);
+	}
+
+	return (
+		<>
+			<NavBar/>
+			<Container component="main" maxWidth="lg" sx={{mb: 0}}>
+				<Paper elevation={3} sx={{my: {xs: 3, md: 6}, p: {xs: 2, md: 3}}}>
+					<Card sx={{display: 'flex', mt: '20px', mb: '30px', boxShadow: 'none'}}>
+						<IconButton
+							sx={{'&:hover': {background: alpha('#5569ff', 0.1)}, color: '#5569ff', pr: '16px'}}
+							color="inherit"
+							onClick={handleClickBack}>
+							<ArrowCircleLeftOutlinedIcon sx={{width: '2em', height: '2em'}}/>
+						</IconButton>
+						<Typography variant="h3">Ticket Options</Typography>
+					</Card>
+					<Card sx={{display: 'flex', pb: 'inherit', mb: 'inherit'}}>
+						<Box sx={{pl: '42px', pr: '21px'}}/>
+						<CardMedia
+							component="img"
+							sx={{width: 500, height: 333}}
+							image={eventInfo.image_url}
+							alt="Event Image"
+						/>
+						<Box sx={{display: 'flex', flexDirection: 'column'}}>
+							<CardContent sx={{flex: '1 0 auto',}}>
+								<Typography component="div" variant="h4" sx={{padding: 'inherit'}}>
+									{eventInfo.title}
+								</Typography>
+								<Typography variant="h6" color="text.secondary" component="div" sx={{padding: 'inherit'}}>
+									<AccessTimeOutlinedIcon fontSize="medium" sx={{pr: '6px'}}/>
+									START TIME: {moment(eventInfo.start_dt).format('MM/DD/YYYY h:mm a')}
+								</Typography>
+								<Typography variant="h6" color="text.secondary" component="div" sx={{padding: 'inherit', pl: '66px'}}>
+									END TIME: {moment(eventInfo.end_dt).format('MM/DD/YYYY h:mm a')}
+								</Typography>
+								<Typography variant="h6" color="text.secondary" component="div" sx={{padding: 'inherit'}}>
+									<LocationOnOutlinedIcon fontSize="medium" sx={{pr: '6px'}}/>
+									LOCATION: {eventInfo.address}
+								</Typography>
+							</CardContent>
+							<Box sx={{display: 'flex', alignItems: 'center', pl: 1, pb: 1}}>
+								<IconButton aria-label="previous"></IconButton>
+							</Box>
+						</Box>
+					</Card>
+					<Divider sx={{borderColor: '#6969ff', borderBottomWidth: 'medium', mb: 'inherit'}}/>
+					<div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'space-around', margin: '20px 0'}}>
+						{priceInfo.map((e) => (<PriceCard key={e._id} ticketInfo={e}/>))}
+					</div>
+				</Paper>
+			</Container>
+		</>
+	);
+}
+
+export default TicketPrice;

@@ -59,6 +59,12 @@ async def webhook(request: Request):
       payment_intent = event['data']['object']
     elif event['type'] == 'payment_intent.succeeded':
       payment_intent = event['data']['object']
+    elif event['type'] == 'payment_intent.succeeded':
+      payment_intent = event['data']['object']
+    elif event['type'] == 'checkout_session.completed':
+      session = event['data']['object']
+      
+      
     # ... handle other event types
     else:
       print('Unhandled event type {}'.format(event['type']))

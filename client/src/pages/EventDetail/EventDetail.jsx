@@ -5,19 +5,19 @@ import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import NavBar from '../../components/Navbar/NavBar';
 import Gallery from '../../components/Gallery/Gallery';
 import Comments from '../../components/Comment/Comments';
-import { useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
-import { axiosInstance } from '../../config';
-import { convertFromRaw } from 'draft-js';
-import { stateToHTML } from 'draft-js-export-html';
+import {useSelector} from 'react-redux';
+import {Link, useParams} from 'react-router-dom';
+import {axiosInstance} from '../../config';
+import {convertFromRaw} from 'draft-js';
+import {stateToHTML} from 'draft-js-export-html';
 import './EventDetail.css';
 import moment from 'moment';
-import { Container } from '@mui/material';
+import {Container} from '@mui/material';
 import Paper from '@mui/material/Paper';
 
 const EventDetail = (props) => {
   const params = useParams();
-  const { currentUser } = useSelector((state) => state.user);
+  const {currentUser} = useSelector((state) => state.user);
   const [eventInfo, setEventInfo] = React.useState({});
   const [price, setPrice] = React.useState('');
   React.useEffect(() => {
@@ -56,9 +56,11 @@ const EventDetail = (props) => {
                 <div className="ticket-box">
                   <span>Tickets starting at</span>
                   <span>{price !== 'Infinity' ? '$ ' + price : ''}</span>
-                  <Button variant="contained" className="buy">
-                    Buy tickets
-                  </Button>
+                  <Link to={`/event/price/${params.id}`}>
+                    <Button variant="contained" className="buy">
+                      Buy tickets
+                    </Button>
+                  </Link>
                 </div>
               </div>
             </div>
