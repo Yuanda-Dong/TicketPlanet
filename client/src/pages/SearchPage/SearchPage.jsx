@@ -44,6 +44,7 @@ const SearchPage = () => {
     window.scrollTo(0, 0);
     async function fetchData() {
       let res = await axiosInstance.post('/event/search', state);
+      window.history.replaceState({}, document.title)
       setEvents(res.data);
     }
     fetchData();

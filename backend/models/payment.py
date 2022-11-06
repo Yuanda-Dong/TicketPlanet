@@ -1,6 +1,6 @@
 from datetime import datetime
 import uuid
-from typing import Optional, List, Dict
+from typing import Optional, List, Dict, Tuple
 from enum import Enum
 from pydantic import AnyUrl, BaseModel, Field, validator
 
@@ -103,25 +103,29 @@ class LineItems(BaseModel):
             }
         }
     
-
+    
+class MetaData(BaseModel):
+    seats: List[Tuple[int, int]] = []
+    seat_ids: List[str] = []
 class TicketPaymentSession(BaseModel):
     cancel_url: str
     success_url: str
     mode: str
     customer_email: str
     line_items: List[LineItems]
+    metadata: MetaData
 
     class Config:
         allow_population_by_field_name = True
         schema_extra = {
             "example": {
-                "cancel_url": "http:localhost:8000/docs",
-                "success_url": "http:localhost:8000/docs",
+                "cancel_url": "http://localhost:8000/docs/",
+                "success_url": "http://localhost:8000/docs/",
                 "mode": "payment",
                 "customer_email": "dylan.oldfield@yahoo.com",
                 "line_items": [
                     {
-                        'quantity': 1,
+                        'quantity': 3,
                         'price_data': {
                             'currency': 'aud',
                             'unit_amount': 1500,
@@ -132,7 +136,10 @@ class TicketPaymentSession(BaseModel):
                         
                         }
                     } 
-                ]
+                ],
+                "metadata":{
+                    "seats": [(0,0), (0,1), (0,2)]
+                }
             }
         }
 
