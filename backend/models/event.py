@@ -26,7 +26,7 @@ class Event(BaseModel):
     image_url: Optional[str]
     gallery: Optional[List[str]]
     published: bool = False
-    seat_plan: Optional[str]
+    seat_plan: Optional[str] = ""
     
     @validator('postcode')
     def postcode_must_be_4_digts(cls, v):
