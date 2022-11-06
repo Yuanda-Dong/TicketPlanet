@@ -52,7 +52,7 @@ def list_events(pageSize: int, pageNum: int, request: Request):
 @router.get("/published", response_description="Get all events", response_model=List[EventInDB])
 def list_events(request: Request):
     #filter published = True
-    events = list(request.app.database["events"].find(limit=100))
+    events = list(request.app.database["events"].find({"published": True}, limit=100))
     return events
 
 
