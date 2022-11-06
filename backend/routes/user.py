@@ -11,6 +11,7 @@ from pymongo import ReturnDocument
 
 from models.token import Token
 from models.user import User, UserUpdate, UserInDB, ForgetPassword, ResetPassword, UserWithAccess, UpdatePassword
+from models.event import EventInDB
 from util.app import app
 from util.oAuth import authenticate_user, get_password_hash, create_access_token, get_current_user, \
     verify_password  # ,oauth
@@ -97,6 +98,7 @@ def create_user(request: Request, user: UserInDB = Body(...)):
 def list_users(request: Request, user: User = Depends(get_current_user)):
     users = list(request.app.database["users"].find(limit=100))
     return users
+
 
 
 @router.get("/{id}", response_description="Get a single user by id", response_model=User)
@@ -249,6 +251,13 @@ async def update_password(request: Request, body: UpdatePassword, auth: User = D
         "code": 200,
         "message": "Password has been reset successfully"
     }
+    
+    
+@router.get("/{id}/events", response_description="Get user's events", response_model=List[EventInDB])
+def list_events(id:str, request: Request):
+    events = list(request.app.database["events"].find({"host_id": id}))
+    return events
+
 
 # @router.post("/routes/check-code")
 # async def reset_password(request: Request, reset_password_token: str):
