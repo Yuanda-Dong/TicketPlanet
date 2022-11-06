@@ -25,8 +25,7 @@ class Event(BaseModel):
     details: Optional[str]
     image_url: Optional[str]
     gallery: Optional[List[str]]
-    published: bool = False
-    seat_plan: Optional[str]
+    seat_plan: Optional[str] = ""
     
     @validator('postcode')
     def postcode_must_be_4_digts(cls, v):
@@ -55,6 +54,7 @@ class Event(BaseModel):
 class EventInDB(Event):
     host_id: str = Field(...)
     tickets: List[str]
+    published: bool = False
     class Config:
         allow_population_by_field_name = True
         schema_extra = {

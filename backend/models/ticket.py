@@ -42,6 +42,7 @@ class TicketInstance(BaseModel):
     user_id: str
     status: TicketStatus = TicketStatus.deactive
     event_id: str
+    payment_intent: str = ""
     
 
 
