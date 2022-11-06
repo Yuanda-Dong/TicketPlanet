@@ -189,7 +189,7 @@ def create_physical_tickets(baseticket:str, event_id: str, userId: str, request:
             }
             new_ticket = request.app.database["passes"].insert_one(new_ticket)
             ticket_ids.append(str(new_ticket.inserted_id))
-            seat_plan["seats"][seat[0]][seat[1]]["ticket_id"] = new_ticket.inserted_id
+            seat_plan["seats"][seat[0]][seat[1]]["ticket_id"] = str(new_ticket.inserted_id)
         
         # if all seats are valid update the seat plan 
         updated_seat_plan = request.app.database["seat_plan"].update_one(

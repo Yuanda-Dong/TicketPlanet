@@ -278,7 +278,7 @@ def add_seat_plan(id: str, seat_plan:SeatPlan, request: Request, user: User = De
     
     return created_plan
     
-@router.get("/seats/{id}", response_description="Add seating plan to event", status_code=status.HTTP_201_CREATED)
+@router.get("/seats/{id}", response_description="Add seating plan to event", status_code=status.HTTP_201_CREATED, response_model=SeatPlanInDB)
 def get_seat_plan(id: str, request: Request):
     if (
             found_event := request.app.database["events"].find_one({"_id": id})
@@ -291,6 +291,10 @@ def get_seat_plan(id: str, request: Request):
     found_plan = request.app.database["seat_plan"].find_one(
         {"_id": found_event['seat_plan']}
     )
+    
+    if found_plan is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                                detail=f"This seat plan no longer exists")
     
     return found_plan
     
@@ -311,6 +315,8 @@ def update_seat_plan(id: str, seat_plan:SeatPlan, request: Request, user: User =
     updated_plan = request.app.database["seat_plan"].find_one_and_update(
         {"_id": id}, {"$set": seat_plan}
     )
+    
+    
 
     return updated_plan
     
