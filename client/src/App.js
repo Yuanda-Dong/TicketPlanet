@@ -4,7 +4,7 @@ import SearchPage from './pages/SearchPage/SearchPage';
 import SignInSide from './pages/Signin';
 import SignUp from './pages/SignUp';
 import EventDetail from './pages/EventDetail/EventDetail';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import {BrowserRouter, Route, Routes} from 'react-router-dom';
 import MyTickets from './pages/MyTickets/MyTickets';
 import Dashboard from './pages/Dashboard/Dashboard.jsx';
 import Events from './components/Dashboard/Events';
@@ -19,6 +19,7 @@ import SeatMap from './components/SeatSelection/SeatMap';
 import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css'; // theme css file
 import NotFound from './pages/404';
+import TicketPrice from "./components/Ticket/TicketPrice";
 
 function App() {
   return (
@@ -33,7 +34,8 @@ function App() {
           <Route path="forgot-password" element={<FindPassword />} />
           <Route path="account-setting" element={<Account />} />
           <Route exact path="event">
-            <Route path=":id" element={<EventDetail />} />
+            <Route path=":id" element={<EventDetail/>}/>
+            <Route path="price/:id" element={<TicketPrice/>}/>
           </Route>
           <Route path="dashboard" element={<Dashboard />}>
             <Route path="events" element={<Events />} />
