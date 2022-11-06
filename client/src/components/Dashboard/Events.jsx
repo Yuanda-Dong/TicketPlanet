@@ -56,9 +56,20 @@ const Events = () => {
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <TabList onChange={handleChange} aria-label="lab API tabs example">
             <Tab label="Published Events" value="1" />
+            <Tab label="Draft Events" value="2" />
           </TabList>
         </Box>
         <TabPanel value="1">
+          <div>
+            <div style={{ minHeight: '60vh' }}>
+              {handleData2.currentData().map((e) => (
+                <EventList key={e._id} eventInfo={e} />
+              ))}
+            </div>
+            <Pagination count={count2} page={page} onChange={handlePageChange} shape="rounded" />
+          </div>
+        </TabPanel>
+        <TabPanel value="2">
           <div>
             <div style={{ minHeight: '60vh' }}>
               {handleData2.currentData().map((e) => (
