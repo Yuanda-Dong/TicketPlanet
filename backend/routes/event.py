@@ -46,11 +46,19 @@ def list_events(pageSize: int, pageNum: int, request: Request):
     events = list(request.app.database["events"].find(skip=pageNum*pageSize, limit=pageSize).sort([('start_dt', pymongo.ASCENDING)]))
     return events
 
+# @router.get("/published", response_description="Get all published events", response_model=List[EventInDB])
+# def list_events(request: Request):
+#     events = list(request.app.database["events"].find({"published": True}))
+#     return events
+#
+# @router.get("/unpublished", response_description="Get all unpublished events", response_model=List[EventInDB])
+# def list_events(request: Request):
+#     events = list(request.app.database["events"].find({"published": False}))
+#     return events
 
 @router.post("/search", response_description="search", response_model=List[EventInDB])
 def search_events(request: Request, filter: Filter):
     events_list = []
-
     # # title filter
     # if filter.title:
     #     query["title"] = re.compile(filter.title)
