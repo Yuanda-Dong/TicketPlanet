@@ -28,6 +28,7 @@ def create_event(request: Request, event: Event = Body(...), user: User = Depend
     event = jsonable_encoder(event)
     event["host_id"] = user["_id"]
     event["tickets"] = []
+    event["published"] = False
     new_event = request.app.database["events"].insert_one(event)
     created_event = request.app.database["events"].find_one(
         {"_id": new_event.inserted_id}
@@ -51,11 +52,53 @@ def list_events(pageSize: int, pageNum: int, request: Request):
 @router.get("/published", response_description="Get all events", response_model=List[EventInDB])
 def list_events(request: Request):
     #filter published = True
-    events = list(request.app.database["events"].find(limit=100).filter())
+    events = list(request.app.database["events"].find(limit=100))
     return events
 
 
 ### get unpublished route 
+
+@router.post("/publish/{id}", response_description="Publish Event", response_model=EventInDB)
+def publish_event(id: str, request: Request, user:User=Depends(get_current_user)):
+    
+
+    if (
+        existing_event := request.app.database["events"].find_one({"_id": id})
+        
+    ) is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Event with ID {id} not found")
+    
+    if existing_event["host_id"] != user["_id"]:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                            detail=f"Only the owner of this event can edit it")
+    
+    existing_event['published'] = True
+    
+    updated_event = request.app.database["events"].find_one_and_update(
+            {"_id": id}, {"$set": existing_event}, return_document=ReturnDocument.AFTER
+    )
+    
+    return updated_event
+    
+    
+    
+@router.post("/unpublish/{id}", response_description="Unpublish Event", response_model=EventInDB)
+def unpublish_event(id: str, request: Request, user:User=Depends(get_current_user)):
+    if (
+        existing_event := request.app.database["events"].find_one({"_id": id})
+        
+    ) is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Event with ID {id} not found")
+    
+    if existing_event["host_id"] != user["_id"]:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                            detail=f"Only the owner of this event can edit it")
+    existing_event['published'] = False
+    
+    updated_event = request.app.database["events"].find_one_and_update(
+            {"_id": id}, {"$set": existing_event}, return_document=ReturnDocument.AFTER
+    )
+    return updated_event
 
 
 @router.post("/search", response_description="search", response_model=List[EventInDB])
