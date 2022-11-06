@@ -19,6 +19,7 @@ import SeatMap from './components/SeatSelection/SeatMap';
 import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css'; // theme css file
 import NotFound from './pages/404';
+import SeatCreationPage from './pages/PostPage/SeatCreationPage';
 
 function App() {
   return (
@@ -44,7 +45,7 @@ function App() {
           <Route path="edit/:id/" element={<EditPage />} />
           <Route path="my-tickets" element={<MyTickets />} />
           <Route path="/tickets/:id/" element={<TicketPage />} />
-          <Route path="test" element={<SeatMap />} />
+          <Route path="/tickets/seat_map" element={<SeatCreationPage />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>

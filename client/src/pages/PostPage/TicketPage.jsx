@@ -10,14 +10,13 @@ import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import Paper from '@mui/material/Paper';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
-import Divider from '@mui/material/Divider';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import { axiosInstance } from '../../config';
 import Modal from '@mui/material/Modal';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import SeatMap from '../../components/SeatSelection/SeatMap';
+import Divider from '@mui/material/Divider';
 
 const TicketPage = () => {
   const { token } = useSelector((state) => state.user);
@@ -33,8 +32,6 @@ const TicketPage = () => {
     },
   };
   const [ticket, setTicket] = useState({ t: { price: '', quantity: '', name: '' }, tickets: [] });
-
-  const [confirm, setConfirm] = useState(false);
 
   const style = {
     position: 'absolute',
@@ -114,9 +111,17 @@ const TicketPage = () => {
     cancel();
     setOpen(false);
   };
+
   const goHome = () => {
     navigate('/dashboard/events');
   };
+  const goNext = () => {
+    navigate('/tickets/seat_map', { state: { tickets: createdTickets } });
+  };
+
+  const [confirm, setConfirm] = useState(false);
+
+  const [createdTickets, setCreatedTickets] = useState([]);
   const fin = async () => {
     for (let i = 0; i < ticket.tickets.length; i++) {
       try {
@@ -126,12 +131,12 @@ const TicketPage = () => {
           { ticket_name: tik.name, price: tik.price, availability: tik.quantity },
           config
         );
-        console.log(res);
+        setCreatedTickets((prev) => [...prev, res.data]);
       } catch (err) {
         console.log(err);
       }
     }
-    goHome();
+    setConfirm(true);
   };
 
   return (
@@ -243,26 +248,33 @@ const TicketPage = () => {
               Cancel
             </Button>
 
-            <Button
-              sx={{ mt: '20px' }}
-              variant="contained"
-              onClick={() => {
-                setConfirm(true);
-              }}
-            >
-              Confirm
+            <Button sx={{ mt: '20px' }} variant="contained" onClick={fin}>
+              Save & Next
             </Button>
           </div>
           <Divider />
+
           {confirm && (
-            <Box>
-              <SeatMap tickets={ticket.tickets} />
-            </Box>
+            <>
+              <Typography align="center" sx={{ mt: '20px' }} id="modal-modal-title" variant="h6" component="h2">
+                Do you need to create your own seat plan?
+              </Typography>
+
+              <Typography align="center" sx={{ mt: '20px' }} id="modal-modal-title">
+                If so, click the "Create Seat Plan" button below, otherwise, submit and publish your event using
+                "Publish" button.
+              </Typography>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '20px', margin: '50px 0px' }}>
+                <Button sx={{ mt: '20px' }} variant="outlined" onClick={goNext}>
+                  Create Seat Plan
+                </Button>
+
+                <Button sx={{ mt: '20px' }} variant="contained">
+                  Publish
+                </Button>
+              </div>
+            </>
           )}
-          <Divider />
-          <Button fullWidth sx={{ mt: '20px' }} variant="contained" onClick={fin}>
-            Finish
-          </Button>
         </Paper>
       </Container>
     </div>

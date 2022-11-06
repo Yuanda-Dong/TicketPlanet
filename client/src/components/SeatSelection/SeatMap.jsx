@@ -5,6 +5,7 @@ import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import styled from 'styled-components';
 // import { ThemeProvider } from 'styled-components';
+import { axiosInstance } from '../../config.js';
 
 const Header = styled.div`
   margin: 50px 0px;
@@ -57,15 +58,10 @@ const SeatMap = ({ tickets }) => {
   const ticketType = tickets.map((t, idx) => ({ ...t, color: colors[idx] }));
 
   function getDefaultMap() {
-    let rowId = -1;
     const defaultMap = Array.from(Array(dimension.height || 1)).map((row) => {
-      rowId += 1;
-      let colId = -1;
       return Array.from(Array(dimension.width || 1)).map((cell) => ({
-        rowId,
-        colId: ++colId,
-        type: '',
-        selected: false,
+        type_id: '',
+        active: false,
       }));
     });
     return defaultMap;
@@ -73,7 +69,7 @@ const SeatMap = ({ tickets }) => {
   function defaultCount() {
     let state = {};
     for (let ticket of tickets) {
-      state[ticket.name] = ticket.quantity;
+      state[ticket._id] = ticket.availability;
     }
     return state;
   }
@@ -110,15 +106,14 @@ const SeatMap = ({ tickets }) => {
 
   const handleSelectUpdate = (temp, row, col) => {
     const clicked = temp[row][col];
-
-    if (!clicked.selected && seatCount[currentType] > 0) {
-      clicked.selected = true;
-      clicked.type = currentType;
+    if (!clicked.active && seatCount[currentType] > 0) {
+      clicked.active = true;
+      clicked.type_id = currentType;
       temp[row][col] = clicked;
       seatCount[currentType] -= 1;
-    } else if (clicked.selected) {
-      clicked.selected = false;
-      clicked.type = null;
+    } else if (clicked.active) {
+      clicked.active = false;
+      clicked.type_id = null;
       temp[row][col] = clicked;
       seatCount[currentType] += 1;
     }
@@ -153,9 +148,15 @@ const SeatMap = ({ tickets }) => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(mapGrid);
+    try {
+      const res = await axiosInstance.post(`/event/seats/${tickets[0].event_id}`, { seats: mapGrid });
+      console.log(res.data);
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   useEffect(() => {
@@ -169,7 +170,7 @@ const SeatMap = ({ tickets }) => {
 
   return (
     <div style={{ marginLeft: '20px' }}>
-      <Header>
+      {/* <Header>
         <h2>Generate your own seat map</h2>
         <Notice>
           <p>
@@ -177,7 +178,7 @@ const SeatMap = ({ tickets }) => {
           </p>
           <p>Skip this step and navigate to the bottom to finish the event ticket creation</p>
         </Notice>
-      </Header>
+      </Header> */}
       <h3>1. Start with a customised seat map dimension</h3>
       <Dimension>
         <TextField
@@ -208,8 +209,8 @@ const SeatMap = ({ tickets }) => {
         }}
       >
         {ticketType.map((type, idx) => (
-          <ToggleButton key={idx} value={type.name}>
-            {type.name}
+          <ToggleButton key={idx} value={type._id}>
+            {type.ticket_name}
           </ToggleButton>
         ))}
       </ToggleButtonGroup>
@@ -241,20 +242,20 @@ const SeatMap = ({ tickets }) => {
         </li>
       </ol>
       <SeatMapContainer>
-        {mapGrid.map((row, idx) => (
-          <Row key={idx}>
-            {row.map((seat, idx) => (
+        {mapGrid.map((row, rowId) => (
+          <Row key={rowId}>
+            {row.map((seat, colId) => (
               <Seat
-                key={idx}
+                key={colId}
                 disabled={currentType === ''}
-                data-row={seat.rowId}
-                data-col={seat.colId}
+                data-row={rowId}
+                data-col={colId}
                 onClick={handleSelect}
-                selected={seat.selected}
-                type={seat.type}
-                theme={ticketType.find((e) => e.name === seat.type)}
+                selected={seat.active}
+                type={seat.type_id}
+                theme={ticketType.find((e) => e._id === seat.type_id)}
               >
-                {`${seat.rowId + 1}-${seat.colId + 1}`}
+                {`${rowId + 1}-${colId + 1}`}
               </Seat>
             ))}
           </Row>
