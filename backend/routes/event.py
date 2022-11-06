@@ -47,6 +47,17 @@ def list_events(pageSize: int, pageNum: int, request: Request):
     return events
 
 
+### publish event route 
+@router.get("/published", response_description="Get all events", response_model=List[EventInDB])
+def list_events(request: Request):
+    #filter published = True
+    events = list(request.app.database["events"].find(limit=100).filter())
+    return events
+
+
+### get unpublished route 
+
+
 @router.post("/search", response_description="search", response_model=List[EventInDB])
 def search_events(request: Request, filter: Filter):
     events_list = []
@@ -223,7 +234,7 @@ def add_seat_plan(id: str, seat_plan:SeatPlan, request: Request, user: User = De
     
     return created_plan
     
-@router.get("/seats/{id}", response_description="Add seating plan to event", status_code=status.HTTP_201_CREATED, response_model=SeatPlanInDB)
+@router.get("/seats/{id}", response_description="Add seating plan to event", status_code=status.HTTP_201_CREATED)
 def get_seat_plan(id: str, request: Request):
     if (
             found_event := request.app.database["events"].find_one({"_id": id})
