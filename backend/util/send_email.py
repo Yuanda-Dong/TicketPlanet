@@ -66,7 +66,7 @@ async def event_update_notice(request: Request, event_id: str):
     updated_event = request.app.database["events"].find_one({"_id": event_id})
     # get booked user email list
     recipient = []
-    users = request.app.database["book"].find({"event_id": event_id}, {"user_id": 1})
+    users = request.app.database["passes"].find({"event_id": event_id}, {"user_id": 1})
     for user in users:
         user_email = request.app.database["users"].find_one({"_id": user["user_id"]})["email"]
         recipient.append(user_email)
@@ -142,6 +142,40 @@ buy_template = '''
     >
         link
     </a>
+  </div>
+</body>
+</html>
+
+'''
+
+
+async def cancel_book(request: Request, event_id: str, user_id: str):
+    # get event
+    event = request.app.database["events"].find_one({"_id": event_id})
+    # get user
+    user_email = request.app.database["users"].find_one({"_id": user_id})["email"]
+    recipient = [user_email]
+    content = cancel_book_template.format(event['title'])
+    message = MessageSchema(
+        subject="Cancel book event notice",
+        recipients=recipient,
+        html=content,
+        subtype="html"
+    )
+    fm = FastMail(conf)
+    result = await fm.send_message(message)
+    print(result)
+
+
+cancel_book_template = '''
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>event cancel book</title>
+</head>
+<body>
+  <div>
+    <h1>event {0:} cancel book success</h1>
   </div>
 </body>
 </html>

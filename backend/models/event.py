@@ -150,8 +150,8 @@ class SeatPlan(BaseModel):
         }
 class SeatPlanInDB(SeatPlan):
     event_id: str
-    
-    
+
+
     
 # Event: event_id, title, host, start dateTime, end dateTime, description, thumbnail (photo shown in card), gallery (optional, list of photos), video(optional), categories, location attendants:[Users], reviews
 

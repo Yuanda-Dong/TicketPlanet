@@ -1,6 +1,6 @@
 import uuid
 from enum import Enum
-from typing import Optional, Union
+from typing import Optional, Union, List
 
 from pydantic import BaseModel, Field, validator
 
@@ -57,6 +57,7 @@ class User(BaseModel):
 
 class UserInDB(User):
     password: str = Field(...)
+    follower: Optional[List[str]]
 
     class Config:
         allow_population_by_field_name = True
@@ -69,7 +70,8 @@ class UserInDB(User):
                 "postcode": "2000",
                 "disabled:": "true",
                 "password": "password",
-                "age": "15-25"
+                "age": "15-25",
+                "follower": []
             }
         }
 
