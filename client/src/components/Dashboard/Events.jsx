@@ -25,10 +25,13 @@ const Events = () => {
 
   useEffect(() => {
     async function fetchData() {
-      let res = await axiosInstance.get('/event/unpublished');
-      setEvents2(res.data.filter((e) => e.host_id === currentUser._id));
-      res = await axiosInstance.get('/event/published');
-      setEvents1(res.data.filter((e) => e.host_id === currentUser._id));
+      // let res = await axiosInstance.get('/event/unpublished');
+      // setEvents2(res.data.filter((e) => e.host_id === currentUser._id));
+      // res = await axiosInstance.get('/event/published');
+      // setEvents1(res.data.filter((e) => e.host_id === currentUser._id));
+      let res = await axiosInstance.get(`/user/${currentUser._id}/events`);
+      setEvents2(res.data.filter((e) => e.published === false));
+      setEvents1(res.data.filter((e) => e.published === true));
     }
     fetchData();
   }, [currentUser._id,re]);
