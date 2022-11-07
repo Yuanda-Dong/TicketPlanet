@@ -10,24 +10,36 @@ import Pagination from '@mui/material/Pagination';
 import { axiosInstance } from '../../config';
 // import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import EventListDraft from '../EventList/EventListDraft';
+
 const Events = () => {
   const { currentUser } = useSelector((state) => state.user);
   // const navigate = useNavigate();
+  const [re, rerender] = useState(false);
+  const [events1, setEvents1] = useState([]);
 
   const [events2, setEvents2] = useState([]);
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
 
   useEffect(() => {
     async function fetchData() {
-      let res = await axiosInstance.get('/event');
+      let res = await axiosInstance.get('/event/unpublished');
       setEvents2(res.data.filter((e) => e.host_id === currentUser._id));
-      // console.log(events2);
+      res = await axiosInstance.get('/event/published');
+      setEvents1(res.data.filter((e) => e.host_id === currentUser._id));
     }
     fetchData();
-  }, [currentUser._id]);
+  }, [currentUser._id,re]);
 
   // const events2 = [10, 11, 12, 13, 14, 15,16,17];
   const [page, setPage] = useState(1);
   const PER_PAGE = 7;
+
+  const handleData1 = usePagination(events1, PER_PAGE);
+  const count1 = Math.ceil(events1?.length / PER_PAGE);
+
   const handleData2 = usePagination(events2, PER_PAGE);
   const count2 = Math.ceil(events2?.length / PER_PAGE);
 
@@ -62,18 +74,18 @@ const Events = () => {
         <TabPanel value="1">
           <div>
             <div style={{ minHeight: '60vh' }}>
-              {handleData2.currentData().map((e) => (
+              {handleData1.currentData().map((e) => (
                 <EventList key={e._id} eventInfo={e} />
               ))}
             </div>
-            <Pagination count={count2} page={page} onChange={handlePageChange} shape="rounded" />
+            <Pagination count={count1} page={page} onChange={handlePageChange} shape="rounded" />
           </div>
         </TabPanel>
         <TabPanel value="2">
           <div>
             <div style={{ minHeight: '60vh' }}>
               {handleData2.currentData().map((e) => (
-                <EventList key={e._id} eventInfo={e} />
+                <EventListDraft key={e._id} eventInfo={e} re = {re} rerender={rerender}/>
               ))}
             </div>
             <Pagination count={count2} page={page} onChange={handlePageChange} shape="rounded" />
