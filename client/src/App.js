@@ -15,7 +15,7 @@ import EditPage from './pages/EditPage/EditPage';
 import FindPassword from './pages/FindPassword';
 import Account from './pages/Account';
 import TicketPage from './pages/PostPage/TicketPage';
-import SeatMap from './components/SeatSelection/SeatMap';
+import SeatMap from './components/SeatCreation/SeatMap';
 import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css'; // theme css file
 import NotFound from './pages/404';
