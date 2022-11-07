@@ -139,6 +139,11 @@ const TicketPage = () => {
     setConfirm(true);
   };
 
+  const publish = async () => {
+    let res = await axiosInstance.post(`/event/publish/${eventID}`,null,config);
+    navigate('/dashboard/events');
+  }
+
   return (
     <div className="PostPage">
       <NavBar />
@@ -269,7 +274,7 @@ const TicketPage = () => {
                   Create Seat Plan
                 </Button>
 
-                <Button sx={{ mt: '20px' }} variant="contained">
+                <Button sx={{ mt: '20px' }} variant="contained" onClick={publish}>
                   Publish
                 </Button>
               </div>

@@ -103,9 +103,10 @@ const EventDetail = (props) => {
               {eventInfo.gallery ? <Gallery galleryImages={eventInfo.gallery}></Gallery> : ''}
             </div>
           </div>
-          <div className="comments-section">
+          {eventInfo.published?<div className="comments-section">
             <Comments eventId={params.id} />
-          </div>
+          </div>:<></>}
+          
         </Paper>
       </Container>
     </div>

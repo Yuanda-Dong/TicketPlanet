@@ -48,6 +48,7 @@ const EditPage = () => {
     image_url: '',
     gallery: [],
     details: '',
+    published: '',
   });
 
   const style = {
@@ -212,21 +213,26 @@ const EditPage = () => {
       // for (const t in ticket){
       //   await axiosInstance.put('/ticket/'+t.id,t,config);
       // }
-      let res = await axiosInstance.get('/ticket/e/' + params.id);
-      for (const t in res.data) {
-        axiosInstance.delete('/ticket/' + res.data[t]._id, config);
+      // console.log("HHHH");
+
+      if(!event.published){
+        let res = await axiosInstance.get('/ticket/e/' + params.id);
+        for (const t in res.data) {
+          axiosInstance.delete('/ticket/' + res.data[t]._id, config);
+        }
+        for (const t in ticket.tickets) {
+          axiosInstance.post(
+            '/ticket/e/' + params.id,
+            {
+              ticket_name: ticket.tickets[t].ticket_name,
+              price: ticket.tickets[t].price,
+              availability: ticket.tickets[t].availability,
+            },
+            config
+          );
       }
 
-      for (const t in ticket.tickets) {
-        axiosInstance.post(
-          '/ticket/e/' + params.id,
-          {
-            ticket_name: ticket.tickets[t].ticket_name,
-            price: ticket.tickets[t].price,
-            availability: ticket.tickets[t].availability,
-          },
-          config
-        );
+     
       }
       navigate('/dashboard/events');
     } catch (err) {
@@ -446,10 +452,9 @@ const EditPage = () => {
               />
             </Grid>
             {/* TICKETs */}
+            {event.published?<></>:(
             <Grid item xs={12}>
               <h3> Tickets</h3>
-            </Grid>
-            <Grid item xs={12}>
               <div>
                 {ticket.tickets.map((e, idx) => (
                   <Card key={idx} sx={{ minWidth: 250 }}>
@@ -482,7 +487,7 @@ const EditPage = () => {
                   </Card>
                 ))}
               </div>
-
+              
               <div>
                 <Button fullWidth variant="outlined" onClick={handleOpen}>
                   Add Tickets
@@ -543,7 +548,8 @@ const EditPage = () => {
                   </Box>
                 </Modal>
               </div>
-            </Grid>
+            </Grid>)}
+            
             <Grid item xs={12}>
               <h3> Image Upload</h3>
             </Grid>
