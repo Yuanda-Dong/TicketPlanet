@@ -21,7 +21,8 @@ const Header = () => {
 
   return (
     <div className="header">
-      <h1 className="title">Fabulous Event Booking Platform!</h1>
+      <h1 className="title">Ticket-PLANET</h1>
+      <h1 className="title">A Fabulous Event Booking Platform!</h1>
       <div className="header_search">
         <Search value={searchValue} setValue={setSearchValue} handleSubmit={jump_to_search} />
       </div>
