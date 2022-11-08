@@ -48,13 +48,13 @@ const Events = () => {
 
   const handlePageChange1 = (e, p) => {
     setPage([p, pages[1]]);
-    handleData2.jump(p);
+    handleData1.jump(p);
     // window.scrollTo({ top: 0 });
   };
 
   const handlePageChange2 = (e, p) => {
     setPage([pages[0], p]);
-    handleData1.jump(p);
+    handleData2.jump(p);
     // window.scrollTo({ top: 0 });
   };
   const [value, setValue] = React.useState('1');
