@@ -15,14 +15,37 @@ import EditPage from './pages/EditPage/EditPage';
 import FindPassword from './pages/FindPassword';
 import Account from './pages/Account';
 import TicketPage from './pages/PostPage/TicketPage';
-import SeatMap from './components/SeatCreation/SeatMap';
 import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css'; // theme css file
 import NotFound from './pages/404';
 import SeatCreationPage from './pages/PostPage/SeatCreationPage';
 import TicketPrice from './components/Ticket/TicketPrice';
+import { useDispatch, useSelector } from 'react-redux';
+import { logout } from './redux/userSlice';
+import { useEffect } from 'react';
+
+const parseJwt = (token) => {
+  try {
+    return JSON.parse(atob(token.split('.')[1]));
+  } catch (e) {
+    return null;
+  }
+};
 
 function App() {
+  const dispatch = useDispatch();
+  const { token } = useSelector((state) => state.user);
+  useEffect(() => {
+    if (token) {
+      const decodedJwt = parseJwt(token);
+
+      if (decodedJwt.exp * 1000 < Date.now()) {
+        dispatch(logout());
+        window.location.replace('http://localhost:3000/signin');
+      }
+    }
+  }, []);
+
   return (
     <BrowserRouter>
       {/* <Navbar /> */}
