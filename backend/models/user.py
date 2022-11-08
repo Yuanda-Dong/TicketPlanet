@@ -88,6 +88,7 @@ class UserUpdate(BaseModel):
     gender: Optional[GenderEnum]
     postcode: Optional[int]
     age: Optional[AgeEnum]
+    follower: Optional[List[str]]
 
     @validator('postcode')
     def postcode_must_be_4_digts(cls, v):
@@ -104,7 +105,8 @@ class UserUpdate(BaseModel):
                 "last_name": "Quixote",
                 "gender": "nonbinary",
                 "postcode": "2000",
-                "age": "15-25"
+                "age": "15-25",
+                 "follower": []
             }
         }
 

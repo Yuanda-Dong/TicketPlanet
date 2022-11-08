@@ -44,7 +44,8 @@ def list_events(request: Request):
 
 @router.get("/upcoming", response_description="Get all events upcoming events", response_model=List[EventInDB])
 def list_events(pageSize: int, pageNum: int, request: Request):
-    events = list(request.app.database["events"].find({"published": True}).sort([('start_dt', pymongo.ASCENDING)]).limit(pageSize))
+    d = datetime.utcnow().isoformat()
+    events = list(request.app.database["events"].find({"published": True, "start_dt": {"$gt": d}}).sort([('start_dt', pymongo.ASCENDING)]).limit(pageSize))
     return events
 
 
@@ -106,18 +107,6 @@ def unpublish_event(id: str, request: Request, user:User=Depends(get_current_use
 @router.post("/search", response_description="search", response_model=List[EventInDB])
 def search_events(request: Request, filter: Filter):
     events_list = []
-    # # title filter
-    # if filter.title:
-    #     query["title"] = re.compile(filter.title)
-    # # details filter
-    # if filter.details:
-    #     query["details"] = re.compile(filter.details)
-    # # address filter
-    # if filter.location:
-    #     query["address"] = re.compile(filter.location)
-
-    # events = list(request.app.database["events"].find(query))
-
     if filter.fuzzy:
         # print("LLLLL")
         # address filter

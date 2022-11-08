@@ -275,3 +275,24 @@ def list_events(id:str, request: Request):
 #         return "guoqi.html"
 #
 #     return "shez.html"
+
+@router.put("/follow")
+async def follow_host(id: str, request: Request, user: User = Depends(get_current_user)):
+    if (
+         existing_host := request.app.database["users"].find_one({"_id": id})
+    ) is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Host with ID {id} not found")
+
+    if existing_host["_id"] == user["_id"]:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                            detail=f"You can not followed yourself")
+
+    existing_follower_list = existing_host["follower"]
+    existing_follower_list.append(user["_id"])
+    update_existing_host = request.app.database["users"].find_one_and_update({"_id": id},
+        {"$set": {"follower": existing_follower_list}}
+    )
+    return {
+        "code": 200,
+        "message": "You have successfully followed the host"
+    }
