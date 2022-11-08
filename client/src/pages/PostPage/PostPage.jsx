@@ -301,6 +301,8 @@ const PostPage = () => {
                   label="Start"
                   className="search"
                   value={event.start_dt}
+                  inputFormat="DD/MM/YYYY hh:mm a"
+                  mask="__/__/____ __:__ _M"
                   name="start_dt"
                   onChange={(newVal) => {
                     setEvent((prev) => ({ ...prev, start_dt: newVal }));
@@ -315,6 +317,8 @@ const PostPage = () => {
                   required
                   label="End"
                   className="search"
+                  inputFormat="DD/MM/YYYY hh:mm a"
+                  mask="__/__/____ __:__ _M"
                   value={event.end_dt}
                   name="end_dt"
                   onChange={(newVal) => {
