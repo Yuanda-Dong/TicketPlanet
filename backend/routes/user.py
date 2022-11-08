@@ -12,6 +12,7 @@ from pymongo import ReturnDocument
 from models.token import Token
 from models.user import User, UserUpdate, UserInDB, ForgetPassword, ResetPassword, UserWithAccess, UpdatePassword
 from models.event import EventInDB
+from models.ticket import TicketInstance
 from util.app import app
 from util.oAuth import authenticate_user, get_password_hash, create_access_token, get_current_user, \
     verify_password  # ,oauth
@@ -257,6 +258,8 @@ async def update_password(request: Request, body: UpdatePassword, auth: User = D
 def list_events(id:str, request: Request):
     events = list(request.app.database["events"].find({"host_id": id}))
     return events
+
+
 
 
 # @router.post("/routes/check-code")

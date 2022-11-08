@@ -1,9 +1,10 @@
 import json
+from typing import List
 from bson.objectid import ObjectId
 from fastapi.encoders import jsonable_encoder
 from fastapi import APIRouter, Body, Request, Response, HTTPException, status, Depends
 from pymongo import ReturnDocument
-from models.ticket import TicketStatus
+from models.ticket import TicketStatus, TicketInstance
 import stripe
 import os
 
@@ -89,3 +90,15 @@ async def webhook(request: Request):
       print('Unhandled event type {}'.format(event['type']))
 
     return {'success':True}
+    
+# @router.post('/bookings/refund', response_model=List[TicketInstance])
+# async def refund_bookings(payment_intent:str, pass_ids request: Request):           
+#     if(
+#       found_bookings := list(request.app.database["passes"].find({"payment_intent": payment_intent }))
+#     ) is not None: 
+#         for booking in found_bookings:
+#           booking['_id'] = str(booking["_id"])
+#         return found_bookings
+    
+#     raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+#                       detail=f"no bookings exist with payment intent: {payment_intent}")
