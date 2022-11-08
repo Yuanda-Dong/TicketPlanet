@@ -44,7 +44,8 @@ def list_events(request: Request):
 
 @router.get("/upcoming", response_description="Get all events upcoming events", response_model=List[EventInDB])
 def list_events(pageSize: int, pageNum: int, request: Request):
-    events = list(request.app.database["events"].find(skip=pageNum*pageSize, limit=pageSize).sort([('start_dt', pymongo.ASCENDING)]))
+    d = datetime.today().isoformat()
+    events = list(request.app.database["events"].find({"published": True, "start_dt": {"$gt": d}}).sort([('start_dt', pymongo.ASCENDING)]).limit(pageSize))
     return events
 
 
@@ -202,6 +203,8 @@ def find_event(id: str, request: Request):
 
 @router.put("/{id}", response_description="Update an event", response_model=EventInDB)
 async def update_event(id: str, request: Request, event: EventUpdate, user: User = Depends(get_current_user)):
+    # event['start_dt'] = event['start_dt'].split("+")[0]
+    # event['end_dt'] = event['end_dt'].split("+")[0]
     if (
             existing_event := request.app.database["events"].find_one({"_id": id})
     ) is None:

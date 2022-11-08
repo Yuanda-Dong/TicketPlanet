@@ -79,8 +79,9 @@ async def event_update_notice(request: Request, event_id: str):
         subtype="html"
     )
     fm = FastMail(conf)
-    result = await fm.send_message(message)
-    print(result)
+    if recipient != []:
+      result = await fm.send_message(message)
+      print(result)
 
 
 event_update_template = '''

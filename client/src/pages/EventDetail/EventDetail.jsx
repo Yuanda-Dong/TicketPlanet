@@ -5,19 +5,19 @@ import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import NavBar from '../../components/Navbar/NavBar';
 import Gallery from '../../components/Gallery/Gallery';
 import Comments from '../../components/Comment/Comments';
-import {useSelector} from 'react-redux';
-import {Link, useParams} from 'react-router-dom';
-import {axiosInstance} from '../../config';
-import {convertFromRaw} from 'draft-js';
-import {stateToHTML} from 'draft-js-export-html';
+import { useSelector } from 'react-redux';
+import { Link, useParams } from 'react-router-dom';
+import { axiosInstance } from '../../config';
+import { convertFromRaw } from 'draft-js';
+import { stateToHTML } from 'draft-js-export-html';
 import './EventDetail.css';
 import moment from 'moment';
-import {Container} from '@mui/material';
+import { Container } from '@mui/material';
 import Paper from '@mui/material/Paper';
 
 const EventDetail = (props) => {
   const params = useParams();
-  const {currentUser} = useSelector((state) => state.user);
+  const { currentUser } = useSelector((state) => state.user);
   const [eventInfo, setEventInfo] = React.useState({});
   const [price, setPrice] = React.useState('');
   React.useEffect(() => {
@@ -56,7 +56,7 @@ const EventDetail = (props) => {
                 <div className="ticket-box">
                   <span>Tickets starting at</span>
                   <span>{price !== 'Infinity' ? '$ ' + price : ''}</span>
-                  <Link to={`/event/price/${params.id}`}>
+                  <Link style={{ textDecoration: 'none' }} to={currentUser ? `/event/price/${params.id}` : '/signin'}>
                     <Button variant="contained" className="buy">
                       Buy tickets
                     </Button>
@@ -103,9 +103,10 @@ const EventDetail = (props) => {
               {eventInfo.gallery ? <Gallery galleryImages={eventInfo.gallery}></Gallery> : ''}
             </div>
           </div>
-          <div className="comments-section">
+          {eventInfo.published?<div className="comments-section">
             <Comments eventId={params.id} />
-          </div>
+          </div>:<></>}
+          
         </Paper>
       </Container>
     </div>

@@ -6,7 +6,7 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import styled from 'styled-components';
 // import { ThemeProvider } from 'styled-components';
 import { axiosInstance } from '../../config.js';
-
+import { useSelector } from 'react-redux';
 const Header = styled.div`
   margin: 50px 0px;
 `;
@@ -49,6 +49,12 @@ const SeatMapContainer = styled.div`
 `;
 
 const SeatMap = ({ tickets }) => {
+  const { token } = useSelector((state) => state.user);
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
   const [currentType, setCurrentType] = useState('');
   const [dimension, setDimension] = useState({ width: 3, height: 3 });
   // props
@@ -152,7 +158,7 @@ const SeatMap = ({ tickets }) => {
     e.preventDefault();
     console.log(mapGrid);
     try {
-      const res = await axiosInstance.post(`/event/seats/${tickets[0].event_id}`, { seats: mapGrid });
+      const res = await axiosInstance.post(`/event/seats/${tickets[0].event_id}`, { seats: mapGrid }, config);
       console.log(res.data);
     } catch (e) {
       console.error(e);

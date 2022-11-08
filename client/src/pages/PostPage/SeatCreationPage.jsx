@@ -1,5 +1,5 @@
 import React from 'react';
-import SeatMap from '../../components/SeatSelection/SeatMap';
+import SeatMap from '../../components/SeatCreation/SeatMap';
 import NavBar from '../../components/Navbar/NavBar';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
@@ -10,7 +10,6 @@ import { useLocation } from 'react-router-dom';
 
 const SeatCreationPage = () => {
   const { state } = useLocation();
-  console.log(state);
   return (
     <div className="PostPage">
       <NavBar />
