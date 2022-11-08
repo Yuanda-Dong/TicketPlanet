@@ -1,7 +1,7 @@
 from calendar import c
-from models.ticket import Ticket, TicketUpdate, TicketInDB
+from models.ticket import Ticket, TicketUpdate, TicketInDB, TicketStatus
 from models.user import User
-from models.payment import TicketPaymentIntent, PaymentIntentReturn, TicketPaymentSession, TicketSessionReturn
+from models.payment import TicketPaymentSession
 from util.oAuth import get_current_user
 from fastapi import APIRouter, Body, Request, Response, HTTPException, status, Depends
 from fastapi.encoders import jsonable_encoder
@@ -9,8 +9,6 @@ from typing import List, Optional, Tuple
 import os
 from pymongo import ReturnDocument
 import stripe
-
-from util.send_email import buy_notice
 
 stripe.api_key = os.getenv("STRIPE_API_KEY")
 router = APIRouter()
@@ -184,7 +182,7 @@ def create_physical_tickets(baseticket:str, event_id: str, userId: str, request:
                 'base_id': baseticket,
                 'seat': str(seat[0]) + "-" + str(seat[1]),
                 'user_id': userId, 
-                'status': False,
+                'status': TicketStatus.deactive,
                 'event_id': event_id
             }
             new_ticket = request.app.database["passes"].insert_one(new_ticket)
@@ -201,7 +199,7 @@ def create_physical_tickets(baseticket:str, event_id: str, userId: str, request:
                 'base_id': baseticket,
                 'seat': "No Assigned Seat",
                 'user_id': userId, 
-                'status': False,
+                'status': TicketStatus.deactive,
                 'event_id': event_id
             }
             new_ticket = request.app.database["passes"].insert_one(new_ticket)

@@ -1,6 +1,9 @@
 import json
+from bson.objectid import ObjectId
 from fastapi.encoders import jsonable_encoder
 from fastapi import APIRouter, Body, Request, Response, HTTPException, status, Depends
+from pymongo import ReturnDocument
+from models.ticket import TicketStatus
 import stripe
 import os
 
@@ -22,8 +25,7 @@ router = APIRouter()
 
 
 @router.post('/webhook')
-async def webhook(request: Request):
-   
+async def webhook(request: Request):   
     event = None
     payload = await request.body()
     print(request.headers)
@@ -59,11 +61,28 @@ async def webhook(request: Request):
       payment_intent = event['data']['object']
     elif event['type'] == 'payment_intent.succeeded':
       payment_intent = event['data']['object']
-    elif event['type'] == 'payment_intent.succeeded':
-      payment_intent = event['data']['object']
-    elif event['type'] == 'checkout_session.completed':
+    elif event['type'] == 'checkout.session.completed':
+      print("session completed")
       session = event['data']['object']
+      tickets = session['metadata']['seat_ids'].split(',')
       
+      print(session['metadata']['seat_ids'])
+      for ticket in tickets:
+        print(type(ticket))
+        ticket = ticket.strip()
+        
+        if(
+          found_ticket := request.app.database["passes"].find_one({"_id": ObjectId(ticket)})
+        ) is not None: 
+          found_ticket["status"] = TicketStatus.active
+          found_ticket["payment_intent"] = session['payment_intent']
+          updated_ticket = request.app.database["passes"].find_one_and_update(
+            {"_id": found_ticket["_id"]}, {"$set": found_ticket}, return_document=ReturnDocument.AFTER
+          )
+          print(f"Ticket {ticket} has been made active")
+          print(updated_ticket)
+        else:
+          print(f"Ticket {ticket} has not been found")
       
     # ... handle other event types
     else:
