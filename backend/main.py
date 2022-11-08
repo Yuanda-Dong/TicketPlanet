@@ -5,6 +5,7 @@ from routes.event import router as event_router
 from routes.ticket import router as ticket_router
 from routes.review import router as review_router
 from routes.payment import router as payment_router
+from routes.bookings import router as booking_router
 # from uvicorn import run
 
 @app.get("/")
@@ -25,6 +26,7 @@ app.include_router(event_router, tags=["events"], prefix="/event")
 app.include_router(ticket_router, tags=["tickets"], prefix="/ticket")
 app.include_router(review_router, tags=["reviews"], prefix="/review")
 app.include_router(payment_router, tags=["payments"], prefix="/payment")
+app.include_router(booking_router, tags=["bookings"], prefix="/booking")
 
 # if __name__ == '__main__':
 #     run('main:app', reload=True, port=8082)
