@@ -121,9 +121,9 @@ const SeatMap = ({ tickets }) => {
       seatCount[currentType] -= 1;
     } else if (clicked.active) {
       clicked.active = false;
-      clicked.type_id = null;
       temp[row][col] = clicked;
-      seatCount[currentType] += 1;
+      seatCount[clicked.type_id] += 1;
+      clicked.type_id = null;
     }
   };
 
@@ -166,7 +166,6 @@ const SeatMap = ({ tickets }) => {
     } catch (e) {
       console.error(e);
     }
-
   };
   const handleSubmit2 = async (e) => {
     e.preventDefault();
@@ -174,7 +173,7 @@ const SeatMap = ({ tickets }) => {
     try {
       let res = await axiosInstance.post(`/event/seats/${tickets[0].event_id}`, { seats: mapGrid }, config);
       console.log(res.data);
-      res = await axiosInstance.post(`/event/publish/${tickets[0].event_id}`,null,config);
+      res = await axiosInstance.post(`/event/publish/${tickets[0].event_id}`, null, config);
       console.log(res.data);
       navigate('/dashboard/events');
     } catch (e) {
@@ -285,11 +284,11 @@ const SeatMap = ({ tickets }) => {
         ))}
       </SeatMapContainer>
       <div style={{ display: 'flex', justifyContent: 'flex-end', margin: '50px 0px' }}>
-        <Button variant="contained" onClick={handleSubmit} style = {{margin:'10px'}}>
+        <Button variant="contained" onClick={handleSubmit} style={{ margin: '10px' }}>
           Upload SeatMap and Save to draft
         </Button>
 
-        <Button variant="contained" color="success" onClick={handleSubmit2} style = {{margin:'10px'}}>
+        <Button variant="contained" color="success" onClick={handleSubmit2} style={{ margin: '10px' }}>
           Upload SeatMap and Publish
         </Button>
       </div>

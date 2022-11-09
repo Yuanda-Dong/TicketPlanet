@@ -54,25 +54,6 @@ const SeatMapContainer = styled.div`
 `;
 
 const SeatGrid = ({ eventId, tickets, quantities, selected, setSelected }) => {
-  //   const seats = [
-  //     [
-  //       { type_id: '123', availability: 10, active: false },
-  //       { type_id: '123', availability: 10, active: true },
-  //       { type_id: '123', availability: 10, active: true },
-  //       { type_id: '123', availability: 10, active: false },
-  //     ],
-  //     [
-  //       { type_id: '321', availability: 10, active: true },
-  //       { type_id: '321', availability: 10, active: true },
-  //       { type_id: '321', availability: 10, active: true },
-  //       { type_id: '321', availability: 10, active: true },
-  //     ],
-  //   ];
-  //   const tickets = [
-  //     { _id: '123', ticket_name: 'Delux', availability: 5 },
-  //     { _id: '321', ticket_name: 'Premium', availability: 20 },
-  //   ];
-
   const [seats, setSeats] = useState([]);
   const [seatCount, setSeatCount] = useState(quantities);
 
@@ -139,7 +120,7 @@ const SeatGrid = ({ eventId, tickets, quantities, selected, setSelected }) => {
                   data-type={seat.type_id}
                   selected={selected.some((i) => i.toString() === [rowId, colId].toString())}
                   theme={ticketType.find((e) => e._id === seat.type_id)}
-                  available={true}
+                  available={!seat.ticket_id}
                 />
               ))}
             </Row>

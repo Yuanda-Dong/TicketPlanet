@@ -1,7 +1,7 @@
 import React from 'react';
 import NavBar from '../Navbar/NavBar';
 import PriceCard from './PriceCard';
-import { alpha, Box, Card, Container, Divider, IconButton, Typography } from '@mui/material';
+import { Alert, alpha, Box, Card, Container, Divider, IconButton, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
 import CardMedia from '@mui/material/CardMedia';
 import CardContent from '@mui/material/CardContent';
@@ -42,7 +42,12 @@ function getCheckout(cancel_url, success_url, email, quantity, price, product_na
 }
 
 function TicketPrice(props) {
-  const { currentUser } = useSelector((state) => state.user);
+  const { currentUser, token } = useSelector((state) => state.user);
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
 
   const navigate = useNavigate();
   const params = useParams();
@@ -69,21 +74,22 @@ function TicketPrice(props) {
   };
 
   const handleCheckout = async () => {
-    let res = await axiosInstance.post('/ticket/session/' + quantities.id, getCheckout());
-    console.log(res.data);
-
-    // console.log(
-    //   quantities.id,
-    //   getCheckout(
-    //     'http://localhost:3000',
-    //     'http://localhost:3000',
-    //     currentUser.email,
-    //     quantities.quantity,
-    //     quantities.cost,
-    //     quantities.name,
-    //     selected
-    //   )
-    // );
+    try {
+      const checkout_body = getCheckout(
+        `http://localhost:3000/event/price/${eventInfo._id}`,
+        'http://localhost:3000/my-tickets',
+        currentUser.email,
+        quantities.quantity,
+        quantities.cost,
+        quantities.name,
+        selected
+      );
+      let res = await axiosInstance.post('/ticket/session/' + quantities.id, checkout_body, config);
+      window.location.href = res.data?.url;
+    } catch (e) {
+      alert(e.response?.data.detail);
+      // alert('Sorry, we encountered system issue, please try again later');
+    }
   };
   return (
     <>
