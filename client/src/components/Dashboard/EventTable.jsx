@@ -22,8 +22,8 @@ const EventTable = () => {
   useEffect(() => {
     async function fetchData() {
       let res = await axiosInstance.get('/event/published');
-      // setEvents(res.data.filter((e) => e.host_id === currentUser._id));
-      setEvents(res.data);
+      setEvents(res.data.filter((e) => e.host_id === currentUser._id));
+      // setEvents(res.data);
     }
     fetchData();
   }, [currentUser?._id]);
