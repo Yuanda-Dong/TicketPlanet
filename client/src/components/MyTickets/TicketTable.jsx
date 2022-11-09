@@ -40,8 +40,8 @@ import { format } from 'date-fns';
 
 const getStatusLabel = (ticketOrderStatus) => {
   const map = {
-    passed: {
-      text: 'Passed',
+    active: {
+      text: 'Active',
       color: 'success',
     },
     pending: {
@@ -152,7 +152,7 @@ function TicketRow(props) {
               </Grid>
             ) : (
               <Grid item xs={6}>
-                <Tooltip title="Delete booking" arrow>
+                <Tooltip title="Cancel booking" arrow>
                   <IconButton
                     sx={{ '&:hover': { background: alpha('#FF1943', 0.1) }, color: '#FF1943' }}
                     color="inherit"
@@ -200,13 +200,12 @@ function TicketRow(props) {
                     <TableCell>CATEGORY</TableCell>
                     <TableCell>ADDRESS</TableCell>
                     <TableCell align={'right'}>POSTCODE</TableCell>
-                    <TableCell align={'right'}>SECTION</TableCell>
                     <TableCell align={'right'}>SEAT</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {ticketRow.detail.map((detail) => (
-                    <TableRow>
+                  {/* {ticketRow.detail.map((detail, idx) => (
+                    <TableRow key={idx}>
                       <TableCell>
                         <Typography variant="body1" fontWeight="bold" color gutterBottom noWrap>
                           {detail.title}
@@ -218,7 +217,19 @@ function TicketRow(props) {
                       <TableCell align={'right'}>{detail.section_number}</TableCell>
                       <TableCell align={'right'}>{detail.seat_number}</TableCell>
                     </TableRow>
-                  ))}
+                  ))} */}
+
+                  <TableRow>
+                    <TableCell>
+                      <Typography variant="body1" fontWeight="bold" color gutterBottom noWrap>
+                        {ticketRow.title}
+                      </Typography>
+                    </TableCell>
+                    <TableCell>{ticketRow.category}</TableCell>
+                    <TableCell>{ticketRow.address}</TableCell>
+                    <TableCell align={'right'}>{ticketRow.postcode}</TableCell>
+                    <TableCell align={'right'}>{ticketRow.seat_number}</TableCell>
+                  </TableRow>
                 </TableBody>
               </Table>
             </Box>
@@ -329,14 +340,14 @@ const TicketTable = ({ ticketOrders }) => {
               <TableCell>TICKET NAME</TableCell>
               <TableCell>TIME</TableCell>
               <TableCell align="right">AMOUNT</TableCell>
-              <TableCell align="right">TOTAL PRICE($)</TableCell>
+              <TableCell align="right">PRICE($)</TableCell>
               <TableCell align="right">STATUS</TableCell>
               <TableCell align="right">ACTIONS</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {paginatedTicketOrders.map((ticketOrder) => (
-              <TicketRow ticketRow={ticketOrder} />
+            {paginatedTicketOrders.map((ticketOrder, idx) => (
+              <TicketRow key={idx} ticketRow={ticketOrder} />
             ))}
           </TableBody>
         </Table>
