@@ -46,23 +46,39 @@ const EventTable = () => {
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
           <TableRow>
-            <TableCell className="tableCell">Event Name</TableCell>
-            <TableCell className="tableCell">Category</TableCell>
-            <TableCell className="tableCell">Start</TableCell>
-            <TableCell className="tableCell">End</TableCell>
-            <TableCell className="tableCell">Reports</TableCell>
-            {/* <TableCell className="tableCell">Payment Method</TableCell>
-            <TableCell className="tableCell">Status</TableCell> */}
+            <TableCell className="tableCell" align="center">
+              Event Name
+            </TableCell>
+            <TableCell className="tableCell" align="center">
+              Category
+            </TableCell>
+            <TableCell className="tableCell" align="center">
+              Start
+            </TableCell>
+            <TableCell className="tableCell" align="center">
+              End
+            </TableCell>
+            <TableCell className="tableCell" align="center">
+              Reports
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {handleData.currentData().map((row) => (
             <TableRow key={row._id}>
-              <TableCell className="tableCell">{row.title}</TableCell>
-              <TableCell className="tableCell">{row.category}</TableCell>
-              <TableCell className="tableCell">{format(new Date(row.start_dt), 'dd/MM/yyyy')}</TableCell>
-              <TableCell className="tableCell">{format(new Date(row.end_dt), 'dd/MM/yyyy')}</TableCell>
-              <TableCell className="tableCell">
+              <TableCell className="tableCell" align="center">
+                {row.title}
+              </TableCell>
+              <TableCell className="tableCell" align="center">
+                {row.category}
+              </TableCell>
+              <TableCell className="tableCell" align="center">
+                {format(new Date(row.start_dt), 'dd/MM/yyyy')}
+              </TableCell>
+              <TableCell className="tableCell" align="center">
+                {format(new Date(row.end_dt), 'dd/MM/yyyy')}
+              </TableCell>
+              <TableCell className="tableCell" align="center">
                 <Link>
                   <span id={row._id}>View Reports</span>
                 </Link>

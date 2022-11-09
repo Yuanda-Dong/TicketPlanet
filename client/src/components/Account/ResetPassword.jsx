@@ -32,6 +32,9 @@ const Button = styled(ButtonMui)`
     :hover {
       background-color: rgba(73, 104, 163, 0.7);
     }
+    :disabled {
+      background-color: rgba(73, 104, 163, 0.7);
+    }
   }
 `;
 
@@ -191,7 +194,9 @@ const ResetPassword = () => {
                         </InputAdornment>
                       }
                     />
-                    <FormHelperText id="component-helper-text">{errors.error1.message}</FormHelperText>
+                    <FormHelperText error={errors.error1.error} id="component-helper-text">
+                      {errors.error1.message}
+                    </FormHelperText>
                   </FormControl>
                 </Grid>
                 <Grid item md={12} xs={12}>
@@ -219,7 +224,9 @@ const ResetPassword = () => {
                         </InputAdornment>
                       }
                     />
-                    <FormHelperText id="component-helper-text">{errors.error2.message}</FormHelperText>
+                    <FormHelperText error={errors.error2.error} id="component-helper-text">
+                      {errors.error2.message}
+                    </FormHelperText>
                   </FormControl>
                 </Grid>
                 <Grid item md={12} xs={12}>
@@ -247,7 +254,9 @@ const ResetPassword = () => {
                         </InputAdornment>
                       }
                     />
-                    <FormHelperText id="component-helper-text">{errors.error3.message}</FormHelperText>
+                    <FormHelperText error={errors.error3.error} id="component-helper-text">
+                      {errors.error3.message}
+                    </FormHelperText>
                   </FormControl>
                 </Grid>
               </Grid>
@@ -271,7 +280,12 @@ const ResetPassword = () => {
             p: 2,
           }}
         >
-          <Button color="primary" variant="contained" onClick={updateData}>
+          <Button
+            color="primary"
+            variant="contained"
+            onClick={updateData}
+            disabled={Object.values(errors).reduce((prev, curr) => prev || curr.error, false)}
+          >
             Update
           </Button>
         </Box>
