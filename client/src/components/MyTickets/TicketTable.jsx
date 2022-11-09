@@ -276,7 +276,7 @@ const TicketTable = ({ ticketOrders }) => {
     },
     {
       id: 'passed',
-      name: 'Passed',
+      name: 'Active',
     },
     {
       id: 'pending',
@@ -284,7 +284,7 @@ const TicketTable = ({ ticketOrders }) => {
     },
     {
       id: 'canceled',
-      name: 'Canceled',
+      name: 'Cancelled',
     },
   ];
 
@@ -338,11 +338,11 @@ const TicketTable = ({ ticketOrders }) => {
             <TableRow>
               <TableCell />
               <TableCell>TICKET NAME</TableCell>
-              <TableCell>TIME</TableCell>
+              <TableCell>TIME(START/END)</TableCell>
               <TableCell align="right">AMOUNT</TableCell>
               <TableCell align="right">PRICE($)</TableCell>
               <TableCell align="right">STATUS</TableCell>
-              <TableCell align="right">ACTIONS</TableCell>
+              <TableCell align="right">TICKET ACTIONS</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
