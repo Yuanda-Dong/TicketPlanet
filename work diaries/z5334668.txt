@@ -24,9 +24,19 @@ I completed the web design of the Account page.
 Users can update their personal information.
 
 Week 6
-I completed the web design of the My Tickets page.
+I designed the UI of the My Tickets page.
 Complete the function of updating the password in the login state
 We had a meeting with teammates to discuss what everyone had accomplished and what to do next.
 Everyone's problems are discussed and resolved.
 
 Week 7
+I completed the web design of the My Tickets page.
+Changing the style of the Event Detail page.
+I completed the web design of the 404NotFount page.
+
+
+Week 8
+A retrospective meeting was held with the team members after presentation A to discuss relevant issues and complete the report.
+I completed the web design of the event ticket Price page.
+
+Week 9
