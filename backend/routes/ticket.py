@@ -9,7 +9,7 @@ from typing import List, Optional, Tuple
 import os
 from pymongo import ReturnDocument
 import stripe
-
+from util.send_email import buy_notice
 stripe.api_key = os.getenv("STRIPE_API_KEY")
 router = APIRouter()
 
@@ -88,7 +88,6 @@ def delete_ticket(id: str, request: Request, response: Response, user: User = De
         if delete_result.deleted_count == 1:
             response.status_code = status.HTTP_204_NO_CONTENT
             return response
-           
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Ticket with ID {id} not found")
         
 @router.post("/session/{id}", response_description="Buy a ticket", status_code=status.HTTP_201_CREATED)
@@ -124,6 +123,7 @@ def buy_ticket(id: str, payment: TicketPaymentSession, request: Request, user: U
                         'seats': str(payment.metadata.seats).strip(' []') 
                     }
                 )
+                await buy_notice(request, found_ticket["event_id"], user["_id"])
                 return payment_intent  # attached physical ticket 
             
             except stripe.error.StripeError as e:
