@@ -24,13 +24,13 @@ const EventDetail = (props) => {
   React.useEffect(() => {
     window.scrollTo(0, 0);
     async function fetchData() {
-      try{
+      try {
         let res = await axiosInstance.get('/event/' + params.id);
         setEventInfo(res.data);
         res = await axiosInstance.get('/ticket/e/' + params.id);
         setPrice(Math.min(...res.data.map((e) => e.price)));
-      }catch{
-        navigate('/404NotFound')
+      } catch {
+        navigate('/404NotFound');
       }
     }
 
@@ -59,8 +59,8 @@ const EventDetail = (props) => {
               </div>
               <div className="ticket-info">
                 <div className="ticket-box">
-                  <span>Tickets starting at</span>
-                  <span>{price !== 'Infinity' ? '$ ' + price : ''}</span>
+                  <span style={{ fontSize: '20px', fontWeight: 'bold' }}>Tickets starting at</span>
+                  <span style={{ fontSize: '30px' }}>{price !== 'Infinity' ? '$ ' + price : ''}</span>
                   <Link style={{ textDecoration: 'none' }} to={currentUser ? `/event/price/${params.id}` : '/signin'}>
                     <Button variant="contained" className="buy">
                       Buy tickets
@@ -108,10 +108,13 @@ const EventDetail = (props) => {
               {eventInfo.gallery ? <Gallery galleryImages={eventInfo.gallery}></Gallery> : ''}
             </div>
           </div>
-          {eventInfo.published?<div className="comments-section">
-            <Comments eventId={params.id} />
-          </div>:<></>}
-          
+          {eventInfo.published ? (
+            <div className="comments-section">
+              <Comments eventId={params.id} />
+            </div>
+          ) : (
+            <></>
+          )}
         </Paper>
       </Container>
     </div>

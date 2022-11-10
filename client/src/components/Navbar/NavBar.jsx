@@ -14,8 +14,8 @@ import SearchBar from '../SearchBar/SearchBar';
 // redux
 import { useSelector } from 'react-redux';
 
-const pages = ['Products', 'Pricing', 'Blog'];
-
+// const pages = ['Products', 'Pricing', 'Blog'];
+const pages = [];
 const NavBar = (props) => {
   const { currentUser } = useSelector((state) => state.user);
   const dashboard = props.dashboard;

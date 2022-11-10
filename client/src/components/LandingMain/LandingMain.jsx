@@ -24,7 +24,7 @@ export default function LandingMain() {
   };
 
   const [events, setEvents] = useState([]);
-  const [recEvents,setRecEvents] = useState([]);
+  const [recEvents, setRecEvents] = useState([]);
 
   useEffect(() => {
     async function fetchData() {
@@ -64,43 +64,42 @@ export default function LandingMain() {
         </TabPanel>
         <TabPanel value="2">
           <TabContext value={recValue}>
-          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-
-          <TabList className="list" onChange={handleChange2} aria-label="lab API tabs example">
-            <Tab label="Past event types" value="1" />
-            <Tab label="Past booked hosts" value="2" />
-            <Tab label="Description" value="3" />
-            <Tab label="demographic" value="4" />
-          </TabList>
-        </Box>
-          <TabPanel value="1">
-          <div className="events-container">
-            {recEvents.map((e) => (
-              <EventCard key={e._id} eventInfo={e} />
-            ))}
-          </div>
-          </TabPanel>
-          <TabPanel value="2">
-          <div className="events-container">
-            {recEvents.map((e) => (
-              <EventCard key={e._id} eventInfo={e} />
-            ))}
-          </div>
-          </TabPanel>
-          <TabPanel value="3">
-          <div className="events-container">
-            {recEvents.map((e) => (
-              <EventCard key={e._id} eventInfo={e} />
-            ))}
-          </div>
-          </TabPanel>
-          <TabPanel value="4">
-          <div className="events-container">
-            {recEvents.map((e) => (
-              <EventCard key={e._id} eventInfo={e} />
-            ))}
-          </div>
-          </TabPanel>
+            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+              <TabList className="list" onChange={handleChange2} aria-label="lab API tabs example">
+                <Tab label="Past event types" value="1" />
+                <Tab label="Past booked hosts" value="2" />
+                <Tab label="Description" value="3" />
+                <Tab label="demographic" value="4" />
+              </TabList>
+            </Box>
+            <TabPanel value="1">
+              <div className="events-container">
+                {recEvents.map((e) => (
+                  <EventCard key={e._id} eventInfo={e} />
+                ))}
+              </div>
+            </TabPanel>
+            <TabPanel value="2">
+              <div className="events-container">
+                {recEvents.map((e) => (
+                  <EventCard key={e._id} eventInfo={e} />
+                ))}
+              </div>
+            </TabPanel>
+            <TabPanel value="3">
+              <div className="events-container">
+                {recEvents.map((e) => (
+                  <EventCard key={e._id} eventInfo={e} />
+                ))}
+              </div>
+            </TabPanel>
+            <TabPanel value="4">
+              <div className="events-container">
+                {recEvents.map((e) => (
+                  <EventCard key={e._id} eventInfo={e} />
+                ))}
+              </div>
+            </TabPanel>
           </TabContext>
         </TabPanel>
       </TabContext>
