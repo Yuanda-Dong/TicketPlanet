@@ -8,6 +8,8 @@ from models.ticket import TicketStatus, TicketInstance
 import stripe
 import os
 
+from util.send_email import buy_notice
+
 stripe.api_key = os.getenv("STRIPE_API_KEY")
 webhook_secret = 'whsec_49b15278a690057b4d5fcd818a85d9e1db99a3ede387e8dee41b70f5c15ab41e' #os.getenv("STRIPE_WEBHOOK") ### <--- update here to stripe cli key if you're testing locally
 router = APIRouter()
@@ -82,6 +84,8 @@ async def webhook(request: Request):
           )
           print(f"Ticket {ticket} has been made active")
           print(updated_ticket)
+
+          await buy_notice(request, found_ticket["event_id"], found_ticket["user_id"])
         else:
           print(f"Ticket {ticket} has not been found")
       
