@@ -22,3 +22,14 @@ Week 6
 Update Search and review 
 Update filter and review model
 Attended the group meeting with other members
+
+Week 7
+Completed send event updates to customers who book events.
+
+Week 8 
+Attended group demo. 
+Added new routes for publish/unpublish.
+
+Week 9
+Working on the follow/unfollow 
+Working on inform my customer when I cancel the events.
