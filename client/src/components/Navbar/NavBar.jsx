@@ -71,7 +71,7 @@ const NavBar = (props) => {
           </Menu>
         </Box>
         <Link className="link" to="/">
-          <Typography className="logo">LOGO</Typography>
+          <Typography className="logo">Ticket-PLANET</Typography>
         </Link>
 
         {props.search === 1 ? (

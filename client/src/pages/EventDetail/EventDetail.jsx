@@ -14,8 +14,9 @@ import './EventDetail.css';
 import moment from 'moment';
 import { Container } from '@mui/material';
 import Paper from '@mui/material/Paper';
-
+import { useNavigate } from 'react-router-dom';
 const EventDetail = (props) => {
+  const navigate = useNavigate();
   const params = useParams();
   const { currentUser } = useSelector((state) => state.user);
   const [eventInfo, setEventInfo] = React.useState({});
@@ -23,10 +24,14 @@ const EventDetail = (props) => {
   React.useEffect(() => {
     window.scrollTo(0, 0);
     async function fetchData() {
-      let res = await axiosInstance.get('/event/' + params.id);
-      setEventInfo(res.data);
-      res = await axiosInstance.get('/ticket/e/' + params.id);
-      setPrice(Math.min(...res.data.map((e) => e.price)));
+      try{
+        let res = await axiosInstance.get('/event/' + params.id);
+        setEventInfo(res.data);
+        res = await axiosInstance.get('/ticket/e/' + params.id);
+        setPrice(Math.min(...res.data.map((e) => e.price)));
+      }catch{
+        navigate('/404NotFound')
+      }
     }
 
     fetchData();

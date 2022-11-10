@@ -1,6 +1,10 @@
 import json
+from typing import List
+from bson.objectid import ObjectId
 from fastapi.encoders import jsonable_encoder
 from fastapi import APIRouter, Body, Request, Response, HTTPException, status, Depends
+from pymongo import ReturnDocument
+from models.ticket import TicketStatus, TicketInstance
 import stripe
 import os
 
@@ -22,8 +26,7 @@ router = APIRouter()
 
 
 @router.post('/webhook')
-async def webhook(request: Request):
-   
+async def webhook(request: Request):   
     event = None
     payload = await request.body()
     print(request.headers)
@@ -59,14 +62,43 @@ async def webhook(request: Request):
       payment_intent = event['data']['object']
     elif event['type'] == 'payment_intent.succeeded':
       payment_intent = event['data']['object']
-    elif event['type'] == 'payment_intent.succeeded':
-      payment_intent = event['data']['object']
-    elif event['type'] == 'checkout_session.completed':
+    elif event['type'] == 'checkout.session.completed':
+      print("session completed")
       session = event['data']['object']
+      tickets = session['metadata']['seat_ids'].split(',')
       
+      print(session['metadata']['seat_ids'])
+      for ticket in tickets:
+        print(type(ticket))
+        ticket = ticket.strip()
+        
+        if(
+          found_ticket := request.app.database["passes"].find_one({"_id": ObjectId(ticket)})
+        ) is not None: 
+          found_ticket["status"] = TicketStatus.active
+          found_ticket["payment_intent"] = session['payment_intent']
+          updated_ticket = request.app.database["passes"].find_one_and_update(
+            {"_id": found_ticket["_id"]}, {"$set": found_ticket}, return_document=ReturnDocument.AFTER
+          )
+          print(f"Ticket {ticket} has been made active")
+          print(updated_ticket)
+        else:
+          print(f"Ticket {ticket} has not been found")
       
     # ... handle other event types
     else:
       print('Unhandled event type {}'.format(event['type']))
 
     return {'success':True}
+    
+# @router.post('/bookings/refund', response_model=List[TicketInstance])
+# async def refund_bookings(payment_intent:str, pass_ids request: Request):           
+#     if(
+#       found_bookings := list(request.app.database["passes"].find({"payment_intent": payment_intent }))
+#     ) is not None: 
+#         for booking in found_bookings:
+#           booking['_id'] = str(booking["_id"])
+#         return found_bookings
+    
+#     raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+#                       detail=f"no bookings exist with payment intent: {payment_intent}")

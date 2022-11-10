@@ -20,8 +20,8 @@ const Events = () => {
 
   const [events2, setEvents2] = useState([]);
   useEffect(() => {
-    window.scrollTo(0, 0)
-  }, [])
+    window.scrollTo(0, 0);
+  }, []);
 
   useEffect(() => {
     async function fetchData() {
@@ -34,10 +34,10 @@ const Events = () => {
       setEvents1(res.data.filter((e) => e.published === true));
     }
     fetchData();
-  }, [currentUser._id,re]);
+  }, [currentUser._id, re]);
 
   // const events2 = [10, 11, 12, 13, 14, 15,16,17];
-  const [page, setPage] = useState(1);
+  const [pages, setPage] = useState([1, 1]);
   const PER_PAGE = 7;
 
   const handleData1 = usePagination(events1, PER_PAGE);
@@ -46,8 +46,14 @@ const Events = () => {
   const handleData2 = usePagination(events2, PER_PAGE);
   const count2 = Math.ceil(events2?.length / PER_PAGE);
 
-  const handlePageChange = (e, p) => {
-    setPage(p);
+  const handlePageChange1 = (e, p) => {
+    setPage([p, pages[1]]);
+    handleData1.jump(p);
+    // window.scrollTo({ top: 0 });
+  };
+
+  const handlePageChange2 = (e, p) => {
+    setPage([pages[0], p]);
     handleData2.jump(p);
     // window.scrollTo({ top: 0 });
   };
@@ -81,17 +87,17 @@ const Events = () => {
                 <EventList key={e._id} eventInfo={e} />
               ))}
             </div>
-            <Pagination count={count1} page={page} onChange={handlePageChange} shape="rounded" />
+            <Pagination count={count1} page={pages[0]} onChange={handlePageChange1} shape="rounded" />
           </div>
         </TabPanel>
         <TabPanel value="2">
           <div>
             <div style={{ minHeight: '60vh' }}>
               {handleData2.currentData().map((e) => (
-                <EventListDraft key={e._id} eventInfo={e} re = {re} rerender={rerender}/>
+                <EventListDraft key={e._id} eventInfo={e} re={re} rerender={rerender} />
               ))}
             </div>
-            <Pagination count={count2} page={page} onChange={handlePageChange} shape="rounded" />
+            <Pagination count={count2} page={pages[1]} onChange={handlePageChange2} shape="rounded" />
           </div>
         </TabPanel>
       </TabContext>
