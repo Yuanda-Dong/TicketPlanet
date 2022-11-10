@@ -17,7 +17,7 @@ from util.app import app
 from util.oAuth import authenticate_user, get_password_hash, create_access_token, get_current_user, \
     verify_password  # ,oauth
 from util.send_email import password_reset, reset_template
-
+from models.report import Report
 import random
 import re
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -327,6 +327,32 @@ def Rec_events_Demographic(id:str, request: Request):
     if len(rec4) > 12:
         rec4 = random.sample(rec4,12)
     return rec4
+
+@router.get("/report/{id}", response_description="Get user's report", response_model=Report)
+def Follower_Report(id:str, request: Request):
+    gender = {'male':0,'female':0,'nonbinary':0}
+    age = {'<=14':0,'15-25':0,'26-35':0,'36-50':0,'>50':0}
+    post = dict()
+    output = {'gender':gender, 'age':age, 'post': post}
+    userDB = list(request.app.database['users'].find({}))
+    user = list(filter(lambda x: x['_id'] == id, userDB))[0]
+    if 'follower' not in user:
+        return output
+    followers = user['follower']
+    followers = list(filter(lambda x: x['_id'] in followers, userDB))
+    for follower in followers:
+        if follower['gender'] in gender:
+            gender[follower['gender']] += 1 
+        if follower['age'] in age:
+            age[follower['age']] += 1 
+        if follower['postcode'] in post:
+            post[follower['postcode']] += 1 
+        else:
+            post[follower['postcode']] = 1 
+    return output
+
+
+
 # @router.post("/routes/check-code")
 # async def reset_password(request: Request, reset_password_token: str):
 #     # Check valid reset password token

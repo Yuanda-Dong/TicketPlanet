@@ -16,7 +16,7 @@ from util.oAuth import get_current_user
 from models.filter import Filter
 from util.postcode_to_distance import distance_post
 import dateutil
-
+from models.report import Report
 from util.send_email import event_update_notice, event_update_template
 
 router = APIRouter()
@@ -311,3 +311,23 @@ def update_seat_plan(id: str, seat_plan:SeatPlan, request: Request, user: User =
 
     return updated_plan
     
+@router.get("/report/{event_id}", response_description="Get user's report", response_model=Report)
+def Event_Report(event_id:str, request: Request):
+    gender = {'male':0,'female':0,'nonbinary':0}
+    age = {'<=14':0,'15-25':0,'26-35':0,'36-50':0,'>50':0}
+    post = dict()
+    output = {'gender':gender, 'age':age, 'post': post}
+    userDB = list(request.app.database['users'].find({}))
+    passes = list(request.app.database['passes'].find({"event_id":event_id, "status": "active"}))
+    eventGoers = set(map(lambda x: x['user_id'], passes))
+    eventGoers = list(filter(lambda x: x['_id'] in eventGoers, userDB))
+    for goer in eventGoers:
+        if goer['gender'] in gender:
+            gender[goer['gender']] += 1 
+        if goer['age'] in age:
+            age[goer['age']] += 1 
+        if goer['postcode'] in post:
+            post[goer['postcode']] += 1 
+        else:
+            post[goer['postcode']] = 1 
+    return output
