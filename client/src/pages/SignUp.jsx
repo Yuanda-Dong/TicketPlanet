@@ -13,7 +13,7 @@ import { SignUpForm1, SignUpForm2 } from '../components/SignUp/SignUpForm';
 import { useNavigate } from 'react-router-dom';
 import NavBar from '../components/Navbar/NavBar';
 import GoogleIcon from '@mui/icons-material/Google';
-import './Payment/Payment.css';
+// import './Payment/Payment.css';
 // firebase google auth
 import { auth, provider } from '../firebase';
 import { signInWithPopup } from 'firebase/auth';

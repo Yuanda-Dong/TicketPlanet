@@ -65,7 +65,6 @@ function App() {
             <Route path="events" element={<Events />} />
             <Route path="reports" element={<Reports />} />
           </Route>
-          {/* <Route path="payment" element={<Payment />} /> */}
           <Route path="post" element={<PostPage />} />
           <Route path="edit/:id/" element={<EditPage />} />
           <Route path="my-tickets" element={<MyTickets />} />

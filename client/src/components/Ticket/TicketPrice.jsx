@@ -80,7 +80,7 @@ function TicketPrice(props) {
         'http://localhost:3000/my-tickets',
         currentUser.email,
         quantities.quantity,
-        quantities.cost,
+        quantities.cost * 100,
         quantities.name,
         selected
       );
