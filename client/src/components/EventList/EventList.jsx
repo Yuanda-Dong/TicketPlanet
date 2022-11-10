@@ -51,7 +51,7 @@ const EventList = (props) => {
     </Menu>
   );
   return (
-    <Paper elevation={3} sx={{ margin: '20px 0', backgroundColor: '#e8e8ea' }}>
+    <Paper elevation={3} sx={{ margin: '20px 0', backgroundColor: 'white' }}>
       <div className="event-list-item">
         <div className="date">
           <span className="month">

@@ -4,19 +4,19 @@
   /* background-size: cover; */
   background-size: 100% 120%;
   background-position: bottom;
-  height: 550px;
+  /* height: 550px; */
+  height: 25vw;
   position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   margin-bottom: 100px;
-  /* background-color: red; */
 }
 
 .header .title {
   margin: 0.5rem;
-  font-size: 55px;
+  font-size: 4rem;
   color: #3c4b69;
 }
 
