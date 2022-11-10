@@ -44,7 +44,7 @@ const getStatusLabel = (ticketOrderStatus) => {
       text: 'Active',
       color: 'success',
     },
-    pending: {
+    deactive: {
       text: 'Pending',
       color: 'warning',
     },
@@ -246,19 +246,13 @@ TicketRow.propTypes = {
     event_id: PropTypes.string.isRequired,
     start_dt: PropTypes.string.isRequired,
     end_dt: PropTypes.string.isRequired,
-    amount: PropTypes.number.isRequired,
     price: PropTypes.number.isRequired,
     status: PropTypes.string.isRequired,
-    detail: PropTypes.arrayOf(
-      PropTypes.shape({
-        title: PropTypes.string.isRequired,
-        category: PropTypes.string.isRequired,
-        address: PropTypes.string,
-        postcode: PropTypes.number.isRequired,
-        seat_number: PropTypes.string.isRequired,
-        section_number: PropTypes.string.isRequired,
-      })
-    ).isRequired,
+    title: PropTypes.string.isRequired,
+    category: PropTypes.string.isRequired,
+    address: PropTypes.string,
+    postcode: PropTypes.number.isRequired,
+    seat_number: PropTypes.string.isRequired,
   }).isRequired,
 };
 

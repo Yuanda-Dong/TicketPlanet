@@ -123,7 +123,7 @@ def buy_ticket(id: str, payment: TicketPaymentSession, request: Request, user: U
                         'seats': str(payment.metadata.seats).strip(' []') 
                     }
                 )
-                await buy_notice(request, found_ticket["event_id"], user["_id"])
+                buy_notice(request, found_ticket["event_id"], user["_id"])
                 return payment_intent  # attached physical ticket 
             
             except stripe.error.StripeError as e:
