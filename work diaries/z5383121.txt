@@ -26,3 +26,16 @@ Complete API calls for post/edit events on the front end
 
 Week 7 
 Complete API calls for search/upcomming events on the front end 
+
+Week 8 
+fixed a bug on search page, that caused the search results to persist even after refreshing the page
+
+Week 9 
+front end for draft events 
+added pagination and publish on seatmap page
+added front-end for recommendation
+started working on back-end for recommendation
+
+Week 10 
+Finished back-end for recommendation 
+Working on reports, demo and final software 
