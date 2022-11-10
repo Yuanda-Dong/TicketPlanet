@@ -344,7 +344,7 @@ def Rec_events_Demographic(id:str, request: Request):
 #
 #     return "shez.html"
 
-@router.put("/follow")
+@router.put("/follow/{id}")
 async def follow_host(id: str, request: Request, user: User = Depends(get_current_user)):
     if (
             existing_host := request.app.database["users"].find_one({"_id": id})
