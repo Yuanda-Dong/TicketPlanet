@@ -263,7 +263,9 @@ def list_events(id:str, request: Request):
 @router.get("/{id}/rec/type", response_description="Get user's events", response_model=List[EventInDB])
 def Rec_events_type(id:str, request: Request):
     passes = list(request.app.database["passes"].find({"user_id": id}))
-    # print(passes)
+    # print(passes.map(lambda x: ))
+    print()
+
 
 
     return []
