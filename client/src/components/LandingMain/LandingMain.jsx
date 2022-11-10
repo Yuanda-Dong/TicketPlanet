@@ -69,8 +69,8 @@ export default function LandingMain() {
           <TabList className="list" onChange={handleChange2} aria-label="lab API tabs example">
             <Tab label="Past event types" value="1" />
             <Tab label="Past booked hosts" value="2" />
-            <Tab label="Description" value="3" />
-            <Tab label="demographic" value="4" />
+            <Tab label="Event description" value="3" />
+            <Tab label="Demographic info" value="4" />
           </TabList>
         </Box>
           <TabPanel value="1">
