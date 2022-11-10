@@ -91,7 +91,7 @@ def delete_ticket(id: str, request: Request, response: Response, user: User = De
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Ticket with ID {id} not found")
         
 @router.post("/session/{id}", response_description="Buy a ticket", status_code=status.HTTP_201_CREATED)
-def buy_ticket(id: str, payment: TicketPaymentSession, request: Request, user: User = Depends(get_current_user)):
+async def buy_ticket(id: str, payment: TicketPaymentSession, request: Request, user: User = Depends(get_current_user)):
     if(
         found_ticket := request.app.database["tickets"].find_one({"_id": id})
     ) is not None: 
@@ -123,7 +123,7 @@ def buy_ticket(id: str, payment: TicketPaymentSession, request: Request, user: U
                         'seats': str(payment.metadata.seats).strip(' []') 
                     }
                 )
-                buy_notice(request, found_ticket["event_id"], user["_id"])
+                await buy_notice(request, found_ticket["event_id"], user["_id"])
                 return payment_intent  # attached physical ticket 
             
             except stripe.error.StripeError as e:
