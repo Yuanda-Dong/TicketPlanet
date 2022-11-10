@@ -85,6 +85,7 @@ function TicketPrice(props) {
         selected
       );
       let res = await axiosInstance.post('/ticket/session/' + quantities.id, checkout_body, config);
+      // console.log(res.data);
       window.location.href = res.data?.url;
     } catch (e) {
       alert(e.response?.data.detail);
