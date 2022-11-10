@@ -33,5 +33,14 @@ Week 5
 
 Week 6
 - Continued working on payments
+- Established webhook file 
+- Began payment session 
 
 Week 7
+- Completed payment session 
+- Added physical ticket activation 
+- Added new routes for seat plan 
+
+Week 8 
+- Presented group demo and completed retroactive 
+- Beginning refunds 

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState } from 'react';
+import {useState} from 'react';
 import {
   alpha,
   Box,
@@ -22,13 +22,13 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import { Label } from './Label';
+import {Label} from './Label';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import DetailsTwoToneIcon from '@mui/icons-material/DetailsTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import PropTypes from 'prop-types';
-import { useNavigate } from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
@@ -36,7 +36,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
-import { format } from 'date-fns';
+import {format} from 'date-fns';
 
 const getStatusLabel = (ticketOrderStatus) => {
   const map = {
@@ -129,38 +129,38 @@ function TicketRow(props) {
             <Grid item xs={6}>
               <Tooltip title="Event Detail" arrow>
                 <IconButton
-                  sx={{ '&:hover': { background: alpha('#5569ff', 0.1) }, color: '#5569ff' }}
+                  sx={{'&:hover': {background: alpha('#5569ff', 0.1)}, color: '#5569ff'}}
                   color="inherit"
                   size="small"
                   onClick={handleClickEventDetail}
                 >
-                  <DetailsTwoToneIcon fontSize="small" />
+                  <DetailsTwoToneIcon fontSize="small"/>
                 </IconButton>
               </Tooltip>
             </Grid>
-            {ticketRow.status === 'pending' ? (
-              <Grid item xs={6}>
-                <Tooltip title="Cancel booking" arrow>
-                  <IconButton
-                    sx={{ '&:hover': { background: alpha('#FF1943', 0.1) }, color: '#FF1943' }}
-                    color="inherit"
-                    size="small"
-                  >
-                    <DeleteTwoToneIcon fontSize="small" />
-                  </IconButton>
-                </Tooltip>
-              </Grid>
-            ) : (
-              <Grid item xs={6}>
-                <Tooltip title="Cancel booking" arrow>
-                  <IconButton
-                    sx={{ '&:hover': { background: alpha('#FF1943', 0.1) }, color: '#FF1943' }}
-                    color="inherit"
-                    size="small"
-                    onClick={handleClickDeleteOpen}
-                  >
-                    <DeleteTwoToneIcon fontSize="small" />
-                  </IconButton>
+            {/*{ticketRow.status === 'pending' ? (*/}
+            {/*  <Grid item xs={6}>*/}
+            {/*    <Tooltip title="Cancel booking" arrow>*/}
+            {/*      <IconButton*/}
+            {/*        sx={{ '&:hover': { background: alpha('#FF1943', 0.1) }, color: '#FF1943' }}*/}
+            {/*        color="inherit"*/}
+            {/*        size="small"*/}
+            {/*      >*/}
+            {/*        <DeleteTwoToneIcon fontSize="small" />*/}
+            {/*      </IconButton>*/}
+            {/*    </Tooltip>*/}
+            {/*  </Grid>*/}
+            {/*) : (*/}
+            <Grid item xs={6}>
+              <Tooltip title="Cancel booking" arrow>
+                <IconButton
+                  sx={{'&:hover': {background: alpha('#FF1943', 0.1)}, color: '#FF1943'}}
+                  color="inherit"
+                  size="small"
+                  onClick={handleClickDeleteOpen}
+                >
+                  <DeleteTwoToneIcon fontSize="small"/>
+                </IconButton>
                 </Tooltip>
                 <Dialog
                   open={DeleteOpen}
@@ -182,7 +182,7 @@ function TicketRow(props) {
                   </DialogActions>
                 </Dialog>
               </Grid>
-            )}
+            {/* )} */}
           </Grid>
         </TableCell>
       </TableRow>
@@ -269,11 +269,11 @@ const TicketTable = ({ ticketOrders }) => {
       name: 'All',
     },
     {
-      id: 'passed',
+      id: 'active',
       name: 'Active',
     },
     {
-      id: 'pending',
+      id: 'deactive',
       name: 'Pending',
     },
     {
