@@ -110,13 +110,13 @@ def search_events(request: Request, filter: Filter):
     if filter.fuzzy:
         # print("LLLLL")
         # address filter
-        query = {"address": re.compile(filter.fuzzy, flags=re.IGNORECASE)}
+        query = {"address": re.compile(filter.fuzzy, flags=re.IGNORECASE), "published": True}
         events_list.extend(list(request.app.database["events"].find(query)))
         # details filter
-        query = {"details": re.compile(filter.fuzzy, flags=re.IGNORECASE)}
+        query = {"details": re.compile(filter.fuzzy, flags=re.IGNORECASE), "published": True}
         events_list.extend(list(request.app.database["events"].find(query)))
         # title filter
-        query = {"title": re.compile(filter.fuzzy, flags=re.IGNORECASE)}
+        query = {"title": re.compile(filter.fuzzy, flags=re.IGNORECASE), "published": True}
         events_list.extend(list(request.app.database["events"].find(query)))
 
         events = []
@@ -124,7 +124,7 @@ def search_events(request: Request, filter: Filter):
             if i not in events:
                 events.append(i)
     else:
-        events = list(request.app.database["events"].find({}))
+        events = list(request.app.database["events"].find({"published": True}))
 
     # category filter
     if filter.category:
