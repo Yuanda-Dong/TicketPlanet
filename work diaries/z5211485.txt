@@ -15,3 +15,12 @@ I completed the API connection for signin and signup using email, and connected 
 
 Week 6
 I completed the Review components and finished the API integration. I also attended the group meeting with other members to add story points to our sprint2 user stories, and allocate tasks to all members.
+
+Week 7
+I added password and email validations, started working on the seat plan creation by the host.
+
+Week 8
+I finished the seat plan creation for the host and also finished the API integration, attended group meetings, added date-range-picker in the search omponent and fixed the code for search page to be more generalised and re-producable.
+
+Week 9
+I worked on the checkout API integration and seat selection for customers, and created the page for reports, included few charts and table templates. 
