@@ -1,8 +1,9 @@
 .header {
   width: 100vw;
-  background-image: url('../../assets/bg.png');
+  /* background-image: url('../../assets/bg.png'); */
+  background-image: url('https://media.discordapp.net/attachments/1019896825655873541/1040174744957358123/image.png?width=2160&height=696');
   background-repeat: no-repeat;
-  background-size: cover;
+  background-size: contain;
   height: 464px;
   position: relative;
   display: flex;
