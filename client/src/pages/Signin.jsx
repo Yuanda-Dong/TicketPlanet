@@ -22,6 +22,7 @@ import { axiosInstance } from '../config';
 import { useDispatch } from 'react-redux';
 import { failedLogin, startLogin, successfulLogin, storeToken } from '../redux/userSlice';
 import { useState } from 'react';
+import background from '../assets/party.png'
 
 export default function SignInSide() {
   const dispatch = useDispatch();
@@ -156,8 +157,8 @@ export default function SignInSide() {
         md={7}
         sx={{
           // backgroundImage: 'url(https://source.unsplash.com/random)',
-          backgroundImage:
-            'url(https://images.unsplash.com/photo-1658093180204-fd48aa384ebc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218MHx8fHx8fHx8MTY1ODkyMjY0OA&ixlib=rb-1.2.1&q=80&w=1080)',
+          // 'url(https://www.refinery29.com/images/9605839.jpg?format=webp&width=3604&height=4325&quality=100)'
+          backgroundImage: `url(${background})`,
           backgroundRepeat: 'no-repeat',
           backgroundColor: (t) => (t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900]),
           backgroundSize: 'cover',
