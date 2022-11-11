@@ -1,3 +1,5 @@
+@import url('../../css/cabinet-grotesk.css');
+
 .app_bar {
   /* background-color: #3c4b69; */
   /* background-color: #4f4cee; */
@@ -20,6 +22,7 @@
   font-weight: 700;
   letter-spacing: 0.3rem;
   color: #4f4cee;
+  font-family: 'CabinetGrotesk-Bold';
 }
 
 .app_bar .wrapper .page_nav {
@@ -29,7 +32,7 @@
 .app_bar .wrapper .create-event {
   color: white;
   /* background-color: #4968a3; */
-  background-color: #0022ba;
+  background-color: #4F4CEE;
 }
 
 .app_bar .wrapper .button_group {
@@ -44,16 +47,16 @@
 }
 
 .app_bar .wrapper .button_group .login:hover {
-  background-color: #707b90;
+  background-color: #333199;
 }
 
 .app_bar .wrapper .button_group .signup {
   color: white;
-  background-color: #576f9d;
+  background-color: #333199;
 }
 
 .app_bar .wrapper .button_group .signup:hover {
-  background-color: #707b90;
+  background-color: #333199;
 }
 
 .app_bar .link {
