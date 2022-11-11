@@ -17,7 +17,7 @@ const EventCard = (props) => {
   };
   return (
     <Card id={props.eventInfo._id} sx={{ maxWidth: 345 }} className="event-card" onClick={viewEvent}>
-      <CardMedia component="img" height="250" image={props.eventInfo.image_url || thumbnail} alt="green iguana" />
+      <CardMedia component="img" height="250" image={props.eventInfo.image_url || thumbnail} alt="Event Thumbnail" />
       <CardContent>
         <div className="date">
           <span className="month">

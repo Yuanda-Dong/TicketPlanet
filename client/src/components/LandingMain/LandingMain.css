@@ -43,9 +43,9 @@
 }
 
 .landing_main_container .MuiTabPanel-root .loadmore {
-  width: 80vw;
+  width: 300px;
   color: white;
   background-color: #576f9d;
-  /* margin-top: 50px; */
   margin: 0 auto;
+  left: calc(50% - 150px);
 }

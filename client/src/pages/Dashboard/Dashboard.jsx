@@ -38,7 +38,7 @@ export default function Dashboard() {
               sx={{ display: { md: 'block', sm: 'none', xs: 'none' } }}
             />
           </Box>
-          <Box component="main" sx={{ flex: 1, py: 6, px: 4, bgcolor: '#eaeff1' }}>
+          <Box component="main" sx={{ flex: 1, py: 6, px: 4, bgcolor: 'rgba(238, 234, 241, 0.4)' }}>
             <Outlet />
           </Box>
         </div>

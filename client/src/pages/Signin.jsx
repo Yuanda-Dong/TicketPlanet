@@ -145,7 +145,7 @@ export default function SignInSide() {
   };
 
   return (
-    <Grid container component="main" sx={{ height: '100%' }}>
+    <Grid container component="main" sx={{ height: '100vh' }}>
       <div style={{ position: 'absolute', width: '100vw' }}>
         <NavBar />
       </div>

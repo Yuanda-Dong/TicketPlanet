@@ -1,9 +1,11 @@
 .header {
   width: 100vw;
-  background-image: url('../../assets/bg.png');
-  background-repeat: no-repeat;
-  background-size: cover;
-  height: 464px;
+  background: url('../../assets/banner.svg') no-repeat;
+  /* background-size: cover; */
+  background-size: 100% 120%;
+  background-position: bottom;
+  /* height: 550px; */
+  height: 25vw;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -14,6 +16,7 @@
 
 .header .title {
   margin: 0.5rem;
+  font-size: 4rem;
   color: #3c4b69;
 }
 
@@ -24,49 +27,3 @@
   display: flex;
   justify-content: center;
 }
-
-/* .header .search_container .search_box {
-  display: flex;
-  align-items: center;
-  flex: 1;
-  justify-content: space-between;
-} */
-
-/* .header .search_container .search_box .search_date_text {
-  width: 60%;
-  margin-left: 20px;
-  color: #7b7b7b;
-  word-spacing: 20px;
-  cursor: pointer;
-} */
-
-/* .header .search_container .search_box .date_picker {
-  position: absolute;
-  top: 70px;
-  z-index: 3;
-}
-
-.header .search_container .search_box .search,
-.search_box fieldset {
-  flex: 1;
-  border: none;
-}
-
-.header .search_container .search_box input {
-  font-size: 18px;
-  background-color: transparent;
-  color: #7b7b7b;
-  outline: none;
-  margin-left: 20px;
-}
-
-.header .search_container .search_box .search_button {
-  width: 100px;
-  margin: 0 20px;
-  background-color: #576f9d;
-}
-
-.header .search_container .search_box .search .MuiOutlinedInput-root {
-  display: flex;
-  flex-direction: row-reverse;
-} */

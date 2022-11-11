@@ -1,6 +1,9 @@
 .app_bar {
-  background-color: #3c4b69;
-  height: 10vh;
+  /* background-color: #3c4b69; */
+  /* background-color: #4f4cee; */
+  background-color: #fff;
+  border-bottom: 1px solid #4f4cee;
+  height: 5vh;
 }
 
 .app_bar .wrapper {
@@ -9,14 +12,14 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  color: white;
+  /* color: white; */
+  color: #4f4cee;
 }
 
 .app_bar .wrapper .logo {
   font-weight: 700;
   letter-spacing: 0.3rem;
-  color: white;
-  font-family: 'monospace';
+  color: #4f4cee;
 }
 
 .app_bar .wrapper .page_nav {
@@ -25,7 +28,8 @@
 
 .app_bar .wrapper .create-event {
   color: white;
-  background-color: #4968a3;
+  /* background-color: #4968a3; */
+  background-color: #0022ba;
 }
 
 .app_bar .wrapper .button_group {
@@ -35,7 +39,7 @@
 }
 
 .app_bar .wrapper .button_group .login {
-  color: white;
+  color: inherit;
   border-color: inherit;
 }
 
@@ -53,5 +57,6 @@
 }
 
 .app_bar .link {
+  /* color: aqua; */
   text-decoration: none;
 }

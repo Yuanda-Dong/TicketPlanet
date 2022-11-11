@@ -12,7 +12,8 @@
   flex: 2;
   /* left: 0;
   top: 10vh; */
-  background-color: #eee;
+  /* background-color: #eee; */
+  border-right: 1px solid #4f4cee;
   z-index: 2;
   padding-left: 25px;
 }

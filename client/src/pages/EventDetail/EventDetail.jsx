@@ -15,56 +15,108 @@ import moment from 'moment';
 import { Container } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import { useNavigate } from 'react-router-dom';
+import { thumbnail } from '../../assets/dummy_img';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 const EventDetail = (props) => {
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
   const navigate = useNavigate();
   const params = useParams();
   const { currentUser } = useSelector((state) => state.user);
+  const { token } = useSelector((state) => state.user);
   const [eventInfo, setEventInfo] = React.useState({});
   const [price, setPrice] = React.useState('');
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
   React.useEffect(() => {
     window.scrollTo(0, 0);
     async function fetchData() {
-      try{
+      try {
         let res = await axiosInstance.get('/event/' + params.id);
         setEventInfo(res.data);
         res = await axiosInstance.get('/ticket/e/' + params.id);
         setPrice(Math.min(...res.data.map((e) => e.price)));
-      }catch{
-        navigate('/404NotFound')
+      } catch {
+        navigate('/404NotFound');
       }
     }
 
     fetchData();
   }, [params.id]);
 
+  const follow = async ()=> {
+    try {
+      let res = await axiosInstance.put(`/user/follow/${eventInfo.host_id}`,null, config);
+      handleClickOpen();
+    } catch {
+      alert("You can not follow yourself");
+    }
+  }
+
   return (
     <div className={'EventPage'}>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Follow"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            You have successfully followed the host, you will receive e-mails when the host publishes a new event. 
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} >Close</Button>
+          {/* <Button onClick={handleClose} autoFocus>
+            Agree
+          </Button> */}
+        </DialogActions>
+      </Dialog>
       <NavBar />
       <Container component="main" maxWidth="lg" sx={{ mb: 0 }}>
         <Paper elevation={3} sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}>
           <div className="event-detail">
             <div className="img-container">
-              <img src={eventInfo.image_url} alt="Event Thumbnail" />
+              <img src={eventInfo.image_url || thumbnail} alt="Event Thumbnail" />
             </div>
             <div className="info">
               <div className="event-info">
                 <h1>{eventInfo.title}</h1>
                 <div>
                   <h3>Host: {eventInfo.host_name}</h3>
-                  <Button variant="outlined" className="follow">
+                  {currentUser ? <Button variant="outlined" className="follow" onClick={follow}>
                     follow
-                  </Button>
+                  </Button>:<></>}
                 </div>
                 <h3>Category: {eventInfo.category}</h3>
               </div>
               <div className="ticket-info">
                 <div className="ticket-box">
-                  <span>Tickets starting at</span>
-                  <span>{price !== 'Infinity' ? '$ ' + price : ''}</span>
+                  <span style={{ fontSize: '20px', fontWeight: 'bold' }}>Tickets starting at</span>
+                  <span style={{ fontSize: '30px' }}>{price !== Infinity ? '$ ' + price : 'Not available'}</span>
                   <Link style={{ textDecoration: 'none' }} to={currentUser ? `/event/price/${params.id}` : '/signin'}>
-                    <Button variant="contained" className="buy">
+                  {price !== Infinity ? <Button variant="contained" className="buy">
                       Buy tickets
-                    </Button>
+                    </Button> : <></>}
+                    
                   </Link>
                 </div>
               </div>
@@ -103,15 +155,26 @@ const EventDetail = (props) => {
                 }}
               ></p>
             </div>
-            <div className="gallery">
+            
+
+            { eventInfo.gallery && eventInfo.gallery.length >0 ? <div className="gallery">
               <h2>Gallery</h2>
-              {eventInfo.gallery ? <Gallery galleryImages={eventInfo.gallery}></Gallery> : ''}
-            </div>
+              <Gallery galleryImages={eventInfo.gallery}></Gallery>
+            </div> : <></>}
+
+            
+
+
+
+
           </div>
-          {eventInfo.published?<div className="comments-section">
-            <Comments eventId={params.id} />
-          </div>:<></>}
-          
+          {eventInfo.published ? (
+            <div className="comments-section">
+              <Comments eventId={params.id} />
+            </div>
+          ) : (
+            <></>
+          )}
         </Paper>
       </Container>
     </div>

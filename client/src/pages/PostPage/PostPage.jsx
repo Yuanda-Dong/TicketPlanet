@@ -31,6 +31,7 @@ const PostPage = () => {
       Authorization: `Bearer ${token}`,
     },
   };
+  // console.log(config)
   const storage = getStorage();
   const [event, setEvent] = useState({
     title: '',

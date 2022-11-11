@@ -17,6 +17,11 @@ from util.app import app
 from util.oAuth import authenticate_user, get_password_hash, create_access_token, get_current_user, \
     verify_password  # ,oauth
 from util.send_email import password_reset, reset_template
+from models.report import Report
+import random
+import re
+from sklearn.feature_extraction.text import TfidfVectorizer
+import numpy as np
 
 sys.path.append("..models")  # Adds higher directory to python modules path.
 
@@ -259,6 +264,92 @@ def list_events(id:str, request: Request):
     events = list(request.app.database["events"].find({"host_id": id}))
     return events
 
+## Based on Event Types
+@router.get("/{id}/rec1", response_description="Get user's events", response_model=List[EventInDB])
+def Rec_events_type(id:str, request: Request):
+    user_passes = list(request.app.database['passes'].find({"user_id": id}))
+    eventsDB = list(request.app.database['events'].find({"published": True}))
+    user_booked_events = set(map(lambda x: x['event_id'], user_passes))
+    user_booked_events = list(filter(lambda x: x['_id'] in user_booked_events, eventsDB))
+    user_booked_types = set(map(lambda x: x['category'], user_booked_events))
+    rec1 = list(filter(lambda x: x['category'] in user_booked_types, eventsDB))
+    if len(rec1) > 12:
+        rec1 = random.sample(rec1,12)
+    return rec1
+## Based on Hosts 
+@router.get("/{id}/rec2", response_description="Get user's events", response_model=List[EventInDB])
+def Rec_events_Hosts(id:str, request: Request):
+    user_passes = list(request.app.database['passes'].find({"user_id": id}))
+    eventsDB = list(request.app.database['events'].find({"published": True}))
+    user_booked_events = set(map(lambda x: x['event_id'], user_passes))
+    user_booked_events = list(filter(lambda x: x['_id'] in user_booked_events, eventsDB))
+    user_booked_hosts = set(map(lambda x: x['host_id'], user_booked_events))
+    rec2 = list(filter(lambda x: x['host_id'] in user_booked_hosts, eventsDB))
+    if len(rec2) > 12:
+        rec2 = random.sample(rec2,12)
+    return rec2
+## Based on text similarity of description 
+@router.get("/{id}/rec3", response_description="Get user's events", response_model=List[EventInDB])
+def Rec_events_description(id:str, request: Request):
+    user_passes = list(request.app.database['passes'].find({"user_id": id}))
+    eventsDB = list(request.app.database['events'].find({"published": True}))
+    def stringProcess(s):
+        return re.sub(r'[^a-zA-Z0-9]', ' ', s.split("\"text\":")[1].split(",\"type\":")[0]).strip()
+    rec3 = []
+    seen = set() 
+    user_booked_events = set(map(lambda x: x['event_id'], user_passes))
+    user_booked_events = list(filter(lambda x: x['_id'] in user_booked_events, eventsDB))
+    user_booked_events_descs = list(map(lambda x: stringProcess(x['details']), user_booked_events))
+    events_descs = list(map(lambda x: stringProcess(x['details']), eventsDB))
+    vect = TfidfVectorizer(min_df=1, stop_words="english")                                                                                                                                                                                                   
+    tfidf = vect.fit_transform(events_descs)                                                                                                                                                                                                                       
+    pairwise_similarity = tfidf * tfidf.T 
+    arr = pairwise_similarity.toarray()
+    np.fill_diagonal(arr, np.nan)
+    for event_desc in user_booked_events_descs:
+        input_idx = events_descs.index(event_desc) 
+        result_idx = np.nanargmax(arr[input_idx])
+        rec3 += [eventsDB[result_idx]]
+    rec3 = [seen.add(obj["_id"]) or obj for obj in rec3 if obj["_id"] not in seen]
+    if len(rec3) > 12:
+        rec3 = random.sample(rec3,12)
+    return rec3
+## Based on Demographic
+@router.get("/{id}/rec4", response_description="Get user's events", response_model=List[EventInDB])
+def Rec_events_Demographic(id:str, request: Request):
+    eventsDB = list(request.app.database['events'].find({"published": True}))
+    passes = list(request.app.database['passes'].find({}))
+    userData = request.app.database['users'].find({"_id": id}).next()
+    similarUsers = list(request.app.database['users'].find({"gender": userData['gender'], "age": userData['age']}))
+    similarUsersExcludingSelf = list(map(lambda x: x["_id"], filter(lambda x: x['_id'] != id, similarUsers)))
+    rec4 = set(map(lambda x: x["event_id"],filter(lambda x: x['user_id'] in similarUsersExcludingSelf, passes)))
+    rec4 = list(filter(lambda x: x['_id'] in rec4, eventsDB))
+    if len(rec4) > 12:
+        rec4 = random.sample(rec4,12)
+    return rec4
+
+@router.get("/report/{id}", response_description="Get user's report", response_model=Report)
+def Follower_Report(id:str, request: Request):
+    gender = {'male':0,'female':0,'nonbinary':0}
+    age = {'<=14':0,'15-25':0,'26-35':0,'36-50':0,'>50':0}
+    post = dict()
+    output = {'gender':gender, 'age':age, 'post': post}
+    userDB = list(request.app.database['users'].find({}))
+    user = list(filter(lambda x: x['_id'] == id, userDB))[0]
+    if 'follower' not in user:
+        return output
+    followers = user['follower']
+    followers = list(filter(lambda x: x['_id'] in followers, userDB))
+    for follower in followers:
+        if follower['gender'] in gender:
+            gender[follower['gender']] += 1 
+        if follower['age'] in age:
+            age[follower['age']] += 1 
+        if follower['postcode'] in post:
+            post[follower['postcode']] += 1 
+        else:
+            post[follower['postcode']] = 1 
+    return output
 
 
 
@@ -279,7 +370,7 @@ def list_events(id:str, request: Request):
 #
 #     return "shez.html"
 
-@router.put("/follow")
+@router.put("/follow/{id}")
 async def follow_host(id: str, request: Request, user: User = Depends(get_current_user)):
     if (
             existing_host := request.app.database["users"].find_one({"_id": id})
