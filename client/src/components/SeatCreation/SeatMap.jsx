@@ -8,6 +8,20 @@ import styled from 'styled-components';
 import { axiosInstance } from '../../config.js';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+
+const NormalButton = styled(Button)`
+  && {
+    background-color: #4f4cee;
+  }
+`;
+
+const OutlinedButton = styled(Button)`
+  && {
+    color: #4f4cee;
+    border-color: #4f4cee;
+  }
+`;
+
 const Header = styled.div`
   margin: 50px 0px;
 `;
@@ -284,13 +298,13 @@ const SeatMap = ({ tickets }) => {
         ))}
       </SeatMapContainer>
       <div style={{ display: 'flex', justifyContent: 'flex-end', margin: '50px 0px' }}>
-        <Button variant="contained" onClick={handleSubmit} style={{ margin: '10px' }}>
+        <OutlinedButton variant="Outlined" onClick={handleSubmit} style={{ margin: '10px' }}>
           Upload SeatMap and Save to draft
-        </Button>
+        </OutlinedButton>
 
-        <Button variant="contained" color="success" onClick={handleSubmit2} style={{ margin: '10px' }}>
+        <NormalButton variant="contained" color="success" onClick={handleSubmit2} style={{ margin: '10px' }}>
           Upload SeatMap and Publish
-        </Button>
+        </NormalButton>
       </div>
     </div>
   );

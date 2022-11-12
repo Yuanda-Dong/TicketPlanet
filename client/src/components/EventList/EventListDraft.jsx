@@ -19,8 +19,8 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
 const EventListDraft = (props) => {
-    const [open, setOpen] = React.useState(false);
-    const [open2, setOpen2] = React.useState(false);
+  const [open, setOpen] = React.useState(false);
+  const [open2, setOpen2] = React.useState(false);
   const handleClickOpen1 = () => {
     setOpen(true);
   };
@@ -28,10 +28,10 @@ const EventListDraft = (props) => {
   const handleClose1 = () => {
     setOpen(false);
   };
-  const handleCloseYes1 = () =>{
+  const handleCloseYes1 = () => {
     handlePublish();
     setOpen(false);
-  }
+  };
 
   const handleClickOpen2 = () => {
     setOpen2(true);
@@ -40,11 +40,11 @@ const EventListDraft = (props) => {
   const handleClose2 = () => {
     setOpen2(false);
   };
-  const handleCloseYes2 = () =>{
+  const handleCloseYes2 = () => {
     handleDelete();
     setOpen2(false);
-  }
-    const navigate = useNavigate();
+  };
+  const navigate = useNavigate();
   const { token } = useSelector((state) => state.user);
   const config = {
     headers: {
@@ -59,15 +59,15 @@ const EventListDraft = (props) => {
   const handleCloseNavMenu = () => {
     setanchoEl(null);
   };
-  const handleDelete = async ()  => {
-    let res = await axiosInstance.delete(`/event/${props.eventInfo._id}`,config);
+  const handleDelete = async () => {
+    let res = await axiosInstance.delete(`/event/${props.eventInfo._id}`, config);
     props.rerender(!props.re);
   };
 
-  const handlePublish = async ()  => {
-    let res = await axiosInstance.post(`/event/publish/${props.eventInfo._id}`,null,config);
+  const handlePublish = async () => {
+    let res = await axiosInstance.post(`/event/publish/${props.eventInfo._id}`, null, config);
     props.rerender(!props.re);
-  }; 
+  };
 
   const publsihed_operations = [
     { id: 'Edit', to: `/edit/${props.eventInfo._id}` },
@@ -90,40 +90,33 @@ const EventListDraft = (props) => {
       open={Boolean(anchoEl)}
       onClose={handleCloseNavMenu}
     >
-        <MenuItem onClick={handleClickOpen1}> 
-            <Typography textAlign="center">Publish</Typography>
-          </MenuItem>
+      <MenuItem onClick={handleClickOpen1}>
+        <Typography textAlign="center">Publish</Typography>
+      </MenuItem>
 
-        <MenuItem onClick={handleClickOpen2}> 
-            <Typography textAlign="center">Delete</Typography>
-          </MenuItem>
-      {publsihed_operations.map((operation) => 
-      
-     (
+      <MenuItem onClick={handleClickOpen2}>
+        <Typography textAlign="center">Delete</Typography>
+      </MenuItem>
+      {publsihed_operations.map((operation) => (
         <Link key={operation.id} to={operation.to} style={{ color: 'inherit', textDecoration: 'none' }}>
           <MenuItem>
             <Typography textAlign="center">{operation.id}</Typography>
           </MenuItem>
         </Link>
-        
       ))}
     </Menu>
   );
   return (
-    <Paper elevation={3} sx={{ margin: '20px 0', backgroundColor: '#e8e8ea' }}>
-         <Dialog
+    <Paper elevation={3} sx={{ margin: '20px 0', backgroundColor: 'white' }}>
+      <Dialog
         open={open2}
         onClose={handleClose2}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">
-          {"Delete Event"}
-        </DialogTitle>
+        <DialogTitle id="alert-dialog-title">{'Delete Event'}</DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            Are you sure to delete this event?
-          </DialogContentText>
+          <DialogContentText id="alert-dialog-description">Are you sure to delete this event?</DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose2}>Disagree</Button>
@@ -139,13 +132,9 @@ const EventListDraft = (props) => {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">
-          {"Publish Event"}
-        </DialogTitle>
+        <DialogTitle id="alert-dialog-title">{'Publish Event'}</DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            Are you sure to publish this event?
-          </DialogContentText>
+          <DialogContentText id="alert-dialog-description">Are you sure to publish this event?</DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose1}>Disagree</Button>
@@ -154,7 +143,6 @@ const EventListDraft = (props) => {
           </Button>
         </DialogActions>
       </Dialog>
-
 
       <div className="event-list-item">
         <div className="date">
@@ -192,6 +180,6 @@ const EventListDraft = (props) => {
 export default EventListDraft;
 EventListDraft.propTypes = {
   eventInfo: PropTypes.object,
-  re:PropTypes.bool,
+  re: PropTypes.bool,
   rerender: PropTypes.func,
 };

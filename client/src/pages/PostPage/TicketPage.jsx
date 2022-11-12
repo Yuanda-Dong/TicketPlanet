@@ -18,6 +18,21 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import Divider from '@mui/material/Divider';
 
+import styled from 'styled-components';
+
+const NormalButton = styled(Button)`
+  && {
+    background-color: #4f4cee;
+  }
+`;
+
+const OutlinedButton = styled(Button)`
+  && {
+    color: #4f4cee;
+    border-color: #4f4cee;
+  }
+`;
+
 const TicketPage = () => {
   const { token } = useSelector((state) => state.user);
 
@@ -140,9 +155,9 @@ const TicketPage = () => {
   };
 
   const publish = async () => {
-    let res = await axiosInstance.post(`/event/publish/${eventID}`,null,config);
+    let res = await axiosInstance.post(`/event/publish/${eventID}`, null, config);
     navigate('/dashboard/events');
-  }
+  };
 
   return (
     <div className="PostPage">
@@ -188,9 +203,9 @@ const TicketPage = () => {
             </div>
 
             <div>
-              <Button fullWidth variant="outlined" onClick={handleOpen}>
+              <OutlinedButton fullWidth variant="outlined" onClick={handleOpen}>
                 Add Tickets
-              </Button>
+              </OutlinedButton>
               <Modal
                 open={open}
                 onClose={handleClose}
@@ -239,23 +254,23 @@ const TicketPage = () => {
                       </Button>
                     </Grid>
                     <Grid item xs={2} mt={1}>
-                      <Button variant="contained" onClick={add}>
+                      <NormalButton variant="contained" onClick={add}>
                         Add
-                      </Button>
+                      </NormalButton>
                     </Grid>
                   </Grid>
                 </Box>
               </Modal>
             </div>
           </Grid>
-          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '20px', margin: '50px 0px' }}>
-            <Button sx={{ mt: '20px' }} variant="outlined" onClick={goHome}>
-              Cancel
-            </Button>
+          <div style={{ display: 'flex', justifyContent: 'space-between', gap: '20px', margin: '50px 0px' }}>
+            <OutlinedButton sx={{ mt: '20px' }} variant="outlined" onClick={goHome}>
+              Save & Exit
+            </OutlinedButton>
 
-            <Button sx={{ mt: '20px' }} variant="contained" onClick={fin}>
+            <NormalButton sx={{ mt: '20px' }} variant="contained" onClick={fin}>
               Save & Next
-            </Button>
+            </NormalButton>
           </div>
           <Divider />
 
@@ -269,14 +284,26 @@ const TicketPage = () => {
                 If so, click the "Create Seat Plan" button below, otherwise, submit and publish your event using
                 "Publish" button.
               </Typography>
-              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '20px', margin: '50px 0px' }}>
-                <Button sx={{ mt: '20px' }} variant="outlined" onClick={goNext}>
+              <div
+                style={{
+                  width: '100%',
+                  position: 'relative',
+                  display: 'flex',
+                  justifyContent: 'flex-end',
+                  gap: '20px',
+                  margin: '50px 0px',
+                }}
+              >
+                <OutlinedButton sx={{ mt: '20px', position: 'absolute', left: 0 }} variant="outlined" onClick={goHome}>
+                  Cancel
+                </OutlinedButton>
+                <OutlinedButton sx={{ mt: '20px' }} variant="outlined" onClick={goNext}>
                   Create Seat Plan
-                </Button>
+                </OutlinedButton>
 
-                <Button sx={{ mt: '20px' }} variant="contained" onClick={publish}>
+                <NormalButton sx={{ mt: '20px' }} variant="contained" onClick={publish}>
                   Publish
-                </Button>
+                </NormalButton>
               </div>
             </>
           )}

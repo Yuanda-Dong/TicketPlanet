@@ -23,6 +23,21 @@ import { axiosInstance } from '../../config';
 import { useNavigate } from 'react-router-dom';
 import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } from 'firebase/storage';
 import { useSelector } from 'react-redux';
+import styled from 'styled-components';
+
+const NormalButton = styled(Button)`
+  && {
+    background-color: #4f4cee;
+  }
+`;
+
+const OutlinedButton = styled(Button)`
+  && {
+    color: #4f4cee;
+    border-color: #4f4cee;
+  }
+`;
+
 const PostPage = () => {
   const { token } = useSelector((state) => state.user);
   const navigate = useNavigate();
@@ -201,6 +216,7 @@ const PostPage = () => {
     }
     if (event.end_dt < event.start_dt) {
       alert('Event must not end before it starts');
+      return;
     }
     try {
       let res = await axiosInstance.post('/event', event, config);
@@ -359,7 +375,7 @@ const PostPage = () => {
               />
             </Grid>
             <Grid item xs={12}>
-              <Button
+              <NormalButton
                 fullWidth
                 aria-describedby="Media upload"
                 variant="contained"
@@ -373,7 +389,7 @@ const PostPage = () => {
                   accept="image/*"
                   onChange={(e) => uploadFile(e.target.files[0], 'thumbnail')}
                 />
-              </Button>
+              </NormalButton>
               {progress.thumbnail < 100 ? `Uploading thumbnail: ${progress.thumbnail}%` : null}
             </Grid>
             <Grid item xs={12}>
@@ -415,7 +431,7 @@ const PostPage = () => {
               </div>
             </Grid>
             <Grid item xs={12}>
-              <Button
+              <NormalButton
                 fullWidth
                 aria-describedby="Media upload"
                 variant="contained"
@@ -431,18 +447,18 @@ const PostPage = () => {
                     uploadFile(e.target.files[0], 'gallery');
                   }}
                 />
-              </Button>
+              </NormalButton>
               {progress.gallery < 100 ? `Uploading gallery image: ${progress.gallery}%` : null}
             </Grid>
           </Grid>
           <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '20px', marginTop: '50px' }}>
-            <Button sx={{ mt: '20px' }} variant="outlined" onClick={goHome}>
+            <OutlinedButton sx={{ mt: '20px' }} variant="outlined" onClick={goHome}>
               Cancel
-            </Button>
+            </OutlinedButton>
 
-            <Button sx={{ mt: '20px' }} variant="contained" onClick={goNext}>
+            <NormalButton sx={{ mt: '20px' }} variant="contained" onClick={goNext}>
               Save & Next
-            </Button>
+            </NormalButton>
           </div>
         </Paper>
       </Container>

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Divider from '@mui/material/Divider';
 import NavBar from '../../components/Navbar/NavBar';
 import TextField from '@mui/material/TextField';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -28,6 +29,22 @@ import CardContent from '@mui/material/CardContent';
 import Modal from '@mui/material/Modal';
 import { useNavigate, useParams } from 'react-router-dom';
 import { convertFromRaw, ContentState } from 'draft-js';
+import styled from 'styled-components';
+import SeatMap from '../../components/SeatCreation/SeatMap';
+
+const NormalButton = styled(Button)`
+  && {
+    background-color: #4f4cee;
+  }
+`;
+
+const OutlinedButton = styled(Button)`
+  && {
+    color: #4f4cee;
+    border-color: #4f4cee;
+  }
+`;
+
 const EditPage = () => {
   const { token } = useSelector((state) => state.user);
   const navigate = useNavigate();
@@ -206,6 +223,7 @@ const EditPage = () => {
     }
     if (event.end_dt < event.start_dt) {
       alert('Event must not end before it starts');
+      return;
     }
     try {
       await axiosInstance.put('/event/' + params.id, event, config);
@@ -215,7 +233,7 @@ const EditPage = () => {
       // }
       // console.log("HHHH");
 
-      if(!event.published){
+      if (!event.published) {
         let res = await axiosInstance.get('/ticket/e/' + params.id);
         for (const t in res.data) {
           axiosInstance.delete('/ticket/' + res.data[t]._id, config);
@@ -230,9 +248,7 @@ const EditPage = () => {
             },
             config
           );
-      }
-
-     
+        }
       }
       navigate('/dashboard/events');
     } catch (err) {
@@ -311,6 +327,7 @@ const EditPage = () => {
     async function fetchData() {
       let res = await axiosInstance.get('/event/' + params.id);
       setEvent(res.data);
+      console.log(res.data);
       // res = await axiosInstance.get("/ticket/e/"+params.id);
       // setPrice(Math.min(...(res.data.map(e=>e.price))));
       let dbState = convertFromRaw(JSON.parse(res.data.details));
@@ -452,104 +469,116 @@ const EditPage = () => {
               />
             </Grid>
             {/* TICKETs */}
-            {event.published?<></>:(
-            <Grid item xs={12}>
-              <h3> Tickets</h3>
-              <div>
-                {ticket.tickets.map((e, idx) => (
-                  <Card key={idx} sx={{ minWidth: 250 }}>
-                    <CardContent>
-                      <Grid container spacing={1} direction="row" justifyContent="space-between" alignItems="flex-end">
-                        <Grid item xs={9}>
-                          <Typography gutterBottom variant="h5" component="div">
-                            {e.ticket_name}
-                          </Typography>
-                          <Typography variant="body2" color="text.secondary">
-                            Price: ${e.price}
-                          </Typography>
-                          <Typography variant="body2" color="text.secondary">
-                            Available quantity: {e.availability}
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={3}>
-                          <Button
-                            variant="outlined"
-                            component="label"
-                            color="error"
-                            startIcon={<DeleteIcon />}
-                            onClick={(event) => removeTicket(event, idx)}
+            {event.published ? (
+              <></>
+            ) : (
+              <>
+                <Grid item xs={12}>
+                  <h3> Tickets</h3>
+                  <div>
+                    {ticket.tickets.map((e, idx) => (
+                      <Card key={idx} sx={{ minWidth: 250 }}>
+                        <CardContent>
+                          <Grid
+                            container
+                            spacing={1}
+                            direction="row"
+                            justifyContent="space-between"
+                            alignItems="flex-end"
                           >
-                            Remove
-                          </Button>
+                            <Grid item xs={9}>
+                              <Typography gutterBottom variant="h5" component="div">
+                                {e.ticket_name}
+                              </Typography>
+                              <Typography variant="body2" color="text.secondary">
+                                Price: ${e.price}
+                              </Typography>
+                              <Typography variant="body2" color="text.secondary">
+                                Available quantity: {e.availability}
+                              </Typography>
+                            </Grid>
+                            <Grid item xs={3}>
+                              <Button
+                                variant="outlined"
+                                component="label"
+                                color="error"
+                                startIcon={<DeleteIcon />}
+                                onClick={(event) => removeTicket(event, idx)}
+                              >
+                                Remove
+                              </Button>
+                            </Grid>
+                          </Grid>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+
+                  <div>
+                    <OutlinedButton fullWidth variant="outlined" onClick={handleOpen}>
+                      Add Tickets
+                    </OutlinedButton>
+                    <Modal
+                      open={open}
+                      onClose={handleClose}
+                      aria-labelledby="modal-modal-title"
+                      aria-describedby="modal-modal-description"
+                    >
+                      <Box sx={style}>
+                        <Grid container spacing={2}>
+                          <Grid item xs={12}>
+                            <Typography align="center" id="modal-modal-title" variant="h6" component="h2">
+                              Add Tickets
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={12}>
+                            <TextField
+                              fullWidth
+                              id="standard-basic"
+                              label="Name: "
+                              variant="standard"
+                              value={ticket.t.ticket_name}
+                              margin="normal"
+                              onChange={setName}
+                            />
+                            <TextField
+                              fullWidth
+                              id="standard-basic"
+                              label="Price: "
+                              variant="standard"
+                              value={ticket.t.price}
+                              margin="normal"
+                              onChange={setPrice}
+                            />
+                            <TextField
+                              fullWidth
+                              id="standard-basic"
+                              label="Quantity: "
+                              variant="standard"
+                              value={ticket.t.availability}
+                              margin="normal"
+                              onChange={setQuantity}
+                            />
+                          </Grid>
+                          <Grid item xs={10} mt={1}>
+                            <Button variant="contained" color="error" onClick={cancel}>
+                              Cancel
+                            </Button>
+                          </Grid>
+                          <Grid item xs={2} mt={1}>
+                            <NormalButton variant="contained" onClick={add}>
+                              Add
+                            </NormalButton>
+                          </Grid>
                         </Grid>
-                      </Grid>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-              
-              <div>
-                <Button fullWidth variant="outlined" onClick={handleOpen}>
-                  Add Tickets
-                </Button>
-                <Modal
-                  open={open}
-                  onClose={handleClose}
-                  aria-labelledby="modal-modal-title"
-                  aria-describedby="modal-modal-description"
-                >
-                  <Box sx={style}>
-                    <Grid container spacing={2}>
-                      <Grid item xs={12}>
-                        <Typography align="center" id="modal-modal-title" variant="h6" component="h2">
-                          Add Tickets
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={12}>
-                        <TextField
-                          fullWidth
-                          id="standard-basic"
-                          label="Name: "
-                          variant="standard"
-                          value={ticket.t.ticket_name}
-                          margin="normal"
-                          onChange={setName}
-                        />
-                        <TextField
-                          fullWidth
-                          id="standard-basic"
-                          label="Price: "
-                          variant="standard"
-                          value={ticket.t.price}
-                          margin="normal"
-                          onChange={setPrice}
-                        />
-                        <TextField
-                          fullWidth
-                          id="standard-basic"
-                          label="Quantity: "
-                          variant="standard"
-                          value={ticket.t.availability}
-                          margin="normal"
-                          onChange={setQuantity}
-                        />
-                      </Grid>
-                      <Grid item xs={10} mt={1}>
-                        <Button variant="contained" color="error" onClick={cancel}>
-                          Cancel
-                        </Button>
-                      </Grid>
-                      <Grid item xs={2} mt={1}>
-                        <Button variant="contained" onClick={add}>
-                          Add
-                        </Button>
-                      </Grid>
-                    </Grid>
-                  </Box>
-                </Modal>
-              </div>
-            </Grid>)}
-            
+                      </Box>
+                    </Modal>
+                  </div>
+                </Grid>
+              </>
+            )}
+
+            <Divider />
             <Grid item xs={12}>
               <h3> Image Upload</h3>
             </Grid>
@@ -565,7 +594,7 @@ const EditPage = () => {
               />
             </Grid>
             <Grid item xs={12}>
-              <Button
+              <NormalButton
                 fullWidth
                 aria-describedby="Media upload"
                 variant="contained"
@@ -579,7 +608,7 @@ const EditPage = () => {
                   accept="image/*"
                   onChange={(e) => uploadFile(e.target.files[0], 'thumbnail')}
                 />
-              </Button>
+              </NormalButton>
               {progress.thumbnail < 100 ? `Uploading thumbnail: ${progress.thumbnail}%` : null}
             </Grid>
             <Grid item xs={12}>
@@ -621,7 +650,7 @@ const EditPage = () => {
               </div>
             </Grid>
             <Grid item xs={12}>
-              <Button
+              <NormalButton
                 fullWidth
                 aria-describedby="Media upload"
                 variant="contained"
@@ -637,18 +666,19 @@ const EditPage = () => {
                     uploadFile(e.target.files[0], 'gallery');
                   }}
                 />
-              </Button>
+              </NormalButton>
               {progress.gallery < 100 ? `Uploading gallery image: ${progress.gallery}%` : null}
             </Grid>
           </Grid>
-          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '20px', marginTop: '50px' }}>
-            <Button sx={{ mt: '20px' }} variant="outlined" onClick={goHome}>
-              Cancel
-            </Button>
 
-            <Button sx={{ mt: '20px' }} variant="contained" onClick={goNext}>
-              Save
-            </Button>
+          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '20px', marginTop: '50px' }}>
+            <OutlinedButton sx={{ mt: '20px' }} variant="outlined" onClick={goHome}>
+              Cancel
+            </OutlinedButton>
+
+            <NormalButton sx={{ mt: '20px' }} variant="contained" onClick={goNext}>
+              Save & Next
+            </NormalButton>
           </div>
         </Paper>
       </Container>
