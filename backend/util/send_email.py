@@ -184,8 +184,7 @@ cancel_book_template = '''
 
 '''
 
-
-async def event_create_template(request: Request, event_id: str, host_id: str):
+async def event_publish(request: Request, event_id: str, host_id: str):
     # sending email to user while the event has been published
     # get event info
     event = request.app.database["events"].find_one({"_id": event_id})
@@ -195,7 +194,7 @@ async def event_create_template(request: Request, event_id: str, host_id: str):
     for follower in host['follower']:
         follower_email = request.app.database["users"].find_one({"_id": follower})["email"]
         recipient.append(follower_email)
-    content = event_update_template.format(event['title'], event_id)
+    content = event_publish_template.format(event['title'], event_id)
 
     message = MessageSchema(
         subject="Event update notice",
@@ -208,7 +207,7 @@ async def event_create_template(request: Request, event_id: str, host_id: str):
     print(result)
 
 
-event_create_template = '''
+event_publish_template = '''
 
 <html lang="en">
 <head>
