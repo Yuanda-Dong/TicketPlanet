@@ -62,7 +62,7 @@ def list_unpublished_events(request: Request):
     return events
 
 @router.post("/publish/{id}", response_description="Publish Event", response_model=EventInDB)
-def publish_event(id: str, request: Request, user:User=Depends(get_current_user)):
+async def publish_event(id: str, request: Request, user:User=Depends(get_current_user)):
     
 
     if (
@@ -82,7 +82,6 @@ def publish_event(id: str, request: Request, user:User=Depends(get_current_user)
     )
     # send email when the event has been published
     await event_publish(request, existing_event['_id'], user["_id"])
-
     return updated_event
     
     
