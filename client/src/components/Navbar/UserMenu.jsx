@@ -10,8 +10,25 @@ import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { logout } from '../../redux/userSlice';
+import LogoutdIcon from '@mui/icons-material/Logout';
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
-const settings = ['My Tickets', 'Dashboard', 'Account', 'Logout'];
+const settings = [
+  <div style={{ display: 'flex', alignItems: 'center', gap: '3px', color: '#5d637c' }}>
+    <ShoppingCartIcon /> <span>My Tickets</span>
+  </div>,
+  <div style={{ display: 'flex', alignItems: 'center', gap: '3px', color: '#5d637c' }}>
+    <DashboardIcon /> <span>Dashboard</span>
+  </div>,
+  <div style={{ display: 'flex', alignItems: 'center', gap: '3px', color: '#5d637c' }}>
+    <ManageAccountsIcon /> <span>Account</span>
+  </div>,
+  <div style={{ display: 'flex', alignItems: 'center', gap: '3px', color: '#5d637c' }}>
+    <LogoutdIcon /> <span>Logout</span>
+  </div>,
+];
 
 const UserMenu = () => {
   const dispatch = useDispatch();
@@ -61,7 +78,7 @@ const UserMenu = () => {
         </IconButton>
       </Tooltip>
       <Menu
-        sx={{ mt: '45px' }}
+        sx={{ mt: '27px' }}
         id="menu-appbar"
         anchorEl={anchorElUser}
         anchorOrigin={{

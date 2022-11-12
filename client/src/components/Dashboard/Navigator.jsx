@@ -9,8 +9,8 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import PeopleIcon from '@mui/icons-material/People';
-import DnsRoundedIcon from '@mui/icons-material/DnsRounded';
-import PermMediaOutlinedIcon from '@mui/icons-material/PhotoSizeSelectActual';
+import LocalActivityIcon from '@mui/icons-material/LocalActivity';
+import InsertChartIcon from '@mui/icons-material/InsertChart';
 import { useLocation } from 'react-router-dom';
 
 import './Navigator.css';
@@ -21,11 +21,11 @@ const categories = [
     children: [
       {
         id: 'My Events',
-        icon: <PeopleIcon />,
+        icon: <LocalActivityIcon />,
         to: 'events',
       },
       // { id: 'Orders', icon: <DnsRoundedIcon />, to: 'orders' },
-      { id: 'Reports', icon: <PermMediaOutlinedIcon />, to: 'reports' },
+      { id: 'Reports', icon: <InsertChartIcon />, to: 'reports' },
     ],
   },
   // {
