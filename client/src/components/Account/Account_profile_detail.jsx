@@ -25,9 +25,9 @@ const Button = styled(ButtonMui)`
   && {
     color: white;
     padding: 7px 13px;
-    background-color: #4968a3;
+    background-color: #4f4cee;
     :hover {
-      background-color: rgba(73, 104, 163, 0.7);
+      background-color: rgba(100, 100, 255, 0.82);
     }
   }
 `;

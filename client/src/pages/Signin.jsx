@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState } from 'react';
+import {useState} from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -10,22 +10,22 @@ import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import ForgotPassword from '../components/ForgotPassword';
-import { useNavigate } from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 import NavBar from '../components/Navbar/NavBar';
 import GoogleIcon from '@mui/icons-material/Google';
 // firebase google auth
-import { auth, provider } from '../firebase';
-import { signInWithPopup } from 'firebase/auth';
+import {auth, provider} from '../firebase';
+import {signInWithPopup} from 'firebase/auth';
 import GoogleSignupDialog from '../components/SignUp/GoogleSignupDialog';
 // axios baseUrl
-import { axiosInstance } from '../config';
+import {axiosInstance} from '../config';
 // redux import
-import { useDispatch } from 'react-redux';
-import { failedLogin, startLogin, storeToken, successfulLogin } from '../redux/userSlice';
+import {useDispatch} from 'react-redux';
+import {failedLogin, startLogin, storeToken, successfulLogin} from '../redux/userSlice';
 import background from '../assets/party.png';
-import { Divider, FormHelperText, IconButton, InputAdornment, OutlinedInput } from '@mui/material';
+import {Divider, FormHelperText, IconButton, InputAdornment, OutlinedInput} from '@mui/material';
 import InputLabel from '@mui/material/InputLabel';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
+import {Visibility, VisibilityOff} from '@mui/icons-material';
 import FormControl from '@mui/material/FormControl';
 
 export default function SignInSide() {
@@ -158,9 +158,9 @@ export default function SignInSide() {
   };
 
   return (
-    <Grid container component="main" style={{ height: '100vh' }}>
-      <div style={{ position: 'absolute', width: '100vw' }}>
-        <NavBar />
+    <Grid container component="main" style={{height: '130vh'}}>
+      <div style={{position: 'absolute', width: '100vw'}}>
+        <NavBar/>
       </div>
       <Grid
         item
