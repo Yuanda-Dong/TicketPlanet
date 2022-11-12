@@ -3,10 +3,10 @@
   background-repeat: no-repeat;
   background-size: cover; */
   width: 100vw;
-  /* height: 70px; */
+  min-height: 100vh;
 }
 
-.landing_main_container .MuiTabs-root {
+.landing_main_container .MuiTabs-root .list {
   width: 100%;
 }
 /* .landing_main_container .MuiTabs-root .MuiTabs-scroller {
@@ -19,23 +19,26 @@
   color: #3c4b69;
 }
 
-.landing_main_container .MuiTabs-root .css-1aquho2-MuiTabs-indicator {
+.landing_main_container .MuiTabs-root .MuiTabs-indicator {
   background-color: #3c4b69;
 }
 
-.landing_main_container > .MuiTabPanel-root {
+.landing_main_container > .upcoming_event {
   width: 80%;
   margin: auto;
   margin-top: 20px;
+  min-height: 100%;
   /* display: flex; */
   /* flex-direction: column; */
-  align-items: center;
 
   /* background-color: #576f9d;
   border-radius: 5px; */
 }
 
 .landing_main_container .MuiTabPanel-root .events-container {
+  /* display: grid;
+  gap: 20px 20px;
+  grid-template-columns: auto auto auto auto; */
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;

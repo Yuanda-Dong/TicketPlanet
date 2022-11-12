@@ -11,6 +11,7 @@ import { axiosInstance } from '../../config';
 // import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import EventListDraft from '../EventList/EventListDraft';
+import './Event.css';
 
 const Events = () => {
   const { currentUser } = useSelector((state) => state.user);
@@ -74,7 +75,7 @@ const Events = () => {
       <h1>Events</h1>
 
       <TabContext value={value}>
-        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+        <Box className="event_dashboard" sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <TabList onChange={handleChange} aria-label="lab API tabs example">
             <Tab label="Published Events" value="1" />
             <Tab label="Draft Events" value="2" />

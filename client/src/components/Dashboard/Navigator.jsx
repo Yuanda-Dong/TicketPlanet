@@ -24,7 +24,7 @@ const categories = [
         icon: <PeopleIcon />,
         to: 'events',
       },
-      { id: 'Orders', icon: <DnsRoundedIcon />, to: 'orders' },
+      // { id: 'Orders', icon: <DnsRoundedIcon />, to: 'orders' },
       { id: 'Reports', icon: <PermMediaOutlinedIcon />, to: 'reports' },
     ],
   },
