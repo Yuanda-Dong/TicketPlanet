@@ -70,6 +70,8 @@ async def event_update_notice(request: Request, event_id: str):
     for user in users:
         user_email = request.app.database["users"].find_one({"_id": user["user_id"]})["email"]
         recipient.append(user_email)
+    if recipient == []:
+      return 
     content = event_update_template.format(updated_event['title'], event_id)
 
     message = MessageSchema(
