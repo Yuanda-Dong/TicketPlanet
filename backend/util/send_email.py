@@ -183,3 +183,50 @@ cancel_book_template = '''
 </html>
 
 '''
+
+
+async def event_create_template(request: Request, event_id: str, host_id: str):
+    # sending email to user while the event has been published
+    # get event info
+    event = request.app.database["events"].find_one({"_id": event_id})
+    # get follower email list
+    recipient = []
+    host = request.app.database["user"].find_one({"_id": host_id})
+    for follower in host['follower']:
+        follower_email = request.app.database["users"].find_one({"_id": follower})["email"]
+        recipient.append(follower_email)
+    content = event_update_template.format(event['title'], event_id)
+
+    message = MessageSchema(
+        subject="Event update notice",
+        recipients=recipient,
+        html=content,
+        subtype="html"
+    )
+    fm = FastMail(conf)
+    result = await fm.send_message(message)
+    print(result)
+
+
+event_create_template = '''
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>new event has been published!</title>
+</head>
+<body>
+  <div>
+    <h1>Event {0:} has been published</h1>
+    <h1>You can click the link below to check the latest information</h1>
+    <a style="display: block; margin: 0 auto; border: none; background-color: rgba(255, 214, 10, 1); color: white; width: 80px; line-height: 24px; padding: 10px; font-size: 24px; border-radius: 10px; cursor: pointer; text-decoration: none;" 
+      href="http://localhost:3000/event/{1:}" 
+      target="_blank"
+    >
+        link
+    </a>
+  </div>
+</body>
+</html>
+
+'''
