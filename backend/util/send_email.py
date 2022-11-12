@@ -132,7 +132,7 @@ buy_template = '''
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>event update</title>
+    <title>book event</title>
 </head>
 <body>
   <div>
