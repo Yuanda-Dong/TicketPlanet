@@ -60,7 +60,9 @@ const EventDetail = (props) => {
 
   const follow = async ()=> {
     try {
+      console.log(eventInfo.host_id)
       let res = await axiosInstance.put(`/user/follow/${eventInfo.host_id}`,null, config);
+      // console.log(eventInfo)
       handleClickOpen();
     } catch {
       alert("You can not follow yourself");

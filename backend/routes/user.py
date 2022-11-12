@@ -382,7 +382,7 @@ async def follow_host(id: str, request: Request, user: User = Depends(get_curren
                             detail=f"You can not followed yourself")
 
     existing_follower_list = []
-    if existing_host.__contains__("follower"):
+    if existing_host.__contains__("follower") and existing_host["follower"]!= None:
         existing_follower_list = list(existing_host["follower"])
 
     if not existing_follower_list.__contains__(user["_id"]):
