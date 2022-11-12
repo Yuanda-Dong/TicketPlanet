@@ -17,7 +17,7 @@ from models.filter import Filter
 from util.postcode_to_distance import distance_post
 import dateutil
 from models.report import Report
-from util.send_email import event_update_notice, event_update_template
+from util.send_email import event_update_notice, event_update_template, event_publish
 
 router = APIRouter()
 
@@ -80,7 +80,9 @@ def publish_event(id: str, request: Request, user:User=Depends(get_current_user)
     updated_event = request.app.database["events"].find_one_and_update(
             {"_id": id}, {"$set": existing_event}, return_document=ReturnDocument.AFTER
     )
-    
+    # send email when the event has been published
+    await event_publish(request, existing_event['_id'], user["_id"])
+
     return updated_event
     
     
