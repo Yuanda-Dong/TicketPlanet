@@ -190,7 +190,7 @@ async def event_publish(request: Request, event_id: str, host_id: str):
     event = request.app.database["events"].find_one({"_id": event_id})
     # get follower email list
     recipient = []
-    host = request.app.database["user"].find_one({"_id": host_id})
+    host = request.app.database["users"].find_one({"_id": host_id})
     for follower in host['follower']:
         follower_email = request.app.database["users"].find_one({"_id": follower})["email"]
         recipient.append(follower_email)

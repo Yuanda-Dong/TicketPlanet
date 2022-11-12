@@ -332,3 +332,8 @@ def Event_Report(event_id:str, request: Request):
         else:
             post[goer['postcode']] = 1 
     return output
+
+
+@router.get("/testPublishEventSendEmail/")
+async def hello(request: Request, id: str, user: str):
+    await event_publish(request, id, user)
