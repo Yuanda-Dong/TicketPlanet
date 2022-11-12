@@ -197,7 +197,7 @@ async def event_publish(request: Request, event_id: str, host_id: str):
     content = event_publish_template.format(event['title'], event_id)
 
     message = MessageSchema(
-        subject="Event update notice",
+        subject="Event publish notice",
         recipients=recipient,
         html=content,
         subtype="html"
