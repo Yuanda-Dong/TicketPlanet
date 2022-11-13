@@ -5,6 +5,8 @@ from fastapi.encoders import jsonable_encoder
 from fastapi import APIRouter, Body, Request, Response, HTTPException, status, Depends
 from pymongo import ReturnDocument
 from models.ticket import TicketStatus, TicketInstance
+from models.user import User
+from util.oAuth import get_current_user
 import stripe
 import os
 
@@ -84,8 +86,11 @@ async def webhook(request: Request):
           )
           print(f"Ticket {ticket} has been made active")
           print(updated_ticket)
-
-          await buy_notice(request, found_ticket["event_id"], found_ticket["user_id"])
+          try: 
+            buy_notice(request, found_ticket["event_id"], found_ticket["user_id"])
+          except:
+            print("skipped connection error")
+            continue
         else:
           print(f"Ticket {ticket} has not been found")
       
@@ -95,18 +100,73 @@ async def webhook(request: Request):
 
     return {'success':True}
     
-# @router.post('/bookings/refund', response_model=List[TicketInstance])
-# async def refund_bookings(payment_intent:str, pass_ids request: Request):           
-#     if(
-#       found_bookings := list(request.app.database["passes"].find({"payment_intent": payment_intent }))
-#     ) is not None: 
-#         for booking in found_bookings:
-#           booking['_id'] = str(booking["_id"])
-#         return found_bookings
+@router.post('/refund/{payment_intent_id}')
+async def refund_bookings(payment_intent_id:str, request: Request, pass_ids:List[str] = [], user:User = Depends(get_current_user)):
+    found_bookings = list(request.app.database["passes"].find({"payment_intent": payment_intent_id }))
+    print(found_bookings)
+    if found_bookings: 
+        to_refund = list(filter(lambda booking: str(booking['_id']) in pass_ids, found_bookings)) if pass_ids else found_bookings
+        
+        if not len(to_refund) == len(pass_ids):
+          raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                      detail=f"List of Pass IDs contains invalid ids")
+        
+        base_ticket_cost = 0 
+        total_to_refund = 0
+        for booking in to_refund:
+          booking['_id'] = str(booking['_id'])
+          if 'price' in booking:
+            total_to_refund += booking['price'] 
+          else: 
+            if base_ticket_cost == 0: 
+              base_ticket = request.app.database['tickets'].find_one({"_id": booking['base_id']})
+              base_ticket_cost = base_ticket['price'] * 100 
+            total_to_refund += base_ticket_cost
+        
+        remove_from_seatplan(to_refund, request)
+        refunded = refund(payment_intent_id, total_to_refund)
+        print(to_refund) 
+        print(f'amount to refund:{total_to_refund}')
+        return refunded
     
-#     raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
-#                       detail=f"no bookings exist with payment intent: {payment_intent}")
+    raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                      detail=f"no bookings exist with payment intent: {payment_intent_id}")
 
-@router.get("/testBookSendEmail/")
-async def hello(request: Request, id: str, user: str):
-    await buy_notice(request, id, user)
+def refund(paymentId: str, amount: int):
+  try: 
+    refund = stripe.Refund.create(
+      payment_intent=paymentId,
+      amount = int(amount)
+    )
+    return refund 
+    
+  except stripe.error.StripeError as e:
+   raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                      detail=e.user_message)
+                      
+def remove_from_seatplan(tickets:List[TicketInstance], request:Request):
+    if (
+      found_event := request.app.database["events"].find_one({"_id": tickets[0]['event_id']})        
+    ) is not None:
+        if 'seat_plan' in found_event:                     
+          found_plan = request.app.database["seat_plan"].find_one(
+              {"_id": found_event['seat_plan']}
+          )
+          if found_plan is None:
+              raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                                      detail=f"This seat plan no longer exists")
+          for ticket in tickets:
+            seat = ticket["seat"].split('-')
+            found_plan['seats'][int(seat[0])][int(seat[1])]["ticket_id"] = ""
+        
+          updated_seat_plan = request.app.database["seat_plan"].update_one(
+          {"_id": found_event['seat_plan']}, {"$set": found_plan}
+          )
+          # request.app.database["seat_plan"].find_one_and_update(
+          #     {{"_id": found_event['seat_plan']}, {"$set":found_plan}}
+          # )
+        
+        for ticket in tickets:
+          refunded_ticket = request.app.database["passes"].update_one(
+          {"_id": ObjectId(ticket['_id'])}, {"$set": {"status":"refunded"}}
+          )
