@@ -104,8 +104,14 @@ async def webhook(request: Request):
 @router.post('/refund/{payment_intent_id}')
 async def refund_bookings(payment_intent_id:str, request: Request, pass_ids:List[str] = [], user:User = Depends(get_current_user)):
     found_bookings = list(request.app.database["passes"].find({"payment_intent": payment_intent_id }))
+    
+    
     print(found_bookings)
     if found_bookings: 
+        if  not user['_id'] ==  found_bookings[0]['user_id']:
+          raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+            detail=f"Only the user who purchased this tickets can request refunds")
+            
         to_refund = list(filter(lambda booking: str(booking['_id']) in pass_ids, found_bookings)) if pass_ids else found_bookings
         
         if not len(to_refund) == len(pass_ids):
@@ -163,11 +169,7 @@ def remove_from_seatplan(tickets:List[TicketInstance], request:Request):
           updated_seat_plan = request.app.database["seat_plan"].update_one(
           {"_id": found_event['seat_plan']}, {"$set": found_plan}
           )
-          # request.app.database["seat_plan"].find_one_and_update(
-          #     {{"_id": found_event['seat_plan']}, {"$set":found_plan}}
-          # )
-        
-        
+                
         base_ticket = request.app.database['tickets'].find_one({"_id": tickets[0]['base_id']})
         
         request.app.database['tickets'].update_one({"_id": tickets[0]['base_id']}, {"$set":{"availability", base_ticket['availability'] + len(tickets)}})
