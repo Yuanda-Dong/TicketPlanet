@@ -112,9 +112,13 @@ async def refund_bookings(payment_intent_id:str, request: Request, pass_ids:List
           raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
             detail=f"Only the user who purchased this tickets can request refunds")
             
-        to_refund = list(filter(lambda booking: str(booking['_id']) in pass_ids, found_bookings)) if pass_ids else found_bookings
+        to_refund = list(filter(lambda booking: str(booking['_id']) in pass_ids and booking['status'] == 'active', found_bookings)) if pass_ids else list(filter(lambda booking: booking['status'] == 'active',found_bookings))
         
-        if not len(to_refund) == len(pass_ids):
+        if not to_refund:
+          raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+              detail=f"No applicable tickets to be refunded ")
+          
+        if len(pass_ids) > 0 and not len(to_refund) == len(pass_ids):
           raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
                       detail=f"List of Pass IDs contains invalid ids")
         
@@ -172,7 +176,7 @@ def remove_from_seatplan(tickets:List[TicketInstance], request:Request):
                 
         base_ticket = request.app.database['tickets'].find_one({"_id": tickets[0]['base_id']})
         
-        request.app.database['tickets'].update_one({"_id": tickets[0]['base_id']}, {"$set":{"availability", base_ticket['availability'] + len(tickets)}})
+        request.app.database['tickets'].update_one({"_id": tickets[0]['base_id']}, {"$set":{"availability": base_ticket['availability'] + len(tickets)}})
         
         for ticket in tickets:
           refunded_ticket = request.app.database["passes"].update_one(
