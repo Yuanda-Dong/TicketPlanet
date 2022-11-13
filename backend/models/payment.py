@@ -68,12 +68,12 @@ class ProductData(BaseModel):
 class PriceData(BaseModel):
     currency: str = 'aud'
     product_data: ProductData
-    unit_amount: int #remember this is in cents
-    @validator('unit_amount')
-    def price_floor(cls, v):
-        if v < 20:
-            raise ValueError('minimum price is 20c')
-        return v
+    # unit_amount: int #remember this is in cents
+    # @validator('unit_amount')
+    # def price_floor(cls, v):
+    #     if v < 20:
+    #         raise ValueError('minimum price is 20c')
+    #     return v
     class Config:
         allow_population_by_field_name = True
         schema_extra = {
@@ -128,7 +128,7 @@ class TicketPaymentSession(BaseModel):
                         'quantity': 3,
                         'price_data': {
                             'currency': 'aud',
-                            'unit_amount': 1500,
+                            # 'unit_amount': 1500,
                             'product_data':{
                                 'name': 'General Admission',
                                 'description': "The Wiggles are the premier Australian Rockband"

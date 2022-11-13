@@ -102,9 +102,11 @@ def buy_ticket(id: str, payment: TicketPaymentSession, request: Request, user: U
         
         if found_ticket["availability"] >= payment.line_items[0].quantity:
             updated_ticket = adjust_ticket_availability(id, found_ticket, -payment.line_items[0].quantity, request)
-            physical_tickets = create_physical_tickets(id, found_ticket['event_id'], user['_id'],request, payment.line_items[0].quantity, payment.metadata.seats)
+            physical_tickets = create_physical_tickets(id, found_ticket['event_id'], user['_id'],request, int(found_ticket['price'] * 100), payment.line_items[0].quantity, payment.metadata.seats)
             #create physical ticket ids
             payment.metadata.seat_ids = physical_tickets
+            line_items = jsonable_encoder(payment.line_items)
+            line_items[0]['price_data']["unit_amount"] = int(found_ticket['price'] * 100)
             
             #payment intent
             try: 
@@ -113,7 +115,7 @@ def buy_ticket(id: str, payment: TicketPaymentSession, request: Request, user: U
                     success_url = payment.success_url,
                     mode=payment.mode,
                     customer_email = payment.customer_email,
-                    line_items = jsonable_encoder(payment.line_items),
+                    line_items = line_items,
                     payment_intent_data={
                         'receipt_email': payment.customer_email,
                         'setup_future_usage':'on_session'
@@ -144,7 +146,7 @@ def adjust_ticket_availability(id: str, ticket:TicketInDB, quantity:int, request
         )
         return updated_ticket
         
-def create_physical_tickets(baseticket:str, event_id: str, userId: str, request:Request, quantity:int = 0, seats:Optional[List[Tuple[int,int]]]=[]):
+def create_physical_tickets(baseticket:str, event_id: str, userId: str, request:Request, price: int,  quantity:int = 0, seats:Optional[List[Tuple[int,int]]]=[]):
     
     event = request.app.database["events"].find_one({"_id": event_id })
     
@@ -182,7 +184,8 @@ def create_physical_tickets(baseticket:str, event_id: str, userId: str, request:
                 'seat': str(seat[0]) + "-" + str(seat[1]),
                 'user_id': userId, 
                 'status': TicketStatus.deactive,
-                'event_id': event_id
+                'event_id': event_id,
+                'price': price
             }
             new_ticket = request.app.database["passes"].insert_one(new_ticket)
             ticket_ids.append(str(new_ticket.inserted_id))
@@ -199,7 +202,8 @@ def create_physical_tickets(baseticket:str, event_id: str, userId: str, request:
                 'seat': "No Assigned Seat",
                 'user_id': userId, 
                 'status': TicketStatus.deactive,
-                'event_id': event_id
+                'event_id': event_id,
+                'price': price
             }
             new_ticket = request.app.database["passes"].insert_one(new_ticket)
             ticket_ids.append(str(new_ticket.inserted_id))

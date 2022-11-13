@@ -45,7 +45,7 @@ Our backend is implemented on [Railway](https://railway.app) using a [FastAPI](h
 ### Testing Stripe & Stripe Webhooks Locally
 - Start up the backend server on (http://localhost:8000/)
 - Download stripe CLI from (https://github.com/stripe/stripe-cli)
-- Forward events to the webhook using `stripe listen --foward-to localhost:8000`
+- Forward events to the webhook using `stripe listen --foward-to localhost:8000/payment/webhook`
 - Update `backend/routes/payment.py` with system generated webhook password 
 
 #### Simulating Events
