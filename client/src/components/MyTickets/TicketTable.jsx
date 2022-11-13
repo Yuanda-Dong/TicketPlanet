@@ -39,6 +39,7 @@ import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import { format } from 'date-fns';
 import { Comment_Form_Popup } from '../Comment/Comments';
+import { axiosInstance } from '../../config';
 
 const getStatusLabel = (ticketOrderStatus) => {
   const map = {
@@ -104,6 +105,11 @@ function TicketRow(props) {
     setReviewOpen(true);
   };
 
+  const handleCancelBooking = async (payment_intent) => {
+    payment_intent && (await axiosInstance.post(`/payment/refund/${payment_intent}`));
+    setDeleteOpen(false);
+  };
+
   return (
     <React.Fragment>
       <TableRow hover key={ticketRow.id}>
@@ -113,8 +119,13 @@ function TicketRow(props) {
           </IconButton>
         </TableCell>
         <TableCell>
+          <Typography sx={{ maxWidth: '150px' }} variant="body1" fontWeight="bold" color="#223354" gutterBottom noWrap>
+            {ticketRow.title}
+          </Typography>
+        </TableCell>
+        <TableCell>
           <Typography variant="body1" fontWeight="bold" color="#223354" gutterBottom noWrap>
-            {ticketRow.ticket_name}
+            {ticketRow.category}
           </Typography>
         </TableCell>
         <TableCell>
@@ -125,79 +136,80 @@ function TicketRow(props) {
             {format(new Date(ticketRow.end_dt), 'dd/MM/yyyy')}
           </Typography>
         </TableCell>
+
+        <TableCell>
+          <Typography sx={{ maxWidth: '150px' }} variant="body1" fontWeight="bold" color="#223354" gutterBottom noWrap>
+            {ticketRow.address}
+          </Typography>
+        </TableCell>
+
+        <TableCell align="right">
+          <Typography variant="body1" fontWeight="bold" color="#223354" gutterBottom noWrap>
+            {ticketRow.postcode}
+          </Typography>
+        </TableCell>
+
         <TableCell align="right">
           <Typography variant="body1" fontWeight="bold" color="#223354" gutterBottom noWrap>
             {ticketRow.amount}
           </Typography>
         </TableCell>
-        <TableCell align="right">
-          <Typography variant="body1" fontWeight="bold" color="#223354" gutterBottom noWrap>
-            {ticketRow.price}
-          </Typography>
-        </TableCell>
-        <TableCell align="right">{getStatusLabel(ticketRow.status)}</TableCell>
-        <TableCell align="right">
-          <Grid container spacing={1}>
-            <Grid item xs={6}>
-              <Tooltip title="Event Detail" arrow>
-                <IconButton
-                  sx={{ '&:hover': { background: alpha('#5569ff', 0.1) }, color: '#5569ff' }}
-                  color="inherit"
-                  size="small"
-                  onClick={handleClickEventDetail}
-                >
-                  <DetailsTwoToneIcon fontSize="small" />
-                </IconButton>
-              </Tooltip>
-            </Grid>
 
-            {/*{ticketRow.status === 'pending' ? (*/}
-            {/*  <Grid item xs={6}>*/}
-            {/*    <Tooltip title="Cancel booking" arrow>*/}
-            {/*      <IconButton*/}
-            {/*        sx={{ '&:hover': { background: alpha('#FF1943', 0.1) }, color: '#FF1943' }}*/}
-            {/*        color="inherit"*/}
-            {/*        size="small"*/}
-            {/*      >*/}
-            {/*        <DeleteTwoToneIcon fontSize="small" />*/}
-            {/*      </IconButton>*/}
-            {/*    </Tooltip>*/}
-            {/*  </Grid>*/}
-            {/*) : (*/}
+        <TableCell align="right">
+          <Tooltip title="Event Detail" arrow>
+            <IconButton
+              sx={{ '&:hover': { background: alpha('#5569ff', 0.1) }, color: '#5569ff' }}
+              color="inherit"
+              size="small"
+              onClick={handleClickEventDetail}
+            >
+              <DetailsTwoToneIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
 
-            <Grid item xs={6}>
-              <Tooltip title="Cancel booking" arrow>
-                <IconButton
-                  sx={{ '&:hover': { background: alpha('#FF1943', 0.1) }, color: '#FF1943' }}
-                  color="inherit"
-                  size="small"
-                  onClick={handleClickDeleteOpen}
-                >
-                  <DeleteTwoToneIcon fontSize="small" />
-                </IconButton>
-              </Tooltip>
-              <Dialog
-                open={DeleteOpen}
-                onClose={handleDeleteClose}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-              >
-                <DialogTitle id="alert-dialog-title">{'Delete Ticket'}</DialogTitle>
-                <DialogContent>
-                  <DialogContentText id="alert-dialog-description">
-                    Are you sure you need to delete this ticket record?
-                  </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                  <Button onClick={handleDeleteClose}>Disagree</Button>
-                  <Button onClick={handleDeleteClose} autoFocus>
-                    Agree
-                  </Button>
-                </DialogActions>
-              </Dialog>
-            </Grid>
-            {/* )} */}
-          </Grid>
+          {/*{ticketRow.status === 'pending' ? (*/}
+          {/*  <Grid item xs={6}>*/}
+          {/*    <Tooltip title="Cancel booking" arrow>*/}
+          {/*      <IconButton*/}
+          {/*        sx={{ '&:hover': { background: alpha('#FF1943', 0.1) }, color: '#FF1943' }}*/}
+          {/*        color="inherit"*/}
+          {/*        size="small"*/}
+          {/*      >*/}
+          {/*        <DeleteTwoToneIcon fontSize="small" />*/}
+          {/*      </IconButton>*/}
+          {/*    </Tooltip>*/}
+          {/*  </Grid>*/}
+          {/*) : (*/}
+
+          <Tooltip title="Cancel booking" arrow>
+            <IconButton
+              sx={{ '&:hover': { background: alpha('#FF1943', 0.1) }, color: '#FF1943' }}
+              color="inherit"
+              size="small"
+              onClick={handleClickDeleteOpen}
+            >
+              <DeleteTwoToneIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
+          <Dialog
+            open={DeleteOpen}
+            onClose={handleDeleteClose}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title">{'Cancel Booking'}</DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                Are you sure you need to cancel booking for this event?
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleDeleteClose}>Disagree</Button>
+              <Button onClick={handleCancelBooking} autoFocus>
+                Agree
+              </Button>
+            </DialogActions>
+          </Dialog>
         </TableCell>
         <TableCell align="right">
           {
@@ -251,40 +263,37 @@ function TicketRow(props) {
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell>EVENT TITLE</TableCell>
-                    <TableCell>CATEGORY</TableCell>
-                    <TableCell>ADDRESS</TableCell>
-                    <TableCell align={'right'}>POSTCODE</TableCell>
-                    <TableCell align={'right'}>SEAT</TableCell>
+                    <TableCell>TICKET NAME</TableCell>
+                    <TableCell>PRICE($)</TableCell>
+                    <TableCell>STATUS</TableCell>
+                    <TableCell>SEAT</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {/* {ticketRow.detail.map((detail, idx) => (
+                  {ticketRow.details.map((detail, idx) => (
                     <TableRow key={idx}>
                       <TableCell>
                         <Typography variant="body1" fontWeight="bold" color gutterBottom noWrap>
-                          {detail.title}
+                          {detail.ticket_name}
                         </Typography>
                       </TableCell>
-                      <TableCell>{detail.category}</TableCell>
-                      <TableCell>{detail.address}</TableCell>
-                      <TableCell align={'right'}>{detail.postcode}</TableCell>
-                      <TableCell align={'right'}>{detail.section_number}</TableCell>
-                      <TableCell align={'right'}>{detail.seat_number}</TableCell>
+                      <TableCell>{detail.price}</TableCell>
+                      <TableCell>{getStatusLabel(detail.status)}</TableCell>
+                      <TableCell>{detail.seat_number}</TableCell>
                     </TableRow>
-                  ))} */}
+                  ))}
 
-                  <TableRow>
+                  {/* <TableRow>
                     <TableCell>
                       <Typography variant="body1" fontWeight="bold" color gutterBottom noWrap>
-                        {ticketRow.title}
+                        {ticketRow.}
                       </Typography>
                     </TableCell>
                     <TableCell>{ticketRow.category}</TableCell>
                     <TableCell>{ticketRow.address}</TableCell>
                     <TableCell align={'right'}>{ticketRow.postcode}</TableCell>
                     <TableCell align={'right'}>{ticketRow.seat_number}</TableCell>
-                  </TableRow>
+                  </TableRow> */}
                 </TableBody>
               </Table>
             </Box>
@@ -386,11 +395,12 @@ const TicketTable = ({ ticketOrders }) => {
           <TableHead>
             <TableRow>
               <TableCell />
-              <TableCell>TICKET NAME</TableCell>
+              <TableCell>EVENT TITLE</TableCell>
+              <TableCell>EVENT CATEGORY</TableCell>
               <TableCell>TIME(START/END)</TableCell>
+              <TableCell align="center">ADDRESS</TableCell>
+              <TableCell align="right">POSTCODE</TableCell>
               <TableCell align="right">AMOUNT</TableCell>
-              <TableCell align="right">PRICE($)</TableCell>
-              <TableCell align="right">STATUS</TableCell>
               <TableCell align="right">TICKET ACTIONS</TableCell>
               <TableCell align="right">REVIEW</TableCell>
             </TableRow>

@@ -25,6 +25,7 @@ const TicketOrders = () => {
   const getEvents = async (eventIds) => {
     const responses = await Promise.all(eventIds.map((id) => axiosInstance.get(`/event/${id}`)));
     return responses.map(({ data }) => data);
+    // return [...new Set(res)];
     // setAllInfo((prev) => ({ ...prev, eventDetails: data }));
   };
 
@@ -32,41 +33,76 @@ const TicketOrders = () => {
 
   const [Tickets, setTickets] = useState();
 
-  const combineInfo = (seatInfo, ticketInfo, eventInfo) => {
-    const { _id, status, seat, event_id, ...otherSeatInfo } = seatInfo;
-    const { ticket_name, price, ...otherTicketInfo } = ticketInfo;
-    const { title, category, address, postcode, start_dt, end_dt, ...otherEventInfo } = eventInfo;
+  // const combineInfo = (seatInfo, ticketInfo, eventInfo) => {
+  //   const { _id, status, seat, event_id, ...otherSeatInfo } = seatInfo;
+  //   const { ticket_name, price, ...otherTicketInfo } = ticketInfo;
+  //   const { title, category, address, postcode, start_dt, end_dt, ...otherEventInfo } = eventInfo;
+  //   return {
+  //     id: _id,
+  //     event_id,
+  //     ticket_name,
+  //     start_dt,
+  //     end_dt,
+  //     price,
+  //     amount: 1,
+  //     status,
+  //     title,
+  //     category,
+  //     address,
+  //     postcode,
+  //     seat_number: seat,
+  //   };
+  // };
+
+  const combineInfo = (eventInfo, tickets, seats) => {
+    const matching_seats = seats.filter((seat) => seat.event_id === eventInfo._id);
+    const { _id, title, category, address, postcode, start_dt, end_dt, ...otherEventInfo } = eventInfo;
+
+    let details = matching_seats.map((seatInfo) => {
+      const { _id, status, seat, ...otherSeatInfo } = seatInfo;
+      const ticketInfo = tickets.find((ticket) => ticket._id === seatInfo.base_id);
+      const { ticket_name, price, ...otherTicketInfo } = ticketInfo;
+      return {
+        id: _id,
+        ticket_name,
+        price,
+        status,
+        seat_number: seat,
+      };
+    });
+
     return {
-      id: _id,
-      event_id,
-      ticket_name,
-      start_dt,
-      end_dt,
-      price,
-      amount: 1,
-      status,
+      event_id: _id,
       title,
       category,
+      start_dt,
+      end_dt,
       address,
       postcode,
-      seat_number: seat,
+      amount: details.length,
+      details,
     };
   };
 
   useEffect(() => {
     const getAllData = async () => {
       const seats = await getMyTickets();
-      const tickets = await getTicketDetail(seats.map(({ base_id }) => base_id));
-      const events = await getEvents(seats.map(({ event_id }) => event_id));
+      const ticketIds = seats.map(({ base_id }) => base_id);
+      const tickets = await getTicketDetail([...new Set(ticketIds)]);
+      const eventIds = seats.map(({ event_id }) => event_id);
+      const events = await getEvents([...new Set(eventIds)]);
       return [seats, tickets, events];
     };
     getAllData().then(([seats, tickets, events]) => {
-      console.log(seats, tickets, events);
-      setTickets(seats.map((seatInfo, idx) => combineInfo(seatInfo, tickets[idx], events[idx])));
+      // console.log(seats, events);
+      // setTickets(seats.map((seatInfo, idx) => combineInfo(seatInfo, tickets[idx], events[idx])));
+      setTickets(events.map((event, idx) => combineInfo(event, tickets, seats)));
     });
   }, []);
 
-  return <Card>{Tickets && <TicketTable ticketOrders={Tickets} />}</Card>;
+  console.log(Tickets);
+
+  return <Card> {Tickets && <TicketTable ticketOrders={Tickets} />}</Card>;
 };
 
 export default TicketOrders;
