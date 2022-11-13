@@ -4,7 +4,7 @@ import SearchPage from './pages/SearchPage/SearchPage';
 import SignInSide from './pages/Signin';
 import SignUp from './pages/SignUp';
 import EventDetail from './pages/EventDetail/EventDetail';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 import MyTickets from './pages/MyTickets/MyTickets';
 import Dashboard from './pages/Dashboard/Dashboard.jsx';
 import Events from './components/Dashboard/Events';
@@ -44,7 +44,7 @@ function App() {
         window.location.replace('http://localhost:3000/signin');
       }
     }
-  }, []);
+  }, [window.location.href]);
 
   return (
     <BrowserRouter>

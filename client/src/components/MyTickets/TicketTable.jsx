@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useState} from 'react';
+import { useState } from 'react';
 import {
   alpha,
   Box,
@@ -22,13 +22,14 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import {Label} from './Label';
+import { Label } from './Label';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import DetailsTwoToneIcon from '@mui/icons-material/DetailsTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
+import ReviewsTwoToneIcon from '@mui/icons-material/ReviewsTwoTone';
 import PropTypes from 'prop-types';
-import {useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
@@ -36,7 +37,8 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
-import {format} from 'date-fns';
+import { format } from 'date-fns';
+import { Comment_Form_Popup } from '../Comment/Comments';
 
 const getStatusLabel = (ticketOrderStatus) => {
   const map = {
@@ -80,6 +82,8 @@ function TicketRow(props) {
   const { ticketRow } = props;
   const [open, setOpen] = useState(false);
   const [DeleteOpen, setDeleteOpen] = useState(false);
+  const [ReviewOpen, setReviewOpen] = useState(false);
+
   const handleClickDeleteOpen = () => {
     setDeleteOpen(true);
   };
@@ -90,6 +94,14 @@ function TicketRow(props) {
 
   const handleClickEventDetail = () => {
     navigate(`/event/${ticketRow.event_id}`);
+  };
+
+  const handleReviewClose = () => {
+    setReviewOpen(false);
+  };
+
+  const handleLeaveReview = () => {
+    setReviewOpen(true);
   };
 
   return (
@@ -129,15 +141,16 @@ function TicketRow(props) {
             <Grid item xs={6}>
               <Tooltip title="Event Detail" arrow>
                 <IconButton
-                  sx={{'&:hover': {background: alpha('#5569ff', 0.1)}, color: '#5569ff'}}
+                  sx={{ '&:hover': { background: alpha('#5569ff', 0.1) }, color: '#5569ff' }}
                   color="inherit"
                   size="small"
                   onClick={handleClickEventDetail}
                 >
-                  <DetailsTwoToneIcon fontSize="small"/>
+                  <DetailsTwoToneIcon fontSize="small" />
                 </IconButton>
               </Tooltip>
             </Grid>
+
             {/*{ticketRow.status === 'pending' ? (*/}
             {/*  <Grid item xs={6}>*/}
             {/*    <Tooltip title="Cancel booking" arrow>*/}
@@ -151,39 +164,81 @@ function TicketRow(props) {
             {/*    </Tooltip>*/}
             {/*  </Grid>*/}
             {/*) : (*/}
+
             <Grid item xs={6}>
               <Tooltip title="Cancel booking" arrow>
                 <IconButton
-                  sx={{'&:hover': {background: alpha('#FF1943', 0.1)}, color: '#FF1943'}}
+                  sx={{ '&:hover': { background: alpha('#FF1943', 0.1) }, color: '#FF1943' }}
                   color="inherit"
                   size="small"
                   onClick={handleClickDeleteOpen}
                 >
-                  <DeleteTwoToneIcon fontSize="small"/>
+                  <DeleteTwoToneIcon fontSize="small" />
                 </IconButton>
+              </Tooltip>
+              <Dialog
+                open={DeleteOpen}
+                onClose={handleDeleteClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+              >
+                <DialogTitle id="alert-dialog-title">{'Delete Ticket'}</DialogTitle>
+                <DialogContent>
+                  <DialogContentText id="alert-dialog-description">
+                    Are you sure you need to delete this ticket record?
+                  </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={handleDeleteClose}>Disagree</Button>
+                  <Button onClick={handleDeleteClose} autoFocus>
+                    Agree
+                  </Button>
+                </DialogActions>
+              </Dialog>
+            </Grid>
+            {/* )} */}
+          </Grid>
+        </TableCell>
+        <TableCell align="right">
+          {
+            new Date(ticketRow.end_dt) < new Date() && (
+              <div>
+                <Tooltip title="Leave Review" arrow>
+                  <IconButton
+                    sx={{ '&:hover': { background: alpha('#5569ff', 0.1) }, color: '#5569ff' }}
+                    color="inherit"
+                    size="small"
+                    onClick={handleLeaveReview}
+                  >
+                    <ReviewsTwoToneIcon fontSize="small" />
+                  </IconButton>
                 </Tooltip>
                 <Dialog
-                  open={DeleteOpen}
-                  onClose={handleDeleteClose}
+                  open={ReviewOpen}
+                  onClose={handleReviewClose}
                   aria-labelledby="alert-dialog-title"
                   aria-describedby="alert-dialog-description"
                 >
-                  <DialogTitle id="alert-dialog-title">{'Delete Ticket'}</DialogTitle>
+                  <DialogTitle id="alert-dialog-title">{'Leave Your Reviews'}</DialogTitle>
                   <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                      Are you sure you need to delete this ticket record?
-                    </DialogContentText>
+                    <Comment_Form_Popup eventId={ticketRow.event_id} handleReviewClose={handleReviewClose} />
                   </DialogContent>
-                  <DialogActions>
-                    <Button onClick={handleDeleteClose}>Disagree</Button>
-                    <Button onClick={handleDeleteClose} autoFocus>
-                      Agree
-                    </Button>
-                  </DialogActions>
+                  {/* <DialogActions>
+                  <Button onClick={handleReviewClose}>Disagree</Button>
+                  <Button onClick={handleReviewClose} autoFocus>
+                    Agree
+                  </Button>
+                </DialogActions> */}
                 </Dialog>
-              </Grid>
-            {/* )} */}
-          </Grid>
+              </div>
+            )
+            // :
+            // (
+            //   <Typography variant="body1" fontWeight="bold" color="#223354" gutterBottom noWrap>
+
+            //   </Typography>
+            // )
+          }
         </TableCell>
       </TableRow>
       <TableRow>
@@ -337,6 +392,7 @@ const TicketTable = ({ ticketOrders }) => {
               <TableCell align="right">PRICE($)</TableCell>
               <TableCell align="right">STATUS</TableCell>
               <TableCell align="right">TICKET ACTIONS</TableCell>
+              <TableCell align="right">REVIEW</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

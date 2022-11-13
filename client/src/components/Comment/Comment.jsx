@@ -1,11 +1,18 @@
 import CommentForm from './CommentForm';
-import { Grid, Button, Avatar } from '@mui/material';
+import { Grid, Button as ButtonMui, Avatar } from '@mui/material';
 import ReplyIcon from '@mui/icons-material/Reply';
 import { useNavigate } from 'react-router-dom';
 import { format } from 'timeago.js';
 
 import More from './More';
+import styled from 'styled-components';
 import './Comment.css';
+
+const Button = styled(ButtonMui)`
+  && {
+    color: #616e82;
+  }
+`;
 
 function getInitials(username) {
   let [firstname, lastname] = username.split(' ');

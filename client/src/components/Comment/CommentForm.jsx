@@ -1,7 +1,13 @@
 import { useState } from 'react';
-import { Button } from '@mui/material';
-
+import { Button as ButtonMui } from '@mui/material';
+import styled from 'styled-components';
 import './Comment.css';
+
+const Button = styled(ButtonMui)`
+  && {
+    background-color: #616e82;
+  }
+`;
 
 const CommentForm = ({
   commentDisabled,

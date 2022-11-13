@@ -16,18 +16,18 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
 const settings = [
-  <div style={{ display: 'flex', alignItems: 'center', gap: '3px', color: '#5d637c' }}>
+  <Typography style={{ display: 'flex', alignItems: 'center', gap: '3px', color: '#5d637c' }}>
     <ShoppingCartIcon /> <span>My Tickets</span>
-  </div>,
-  <div style={{ display: 'flex', alignItems: 'center', gap: '3px', color: '#5d637c' }}>
+  </Typography>,
+  <Typography style={{ display: 'flex', alignItems: 'center', gap: '3px', color: '#5d637c' }}>
     <DashboardIcon /> <span>Dashboard</span>
-  </div>,
-  <div style={{ display: 'flex', alignItems: 'center', gap: '3px', color: '#5d637c' }}>
+  </Typography>,
+  <Typography style={{ display: 'flex', alignItems: 'center', gap: '3px', color: '#5d637c' }}>
     <ManageAccountsIcon /> <span>Account</span>
-  </div>,
-  <div style={{ display: 'flex', alignItems: 'center', gap: '3px', color: '#5d637c' }}>
+  </Typography>,
+  <Typography style={{ display: 'flex', alignItems: 'center', gap: '3px', color: '#5d637c' }}>
     <LogoutdIcon /> <span>Logout</span>
-  </div>,
+  </Typography>,
 ];
 
 const UserMenu = () => {
@@ -93,9 +93,9 @@ const UserMenu = () => {
         open={Boolean(anchorElUser)}
         onClose={handleCloseUserMenu}
       >
-        {settings.map((setting) => (
-          <MenuItem key={setting} onClick={handleMenuItem}>
-            <Typography textAlign="center">{setting}</Typography>
+        {settings.map((setting, idx) => (
+          <MenuItem key={idx} onClick={handleMenuItem}>
+            <div style={{ textAlign: 'center' }}>{setting}</div>
           </MenuItem>
         ))}
       </Menu>

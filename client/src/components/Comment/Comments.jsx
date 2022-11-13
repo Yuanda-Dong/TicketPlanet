@@ -44,7 +44,7 @@ const Comments = ({ eventId }) => {
   };
   const deleteComment = async (commentId) => {
     if (window.confirm('Are you sure you want to remove comment?')) {
-      await axiosInstance.delete('/review', {}, { params: { id: commentId } });
+      await axiosInstance.delete('/review', { params: { id: commentId } });
       setChange((prev) => !prev);
     }
   };
@@ -64,13 +64,13 @@ const Comments = ({ eventId }) => {
         {rootComments?.length} {rootComments?.length === 1 ? 'Review' : 'Reviews'}
       </h3>
       <Divider sx={{ margin: '20px 0' }} />
-      <CommentForm commentDisabled={currentUser ? false : true} submitLabel="Post" handleSubmit={addComment} />
+      {/* <CommentForm commentDisabled={currentUser ? false : true} submitLabel="Post" handleSubmit={addComment} /> */}
       {rootComments && (
         <div className="comments-container">
           {rootComments.map((rootComment) => (
             <Comment
               userId={rootComment.user_id}
-              key={rootComment.id}
+              key={rootComment._id}
               comment={rootComment}
               replies={getReplies(rootComment._id)}
               activeComment={activeComment}
@@ -88,3 +88,28 @@ const Comments = ({ eventId }) => {
 };
 
 export default Comments;
+
+export const Comment_Form_Popup = ({ eventId, setReviewSubmit, handleReviewClose }) => {
+  const { currentUser, token } = useSelector((state) => state.user);
+
+  const addComment = async (text, parent_id, replyId) => {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    await axiosInstance.post(
+      `/review/${eventId}`,
+      {
+        parent_id: parent_id,
+        message: text,
+        reply_review_id: replyId,
+      },
+      config
+    );
+    setReviewSubmit((prev) => ({ ...prev, [eventId]: true }));
+    handleReviewClose();
+  };
+
+  return <CommentForm commentDisabled={currentUser ? false : true} submitLabel="Post" handleSubmit={addComment} />;
+};
