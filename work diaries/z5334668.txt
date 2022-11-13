@@ -40,3 +40,7 @@ A retrospective meeting was held with the team members after presentation A to d
 I completed the web design of the event ticket Price page.
 
 Week 9
+Continue to complete the front-end work, making the website more like the official website.
+
+Week 10
+Working on reports, demo and final software.

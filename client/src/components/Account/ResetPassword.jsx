@@ -12,28 +12,28 @@ import {
   OutlinedInput,
   Snackbar,
 } from '@mui/material';
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import './Account.css';
 import Typography from '@mui/material/Typography';
 import styled from 'styled-components';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
+import {Visibility, VisibilityOff} from '@mui/icons-material';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
-import { useSelector } from 'react-redux';
+import {useSelector} from 'react-redux';
 import MuiAlert from '@mui/material/Alert';
-import { axiosInstance } from '../../config';
-import { ValidatePassword } from '../../helper';
+import {axiosInstance} from '../../config';
+import {ValidatePassword} from '../../helper';
 
 const Button = styled(ButtonMui)`
   && {
     color: white;
     padding: 7px 13px;
-    background-color: #4968a3;
+    background-color: #4f4cee;
     :hover {
-      background-color: rgba(73, 104, 163, 0.7);
+      background-color: rgba(100, 100, 255, 0.82);
     }
     :disabled {
-      background-color: rgba(73, 104, 163, 0.7);
+      background-color: rgba(100, 100, 255, 0.82);
     }
   }
 `;

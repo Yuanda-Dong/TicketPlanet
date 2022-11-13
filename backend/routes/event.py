@@ -17,7 +17,7 @@ from models.filter import Filter
 from util.postcode_to_distance import distance_post
 import dateutil
 from models.report import Report
-from util.send_email import event_update_notice, event_update_template
+from util.send_email import event_update_notice, event_update_template, event_publish
 
 router = APIRouter()
 
@@ -62,7 +62,7 @@ def list_unpublished_events(request: Request):
     return events
 
 @router.post("/publish/{id}", response_description="Publish Event", response_model=EventInDB)
-def publish_event(id: str, request: Request, user:User=Depends(get_current_user)):
+async def publish_event(id: str, request: Request, user:User=Depends(get_current_user)):
     
 
     if (
@@ -80,7 +80,8 @@ def publish_event(id: str, request: Request, user:User=Depends(get_current_user)
     updated_event = request.app.database["events"].find_one_and_update(
             {"_id": id}, {"$set": existing_event}, return_document=ReturnDocument.AFTER
     )
-    
+    # send email when the event has been published
+    await event_publish(request, existing_event['_id'], user["_id"])
     return updated_event
     
     
@@ -331,3 +332,8 @@ def Event_Report(event_id:str, request: Request):
         else:
             post[goer['postcode']] = 1 
     return output
+
+
+@router.get("/testPublishEventSendEmail/")
+async def hello(request: Request, id: str, user: str):
+    await event_publish(request, id, user)

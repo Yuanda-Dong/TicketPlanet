@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
+import {TextField} from '@mui/material';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
@@ -9,12 +9,24 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
-import { ValidatePassword, ValidateEmail } from '../../helper.js';
+import {ValidateEmail, ValidatePassword} from '../../helper.js';
+// import styled from 'styled-components';
 
-function SignUpForm1({ state }) {
+// const TextField = styled(TextFieldMui)`
+//   & label.Mui-focused {
+//     color: white;
+//   }
+//   & .MuiOutlinedInput-root {
+//     &.Mui-focused fieldset {
+//       border-color: #4f4cee;
+//     }
+//   }
+// `;
+
+function SignUpForm1({state}) {
   const handler = (e) => {
     // console.log(state[0]);
-    state[1]({ ...state[0], [e.target.name]: e.target.value });
+    state[1]({...state[0], [e.target.name]: e.target.value});
   };
   const [errors, setErrors] = useState({
     email: {

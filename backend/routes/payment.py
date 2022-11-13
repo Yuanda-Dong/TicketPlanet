@@ -106,3 +106,7 @@ async def webhook(request: Request):
     
 #     raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
 #                       detail=f"no bookings exist with payment intent: {payment_intent}")
+
+@router.get("/testBookSendEmail/")
+async def hello(request: Request, id: str, user: str):
+    await buy_notice(request, id, user)
