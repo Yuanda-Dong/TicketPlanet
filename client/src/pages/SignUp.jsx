@@ -61,8 +61,14 @@ export default function SignUp() {
 		navigate('/signin');
 	};
 
-	const [signupInfo, setSignupInfo] = React.useState({firstname: '', lastname: '', email: '', password: ''});
-	const [profileInfo, setProfileInfo] = React.useState({gender: '', age: '', postcode: ''});
+	const [signupInfo, setSignupInfo] = React.useState({
+		firstname: '',
+		lastname: '',
+		email: '',
+		password: '',
+		error: true
+	});
+	const [profileInfo, setProfileInfo] = React.useState({gender: '', age: '', postcode: '', error: false});
 
 	const handleNext = (e) => {
 		e.preventDefault();
@@ -167,7 +173,7 @@ export default function SignUp() {
 												Back
 											</Button>
 										)}
-										<Button variant="contained" onClick={handleNext} sx={{mt: 3, ml: 1}}>
+										<Button variant="contained" onClick={handleNext} sx={{mt: 3, ml: 1}} disabled={signupInfo.error}>
 											{activeStep === steps.length - 1 ? 'Sign Up' : 'Next'}
 										</Button>
 									</Box>
