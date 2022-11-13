@@ -58,16 +58,16 @@ const EventDetail = (props) => {
     fetchData();
   }, [params.id]);
 
-  const follow = async ()=> {
+  const follow = async () => {
     try {
-      console.log(eventInfo.host_id)
-      let res = await axiosInstance.put(`/user/follow/${eventInfo.host_id}`,null, config);
+      console.log(eventInfo.host_id);
+      let res = await axiosInstance.put(`/user/follow/${eventInfo.host_id}`, null, config);
       // console.log(eventInfo)
       handleClickOpen();
     } catch {
-      alert("You can not follow yourself");
+      alert('You can not follow yourself');
     }
-  }
+  };
 
   return (
     <div className={'EventPage'}>
@@ -77,16 +77,14 @@ const EventDetail = (props) => {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">
-          {"Follow"}
-        </DialogTitle>
+        <DialogTitle id="alert-dialog-title">{'Follow'}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            You have successfully followed the host, you will receive e-mails when the host publishes a new event. 
+            You have successfully followed the host, you will receive e-mails when the host publishes a new event.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} >Close</Button>
+          <Button onClick={handleClose}>Close</Button>
           {/* <Button onClick={handleClose} autoFocus>
             Agree
           </Button> */}
@@ -97,16 +95,20 @@ const EventDetail = (props) => {
         <Paper elevation={3} sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}>
           <div className="event-detail">
             <div className="img-container">
-              <img src={eventInfo.image_url || thumbnail} alt="Event Thumbnail" />
+              <img src={eventInfo.image_url} alt="Event Thumbnail" />
             </div>
             <div className="info">
               <div className="event-info">
                 <h1>{eventInfo.title}</h1>
                 <div>
                   <h3>Host: {eventInfo.host_name}</h3>
-                  {currentUser ? <Button variant="outlined" className="follow" onClick={follow}>
-                    follow
-                  </Button>:<></>}
+                  {currentUser ? (
+                    <Button variant="outlined" className="follow" onClick={follow}>
+                      follow
+                    </Button>
+                  ) : (
+                    <></>
+                  )}
                 </div>
                 <h3>Category: {eventInfo.category}</h3>
               </div>
@@ -115,10 +117,13 @@ const EventDetail = (props) => {
                   <span style={{ fontSize: '20px', fontWeight: 'bold' }}>Tickets starting at</span>
                   <span style={{ fontSize: '30px' }}>{price !== Infinity ? '$ ' + price : 'Not available'}</span>
                   <Link style={{ textDecoration: 'none' }} to={currentUser ? `/event/price/${params.id}` : '/signin'}>
-                  {price !== Infinity ? <Button variant="contained" className="buy">
-                      Buy tickets
-                    </Button> : <></>}
-                    
+                    {price !== Infinity ? (
+                      <Button variant="contained" className="buy">
+                        Buy tickets
+                      </Button>
+                    ) : (
+                      <></>
+                    )}
                   </Link>
                 </div>
               </div>
@@ -157,18 +162,15 @@ const EventDetail = (props) => {
                 }}
               ></p>
             </div>
-            
 
-            { eventInfo.gallery && eventInfo.gallery.length >0 ? <div className="gallery">
-              <h2>Gallery</h2>
-              <Gallery galleryImages={eventInfo.gallery}></Gallery>
-            </div> : <></>}
-
-            
-
-
-
-
+            {eventInfo.gallery && eventInfo.gallery.length > 0 ? (
+              <div className="gallery">
+                <h2>Gallery</h2>
+                <Gallery galleryImages={eventInfo.gallery}></Gallery>
+              </div>
+            ) : (
+              <></>
+            )}
           </div>
           {eventInfo.published ? (
             <div className="comments-section">

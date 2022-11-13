@@ -15,6 +15,12 @@ import Paper from '@mui/material/Paper';
 import './TicketPrice.css';
 import SeatGrid from './SeatGrid';
 import { useSelector } from 'react-redux';
+import styled from 'styled-components';
+const NormalButton = styled(Button)`
+  && {
+    background-color: #4f4cee;
+  }
+`;
 
 function getCheckout(cancel_url, success_url, email, quantity, price, product_name, seats) {
   const body = {
@@ -145,9 +151,9 @@ function TicketPrice(props) {
             selected={selected}
             setSelected={setSelected}
           />
-          <Button fullWidth variant="contained" onClick={handleCheckout}>
+          <NormalButton fullWidth variant="contained" onClick={handleCheckout}>
             Checkout
-          </Button>
+          </NormalButton>
         </Paper>
       </Container>
     </>

@@ -1,11 +1,11 @@
-import {Card} from '@mui/material';
+import { Card } from '@mui/material';
 import TicketTable from './TicketTable';
-import {useEffect, useState} from 'react';
-import {axiosInstance} from '../../config.js';
-import {useSelector} from 'react-redux';
+import { useEffect, useState } from 'react';
+import { axiosInstance } from '../../config.js';
+import { useSelector } from 'react-redux';
 
 const TicketOrders = () => {
-  const {token} = useSelector((state) => state.user);
+  const { token } = useSelector((state) => state.user);
   const [allInfo, setAllInfo] = useState({});
   const config = {
     headers: {
@@ -60,9 +60,10 @@ const TicketOrders = () => {
       const events = await getEvents(seats.map(({ event_id }) => event_id));
       return [seats, tickets, events];
     };
-    getAllData().then(([seats, tickets, events]) =>
-      setTickets(seats.map((seatInfo, idx) => combineInfo(seatInfo, tickets[idx], events[idx])))
-    );
+    getAllData().then(([seats, tickets, events]) => {
+      console.log(seats, tickets, events);
+      setTickets(seats.map((seatInfo, idx) => combineInfo(seatInfo, tickets[idx], events[idx])));
+    });
   }, []);
 
   return <Card>{Tickets && <TicketTable ticketOrders={Tickets} />}</Card>;

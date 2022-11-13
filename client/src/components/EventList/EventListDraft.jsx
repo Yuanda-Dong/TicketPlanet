@@ -61,12 +61,12 @@ const EventListDraft = (props) => {
   };
   const handleDelete = async () => {
     let res = await axiosInstance.delete(`/event/${props.eventInfo._id}`, config);
-    props.rerender(!props.re);
+    props.rerender((prev) => !prev);
   };
 
   const handlePublish = async () => {
     let res = await axiosInstance.post(`/event/publish/${props.eventInfo._id}`, null, config);
-    props.rerender(!props.re);
+    props.rerender((prev) => !prev);
   };
 
   const publsihed_operations = [

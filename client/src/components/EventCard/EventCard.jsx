@@ -28,15 +28,15 @@ const EventCard = (props) => {
           </span>
         </div>
         <div className="event-info">
-          <Typography gutterBottom variant="h5" component="div">
+          <Typography gutterBottom variant="h6" component="div">
             {props.eventInfo.title}
           </Typography>
 
-          <Typography variant="body2" color="text.secondary">
+          <Typography variant="body2" color="text.secondary" style={{ margin: '5px 0' }}>
             {props.eventInfo.category}
           </Typography>
 
-          <Typography variant="body2" color="text.secondary">
+          <Typography style={{ display: 'flex', alignItems: 'flex-start' }} variant="body2" color="text.secondary">
             <LocationOnIcon />
             {props.eventInfo.address}
           </Typography>
