@@ -242,16 +242,16 @@ def delete_event(id: str, request: Request, response: Response, user: User = Dep
 
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Event with ID {id} not found")
     
-@router.delete("/purge", response_description="Delete a user")
-async def delete_event(to_keep: List[str], request: Request):
-    events = request.app.database["events"].find()
+# @router.delete("/purge", response_description="Delete a user")
+# async def delete_event(to_keep: List[str], request: Request):
+#     events = request.app.database["events"].find()
 
-    for event in events:
-        print(event)
-        if event["_id"] not in to_keep:
-            print("this is to be deleted")
-            delete_result = request.app.database["events"].delete_one({"_id": event['_id']}) 
-    return to_keep
+#     for event in events:
+#         print(event)
+#         if event["_id"] not in to_keep:
+#             print("this is to be deleted")
+#             delete_result = request.app.database["events"].delete_one({"_id": event['_id']}) 
+#     return to_keep
 
 
 @router.post("/seats/{id}", response_description="Add seating plan to event", status_code=status.HTTP_201_CREATED, response_model=SeatPlanInDB)
