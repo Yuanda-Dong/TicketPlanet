@@ -375,7 +375,7 @@ def cancel_event(id: str, request: Request, user: User = Depends(get_current_use
                               detail=e.user_message)
         
         request.app.database["passes"].update_many({"event_id": id, "status": "active"}, {"$set":{"status": "cancelled"}})
-        request.app.database["events"].update_one({"_id": id}, {"$set":{"seat_plan":"", "tickets":[]}})
+        request.app.database["events"].update_one({"_id": id}, {"$set":{"seat_plan":"", "tickets":[], "published":False}})
         updated_event = request.app.database["events"].find_one({"_id": id})
         return updated_event
 
