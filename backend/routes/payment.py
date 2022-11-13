@@ -7,6 +7,7 @@ from pymongo import ReturnDocument
 from models.ticket import TicketStatus, TicketInstance
 from models.user import User
 from util.oAuth import get_current_user
+from routes.ticket import adjust_ticket_availability
 import stripe
 import os
 
@@ -165,6 +166,11 @@ def remove_from_seatplan(tickets:List[TicketInstance], request:Request):
           # request.app.database["seat_plan"].find_one_and_update(
           #     {{"_id": found_event['seat_plan']}, {"$set":found_plan}}
           # )
+        
+        
+        base_ticket = request.app.database['tickets'].find_one({"_id": tickets[0]['base_id']})
+        
+        request.app.database['tickets'].update_one({"_id": tickets[0]['base_id']}, {"$set":{"availability", base_ticket['availability'] + len(tickets)}})
         
         for ticket in tickets:
           refunded_ticket = request.app.database["passes"].update_one(
