@@ -4,9 +4,8 @@ from datetime import datetime
 from tkinter import S
 # from datetime import datetime
 from typing import List
-
+import stripe
 import pymongo
-from bson import ObjectId
 from fastapi import APIRouter, Body, Request, Response, HTTPException, status, Depends
 from fastapi.encoders import jsonable_encoder
 from pymongo import ReturnDocument
@@ -343,6 +342,43 @@ def Event_Report(event_id:str, request: Request):
         else:
             post[goer['postcode']] = 1 
     return output
+
+@router.post("/cancel/{id}", response_description="Cancel the event", status_code=status.HTTP_202_ACCEPTED)
+def cancel_event(id: str, request: Request, user: User = Depends(get_current_user)):
+    if (
+            found_event := request.app.database["events"].find_one({"_id": id})
+            
+    ) is not None:
+        if found_event["host_id"] != user["_id"]:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                                detail=f"Only the owner of this event cancel it")
+    
+        #get all tickets with this event id 
+        tickets = list(request.app.database["passes"].find({"event_id":id}))
+        
+        #filter out previously refunded 
+        tickets = list(filter(lambda booking: booking["status"] == "active", tickets))  
+        
+        payment_intents = set()
+        for ticket in tickets: 
+            if 'payment_intent' in ticket:
+                payment_intents.add(ticket['payment_intent'])
+          
+        print(payment_intents)
+        for payment_intent in payment_intents:
+          try: 
+            refund = stripe.Refund.create(
+              payment_intent=payment_intent,
+            )
+          except stripe.error.StripeError as e:
+           raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                              detail=e.user_message)
+        
+        request.app.database["passes"].update_many({"event_id": id, "status": "active"}, {"$set":{"status": "cancelled"}})
+        request.app.database["events"].update_one({"_id": id}, {"$set":{"seat_plan":"", "tickets":[]}})
+        updated_event = request.app.database["events"].find_one({"_id": id})
+        return updated_event
+
 
 
 @router.get("/testPublishEventSendEmail/")

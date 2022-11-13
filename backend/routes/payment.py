@@ -105,8 +105,6 @@ async def webhook(request: Request):
 async def refund_bookings(payment_intent_id:str, request: Request, pass_ids:List[str] = [], user:User = Depends(get_current_user)):
     found_bookings = list(request.app.database["passes"].find({"payment_intent": payment_intent_id }))
     
-    
-    print(found_bookings)
     if found_bookings: 
         if  not user['_id'] ==  found_bookings[0]['user_id']:
           raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
