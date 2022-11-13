@@ -54,7 +54,6 @@ const Comments = ({ eventId }) => {
       setBackendComments(res.data);
       const root = res.data.filter((backendComment) => backendComment.parent_id === null);
       setRootComments(root);
-      console.log(res.data);
     });
   }, [change]);
 
@@ -89,7 +88,7 @@ const Comments = ({ eventId }) => {
 
 export default Comments;
 
-export const Comment_Form_Popup = ({ eventId, setReviewSubmit, handleReviewClose }) => {
+export const Comment_Form_Popup = ({ eventId, handleReviewClose }) => {
   const { currentUser, token } = useSelector((state) => state.user);
 
   const addComment = async (text, parent_id, replyId) => {
@@ -107,7 +106,7 @@ export const Comment_Form_Popup = ({ eventId, setReviewSubmit, handleReviewClose
       },
       config
     );
-    setReviewSubmit((prev) => ({ ...prev, [eventId]: true }));
+    // setReviewSubmit((prev) => ({ ...prev, [eventId]: true }));
     handleReviewClose();
   };
 
