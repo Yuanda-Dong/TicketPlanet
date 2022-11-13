@@ -24,6 +24,7 @@ import { useNavigate } from 'react-router-dom';
 import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } from 'firebase/storage';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
+import { eventCategories } from '../../assets/constants';
 
 const NormalButton = styled(Button)`
   && {
@@ -277,11 +278,11 @@ const PostPage = () => {
                   onChange={handleEventChange}
                   required
                 >
-                  <MenuItem value={'Movies'}>Movies</MenuItem>
-                  <MenuItem value={'Concert'}>Concert</MenuItem>
-                  <MenuItem value={'Arts'}>Arts</MenuItem>
-                  <MenuItem value={'Conference'}>Conference</MenuItem>
-                  <MenuItem value={'Other'}>Other</MenuItem>
+                  {eventCategories.map((cat, idx) => (
+                    <MenuItem key={idx} value={cat}>
+                      {cat}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             </Grid>
@@ -319,7 +320,7 @@ const PostPage = () => {
                   className="search"
                   value={event.start_dt}
                   inputFormat="DD/MM/YYYY hh:mm a"
-                  mask="__/__/____ __:__ _M"
+                  // mask="__/__/____ __:__ _M"
                   name="start_dt"
                   onChange={(newVal) => {
                     setEvent((prev) => ({ ...prev, start_dt: newVal }));
@@ -335,7 +336,7 @@ const PostPage = () => {
                   label="End"
                   className="search"
                   inputFormat="DD/MM/YYYY hh:mm a"
-                  mask="__/__/____ __:__ _M"
+                  // mask="__/__/____ __:__ _M"
                   value={event.end_dt}
                   name="end_dt"
                   onChange={(newVal) => {

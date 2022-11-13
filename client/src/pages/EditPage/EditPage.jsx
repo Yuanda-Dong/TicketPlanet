@@ -31,6 +31,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { convertFromRaw, ContentState } from 'draft-js';
 import styled from 'styled-components';
 import SeatMap from '../../components/SeatCreation/SeatMap';
+import { eventCategories } from '../../assets/constants';
 
 const NormalButton = styled(Button)`
   && {
@@ -389,11 +390,11 @@ const EditPage = () => {
                   onChange={handleEventChange}
                   required
                 >
-                  <MenuItem value={'Movies'}>Movies</MenuItem>
-                  <MenuItem value={'Concert'}>Concert</MenuItem>
-                  <MenuItem value={'Arts'}>Arts</MenuItem>
-                  <MenuItem value={'Conference'}>Conference</MenuItem>
-                  <MenuItem value={'Other'}>Other</MenuItem>
+                  {eventCategories.map((cat, idx) => (
+                    <MenuItem key={idx} value={cat}>
+                      {cat}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             </Grid>
@@ -677,7 +678,7 @@ const EditPage = () => {
             </OutlinedButton>
 
             <NormalButton sx={{ mt: '20px' }} variant="contained" onClick={goNext}>
-              Save & Next
+              Save
             </NormalButton>
           </div>
         </Paper>
