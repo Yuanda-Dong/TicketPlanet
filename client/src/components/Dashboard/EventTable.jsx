@@ -78,13 +78,14 @@ const EventTable = ({ setCurrentEvent }) => {
                 {format(new Date(row.end_dt), 'dd/MM/yyyy')}
               </TableCell>
               <TableCell className="tableCell" align="center">
-                <Link
-                  id={row._id}
-                  onClick={(e) => {
-                    setCurrentEvent(e.target.id);
-                  }}
-                >
-                  <span>View Reports</span>
+                <Link id={row._id} style={{ textDecoration: null }}>
+                  <span
+                    onClick={(e) => {
+                      setCurrentEvent(e.target.id);
+                    }}
+                  >
+                    View Reports
+                  </span>
                 </Link>
               </TableCell>
             </TableRow>

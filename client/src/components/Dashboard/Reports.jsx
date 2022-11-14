@@ -3,6 +3,7 @@ import Piechart from '../Charts/PieChart';
 import EventTable from './EventTable';
 import AgeChart from '../Charts/AgeChart';
 import LocationChart from '../Charts/LocationChart';
+import Widget from '../Charts/Widget';
 import { axiosInstance } from '../../config.js';
 import { useSelector } from 'react-redux';
 
@@ -13,7 +14,7 @@ const ReportContainer = styled.div``;
 
 const Charts = styled.div`
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-between;
 `;
 
 const Paper = styled(PaperMui)`
@@ -21,12 +22,17 @@ const Paper = styled(PaperMui)`
     margin: 3rem 0;
     width: 400px;
     height: 300px;
-    box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+    /* box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+     */
+    -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+    box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+    border-radius: 10px;
   }
 `;
 
 const H2 = styled.h2`
   margin: 1rem;
+  font-size: 20px;
 `;
 
 const genderData = [
@@ -92,8 +98,7 @@ const Reports = () => {
         } catch (e) {
           console.error(e);
         }
-      }
-      else if (currentUser) {
+      } else if (currentUser) {
         try {
           let res = axiosInstance.get(`/user/report/${currentUser._id}`);
           setData(res.data);
@@ -109,6 +114,7 @@ const Reports = () => {
 
   return (
     <ReportContainer>
+      <Widget setCurrentEvent={setCurrentEvent} />
       <Charts>
         <Paper>
           <H2>Gender Distribution</H2>
