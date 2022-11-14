@@ -39,7 +39,7 @@ const LocationChart = ({ data }) => {
         layout="vertical"
         width={400}
         height={300}
-        data={data.sort((a, b) => b.counts - a.counts)}
+        data={data.sort((a, b) => b.count - a.count)}
         margin={{
           right: 30,
           left: 20,
@@ -49,7 +49,7 @@ const LocationChart = ({ data }) => {
         <XAxis type="number" hide />
         <YAxis dataKey="name" type="category" />
         <Tooltip />
-        <Bar dataKey="counts" fill="#6faeb5" />
+        <Bar dataKey="count" fill="#6faeb5" />
       </BarChart>
     </ResponsiveContainer>
   );

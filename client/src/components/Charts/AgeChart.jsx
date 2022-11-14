@@ -41,7 +41,7 @@ const AgeChart = ({ data }) => {
         <YAxis hide />
         <Tooltip />
         {/* <Legend /> */}
-        <Bar dataKey="age" fill="#838ac3" />
+        <Bar dataKey="count" fill="#838ac3" />
       </BarChart>
     </ResponsiveContainer>
   );

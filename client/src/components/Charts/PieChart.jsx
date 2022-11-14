@@ -1,10 +1,10 @@
 import React from 'react';
 import { PieChart, Pie, Sector, Cell, ResponsiveContainer, Legend } from 'recharts';
 
-// const data01 = [
-//   { name: 'Female', count: 400, fill: '#82ca9d' },
-//   { name: 'Male', count: 300, fill: '#8884d8' },
-//   { name: 'Other', count: 300, fill: '#e887ab' },
+// const data = [
+//   { name: 'Female', count: 1, fill: '#82ca9d' },
+//   { name: 'Male', count: 3, fill: '#8884d8' },
+//   { name: 'Other', count: 2, fill: '#e887ab' },
 // ];
 const renderColorfulLegendText = (value, entry) => {
   return <span style={{ color: '#596579', fontWeight: 500, padding: '10px' }}>{value}</span>;

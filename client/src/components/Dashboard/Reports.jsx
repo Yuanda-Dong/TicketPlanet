@@ -64,15 +64,15 @@ const ageData = [
   },
 ];
 
-const locationData = [];
-
 const Reports = () => {
   const { currentUser } = useSelector((state) => state.user);
   const [chartData, setChartData] = useState({
     gender: genderData,
     age: ageData,
-    post: locationData,
+    post: [],
   });
+
+  const [ready, setReady] = useState(false);
 
   const [currentEvent, setCurrentEvent] = useState(null);
   const [followers, setFollowers] = useState(0);
@@ -80,13 +80,14 @@ const Reports = () => {
   useEffect(() => {
     const setData = (data) => {
       if (data) {
-        setFollowers(Object.values(data.gender).reduce((a, b) => a + b));
         setChartData((prev) => {
           prev.gender.forEach((entry) => (entry.count = data.gender[entry.value]));
           prev.age.forEach((entry) => (entry.count = data.age[entry.name]));
+          const temp = [];
           for (const [key, val] of Object.entries(data.post)) {
-            prev.post.push({ name: key, counts: val });
+            temp.push({ name: key, count: val });
           }
+          prev.post = temp;
           return prev;
         });
       }
@@ -95,24 +96,28 @@ const Reports = () => {
     const fetchReport = async (currentEvent) => {
       if (currentEvent) {
         try {
-          let res = axiosInstance.get(`/event/report/${currentEvent}`);
-          setData(res.data);
+          setReady(false);
+          let res = await axiosInstance.get(`/event/report/${currentEvent}`);
+          await setData(res.data);
+          setReady(true);
         } catch (e) {
           console.error(e);
         }
       } else if (currentUser) {
+        console.log('user');
         try {
-          let res = axiosInstance.get(`/user/report/${currentUser._id}`);
-          setData(res.data);
+          setReady(false);
+          let res = await axiosInstance.get(`/user/report/${currentUser._id}`);
+          await setData(res.data);
+          await setFollowers(Object.values(res.data.gender).reduce((a, b) => a + b));
+          setReady(true);
         } catch (e) {
           console.error(e);
         }
       }
     };
-    fetchReport();
+    fetchReport(currentEvent);
   }, [currentUser, currentEvent]);
-
-  console.log(chartData);
 
   return (
     <ReportContainer>
@@ -120,15 +125,15 @@ const Reports = () => {
       <Charts>
         <Paper>
           <H2>Gender Distribution</H2>
-          <Piechart data={chartData.gender} />
+          {ready && <Piechart data={chartData.gender} />}
         </Paper>
         <Paper>
           <H2>Age Distribution</H2>
-          <AgeChart data={chartData.age} />
+          {ready && <AgeChart data={chartData.age} />}
         </Paper>
         <Paper>
           <H2>Location Distribution</H2>
-          <LocationChart data={chartData.post} />
+          {ready && <LocationChart data={chartData.post} />}
         </Paper>
       </Charts>
 
