@@ -113,6 +113,12 @@ def find_user(id: str, request: Request, user: User = Depends(get_current_user))
         return user
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"user with ID {id} not found")
 
+@router.get("/name/{id}", response_description="Get a single user by id", response_model=User)
+def find_user_name(id: str, request: Request):
+    if (user := request.app.database["users"].find_one({"_id": id})) is not None:
+        return user
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"user with ID {id} not found")
+
 
 @router.put("/{id}", response_description="Update a user", response_model=UserInDB)
 def update_user(id: str, request: Request, updates: UserUpdate, auth: User = Depends(get_current_user)):
