@@ -105,7 +105,9 @@ function TicketRow(props) {
     setReviewOpen(true);
   };
 
-  const handleCancelBooking = async (payment_intent) => {
+  const handleCancelBooking = async (e) => {
+    // console.log(e.target.id);
+    const payment_intent = e.target.dataset.payment;
     payment_intent && (await axiosInstance.post(`/payment/refund/${payment_intent}`));
     setDeleteOpen(false);
   };
@@ -180,83 +182,39 @@ function TicketRow(props) {
           {/*    </Tooltip>*/}
           {/*  </Grid>*/}
           {/*) : (*/}
-
-          <Tooltip title="Cancel booking" arrow>
-            <IconButton
-              sx={{ '&:hover': { background: alpha('#FF1943', 0.1) }, color: '#FF1943' }}
-              color="inherit"
-              size="small"
-              onClick={handleClickDeleteOpen}
-            >
-              <DeleteTwoToneIcon fontSize="small" />
-            </IconButton>
-          </Tooltip>
-          <Dialog
-            open={DeleteOpen}
-            onClose={handleDeleteClose}
-            aria-labelledby="alert-dialog-title"
-            aria-describedby="alert-dialog-description"
-          >
-            <DialogTitle id="alert-dialog-title">{'Cancel Booking'}</DialogTitle>
-            <DialogContent>
-              <DialogContentText id="alert-dialog-description">
-                Are you sure you need to cancel booking for this event?
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleDeleteClose}>Disagree</Button>
-              <Button onClick={handleCancelBooking} autoFocus>
-                Agree
-              </Button>
-            </DialogActions>
-          </Dialog>
         </TableCell>
         <TableCell align="right">
-          {
-            new Date(ticketRow.end_dt) < new Date() && (
-              <div>
-                <Tooltip title="Leave Review" arrow>
-                  <IconButton
-                    sx={{ '&:hover': { background: alpha('#5569ff', 0.1) }, color: '#5569ff' }}
-                    color="inherit"
-                    size="small"
-                    onClick={handleLeaveReview}
-                  >
-                    <ReviewsTwoToneIcon fontSize="small" />
-                  </IconButton>
-                </Tooltip>
-                <Dialog
-                  open={ReviewOpen}
-                  onClose={handleReviewClose}
-                  aria-labelledby="alert-dialog-title"
-                  aria-describedby="alert-dialog-description"
+          {new Date(ticketRow.end_dt) < new Date() && (
+            <div>
+              <Tooltip title="Leave Review" arrow>
+                <IconButton
+                  sx={{ '&:hover': { background: alpha('#5569ff', 0.1) }, color: '#5569ff' }}
+                  color="inherit"
+                  size="small"
+                  onClick={handleLeaveReview}
                 >
-                  <DialogTitle id="alert-dialog-title">{'Leave Your Reviews'}</DialogTitle>
-                  <DialogContent>
-                    <Comment_Form_Popup eventId={ticketRow.event_id} handleReviewClose={handleReviewClose} />
-                  </DialogContent>
-                  {/* <DialogActions>
-                  <Button onClick={handleReviewClose}>Disagree</Button>
-                  <Button onClick={handleReviewClose} autoFocus>
-                    Agree
-                  </Button>
-                </DialogActions> */}
-                </Dialog>
-              </div>
-            )
-            // :
-            // (
-            //   <Typography variant="body1" fontWeight="bold" color="#223354" gutterBottom noWrap>
-
-            //   </Typography>
-            // )
-          }
+                  <ReviewsTwoToneIcon fontSize="small" />
+                </IconButton>
+              </Tooltip>
+              <Dialog
+                open={ReviewOpen}
+                onClose={handleReviewClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+              >
+                <DialogTitle id="alert-dialog-title">{'Leave Your Reviews'}</DialogTitle>
+                <DialogContent>
+                  <Comment_Form_Popup eventId={ticketRow.event_id} handleReviewClose={handleReviewClose} />
+                </DialogContent>
+              </Dialog>
+            </div>
+          )}
         </TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
           <Collapse in={open} timeout={'auto'} unmountOnExit>
-            <Box sx={{ margin: 1 }}>
+            <Box sx={{ margin: 1, marginLeft: '100px' }}>
               <Typography variant={'h6'} gutterBottom component="div">
                 Ticket Detail
               </Typography>
@@ -267,11 +225,12 @@ function TicketRow(props) {
                     <TableCell>PRICE($)</TableCell>
                     <TableCell>STATUS</TableCell>
                     <TableCell>SEAT</TableCell>
+                    <TableCell>TICKET ACTION</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {ticketRow.details.map((detail, idx) => (
-                    <TableRow key={idx}>
+                  {ticketRow.details.map((detail) => (
+                    <TableRow key={detail.id}>
                       <TableCell>
                         <Typography variant="body1" fontWeight="bold" color gutterBottom noWrap>
                           {detail.ticket_name}
@@ -280,6 +239,42 @@ function TicketRow(props) {
                       <TableCell>{detail.price}</TableCell>
                       <TableCell>{getStatusLabel(detail.status)}</TableCell>
                       <TableCell>{detail.seat_number}</TableCell>
+                      <TableCell align="center">
+                        <Tooltip title="Cancel booking" arrow>
+                          <IconButton
+                            sx={{ '&:hover': { background: alpha('#FF1943', 0.1) }, color: '#FF1943' }}
+                            color="inherit"
+                            size="small"
+                            onClick={handleClickDeleteOpen}
+                          >
+                            <DeleteTwoToneIcon fontSize="small" />
+                          </IconButton>
+                        </Tooltip>
+                        <Dialog
+                          open={DeleteOpen}
+                          onClose={handleDeleteClose}
+                          aria-labelledby="alert-dialog-title"
+                          aria-describedby="alert-dialog-description"
+                        >
+                          <DialogTitle id="alert-dialog-title">{'Cancel Booking'}</DialogTitle>
+                          <DialogContent>
+                            <DialogContentText id="alert-dialog-description">
+                              Are you sure you need to cancel booking for this event?
+                            </DialogContentText>
+                          </DialogContent>
+                          <DialogActions>
+                            <Button onClick={handleDeleteClose}>Disagree</Button>
+                            <Button
+                              id={detail.id}
+                              data-payment={detail.payment_intent}
+                              onClick={handleCancelBooking}
+                              autoFocus
+                            >
+                              Agree
+                            </Button>
+                          </DialogActions>
+                        </Dialog>
+                      </TableCell>
                     </TableRow>
                   ))}
 
@@ -306,17 +301,18 @@ function TicketRow(props) {
 
 TicketRow.propTypes = {
   ticketRow: PropTypes.shape({
-    ticket_name: PropTypes.string.isRequired,
+    details: PropTypes.array.isRequired,
+    // ticket_name: PropTypes.string.isRequired,
     event_id: PropTypes.string.isRequired,
     start_dt: PropTypes.string.isRequired,
     end_dt: PropTypes.string.isRequired,
-    price: PropTypes.number.isRequired,
-    status: PropTypes.string.isRequired,
+    // price: PropTypes.number.isRequired,
+    // status: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     category: PropTypes.string.isRequired,
     address: PropTypes.string,
     postcode: PropTypes.number.isRequired,
-    seat_number: PropTypes.string.isRequired,
+    // seat_number: PropTypes.string.isRequired,
   }).isRequired,
 };
 
@@ -401,7 +397,7 @@ const TicketTable = ({ ticketOrders }) => {
               <TableCell align="center">ADDRESS</TableCell>
               <TableCell align="right">POSTCODE</TableCell>
               <TableCell align="right">AMOUNT</TableCell>
-              <TableCell align="right">TICKET ACTIONS</TableCell>
+              <TableCell align="right">VIEW</TableCell>
               <TableCell align="right">REVIEW</TableCell>
             </TableRow>
           </TableHead>

@@ -11,9 +11,11 @@
 .event-card .css-46bh2p-MuiCardContent-root {
   display: flex;
   gap: 1em;
+  /* height: 100%; */
 }
 .event-card .css-46bh2p-MuiCardContent-root .date {
   display: flex;
+  /* height: 100%; */
   flex-direction: column;
   justify-content: center;
   align-items: center;

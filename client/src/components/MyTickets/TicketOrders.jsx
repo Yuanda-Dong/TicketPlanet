@@ -59,7 +59,7 @@ const TicketOrders = () => {
     const { _id, title, category, address, postcode, start_dt, end_dt, ...otherEventInfo } = eventInfo;
 
     let details = matching_seats.map((seatInfo) => {
-      const { _id, status, seat, ...otherSeatInfo } = seatInfo;
+      const { _id, status, seat, payment_intent, ...otherSeatInfo } = seatInfo;
       const ticketInfo = tickets.find((ticket) => ticket._id === seatInfo.base_id);
       const { ticket_name, price, ...otherTicketInfo } = ticketInfo;
       return {
@@ -68,6 +68,7 @@ const TicketOrders = () => {
         price,
         status,
         seat_number: seat,
+        payment_intent: payment_intent,
       };
     });
 
@@ -91,16 +92,15 @@ const TicketOrders = () => {
       const tickets = await getTicketDetail([...new Set(ticketIds)]);
       const eventIds = seats.map(({ event_id }) => event_id);
       const events = await getEvents([...new Set(eventIds)]);
+      console.log(seats);
       return [seats, tickets, events];
     };
     getAllData().then(([seats, tickets, events]) => {
       // console.log(seats, events);
       // setTickets(seats.map((seatInfo, idx) => combineInfo(seatInfo, tickets[idx], events[idx])));
-      setTickets(events.map((event, idx) => combineInfo(event, tickets, seats)));
+      setTickets(events.map((event) => combineInfo(event, tickets, seats)));
     });
   }, []);
-
-  console.log(Tickets);
 
   return <Card> {Tickets && <TicketTable ticketOrders={Tickets} />}</Card>;
 };
