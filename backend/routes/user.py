@@ -113,6 +113,12 @@ def find_user(id: str, request: Request, user: User = Depends(get_current_user))
         return user
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"user with ID {id} not found")
 
+@router.get("/name/{id}", response_description="Get a single user by id", response_model=User)
+def find_user_name(id: str, request: Request):
+    if (user := request.app.database["users"].find_one({"_id": id})) is not None:
+        return user
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"user with ID {id} not found")
+
 
 @router.put("/{id}", response_description="Update a user", response_model=UserInDB)
 def update_user(id: str, request: Request, updates: UserUpdate, auth: User = Depends(get_current_user)):
@@ -387,6 +393,29 @@ async def follow_host(id: str, request: Request, user: User = Depends(get_curren
 
     if not existing_follower_list.__contains__(user["_id"]):
         existing_follower_list.append(user["_id"])
+        request.app.database["users"].find_one_and_update({"_id": id}, {"$set": {"follower": existing_follower_list}})
+    return {
+        "code": 200,
+        "message": "You have successfully followed the host"
+    }
+
+@router.put("/unfollow/{id}")
+async def unfollow_host(id: str, request: Request, user: User = Depends(get_current_user)):
+    if (
+            existing_host := request.app.database["users"].find_one({"_id": id})
+    ) is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Host with ID {id} not found")
+
+    if existing_host["_id"] == user["_id"]:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                            detail=f"You can not followed yourself")
+
+    existing_follower_list = []
+    if existing_host.__contains__("follower") and existing_host["follower"]!= None:
+        existing_follower_list = list(existing_host["follower"])
+
+    if existing_follower_list.__contains__(user["_id"]):
+        existing_follower_list.remove(user["_id"])
         request.app.database["users"].find_one_and_update({"_id": id}, {"$set": {"follower": existing_follower_list}})
     return {
         "code": 200,

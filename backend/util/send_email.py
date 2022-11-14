@@ -191,9 +191,10 @@ async def event_publish(request: Request, event_id: str, host_id: str):
     # get follower email list
     recipient = []
     host = request.app.database["users"].find_one({"_id": host_id})
-    for follower in host['follower']:
-        follower_email = request.app.database["users"].find_one({"_id": follower})["email"]
-        recipient.append(follower_email)
+    if host.__contains__("follower") and host["follower"] is not None:
+        for follower in host['follower']:
+            follower_email = request.app.database["users"].find_one({"_id": follower})["email"]
+            recipient.append(follower_email)
     content = event_publish_template.format(event['title'], event_id)
 
     message = MessageSchema(
@@ -203,8 +204,9 @@ async def event_publish(request: Request, event_id: str, host_id: str):
         subtype="html"
     )
     fm = FastMail(conf)
-    result = await fm.send_message(message)
-    print(result)
+    if recipient != []:
+      result = await fm.send_message(message)
+      print(result)
 
 
 event_publish_template = '''
