@@ -23,6 +23,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 const EventDetail = (props) => {
   const [open, setOpen] = React.useState(false);
+  const [email, setEmail] = React.useState("");
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -48,6 +49,9 @@ const EventDetail = (props) => {
       try {
         let res = await axiosInstance.get('/event/' + params.id);
         setEventInfo(res.data);
+
+        res = await axiosInstance.get('/user/name/' + res.data.host_id); 
+        setEmail(res.data.email);
         res = await axiosInstance.get('/ticket/e/' + params.id);
         setPrice(Math.min(...res.data.map((e) => e.price)));
       } catch {
@@ -103,6 +107,7 @@ const EventDetail = (props) => {
                 <h1>{eventInfo.title}</h1>
                 <div>
                   <h3>Host: {eventInfo.host_name}</h3>
+                  <h3>Host Contact: {email}</h3>
                   {currentUser ? (
                     <Button variant="outlined" className="follow" onClick={follow}>
                       follow

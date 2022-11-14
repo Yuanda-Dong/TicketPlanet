@@ -303,7 +303,7 @@ const EditPage = () => {
       return;
     }
 
-    if (!(!isNaN(ticket.t.price) && Number(ticket.t.price) > 0)) {
+    if (!(!isNaN(ticket.t.price) && Number(ticket.t.price) >= 0)) {
       alert('Ticket must have a valid price');
       return;
     }
