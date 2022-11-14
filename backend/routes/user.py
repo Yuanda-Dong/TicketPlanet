@@ -408,8 +408,8 @@ async def unfollow_host(id: str, request: Request, user: User = Depends(get_curr
     if existing_host.__contains__("follower") and existing_host["follower"]!= None:
         existing_follower_list = list(existing_host["follower"])
 
-    if not existing_follower_list.__contains__(user["_id"]):
-        existing_follower_list.append(user["_id"])
+    if existing_follower_list.__contains__(user["_id"]):
+        existing_follower_list.remove(user["_id"])
         request.app.database["users"].find_one_and_update({"_id": id}, {"$set": {"follower": existing_follower_list}})
     return {
         "code": 200,
