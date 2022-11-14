@@ -75,10 +75,12 @@ const Reports = () => {
   });
 
   const [currentEvent, setCurrentEvent] = useState(null);
+  const [followers, setFollowers] = useState(0);
 
   useEffect(() => {
     const setData = (data) => {
       if (data) {
+        setFollowers(Object.values(data.gender).reduce((a, b) => a + b));
         setChartData((prev) => {
           prev.gender.forEach((entry) => (entry.count = data.gender[entry.value]));
           prev.age.forEach((entry) => (entry.count = data.age[entry.name]));
@@ -114,7 +116,7 @@ const Reports = () => {
 
   return (
     <ReportContainer>
-      <Widget setCurrentEvent={setCurrentEvent} />
+      <Widget setCurrentEvent={setCurrentEvent} counts={followers} />
       <Charts>
         <Paper>
           <H2>Gender Distribution</H2>
