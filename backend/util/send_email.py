@@ -21,7 +21,7 @@ conf = ConnectionConfig(
 )
 
 
-async def password_reset(subject: str, recipient: List, content: str):
+def password_reset(subject: str, recipient: List, content: str):
     message = MessageSchema(
         subject=subject,
         recipients=recipient,
@@ -29,8 +29,8 @@ async def password_reset(subject: str, recipient: List, content: str):
         subtype="html"
     )
     fm = FastMail(conf)
-    result = await fm.send_message(message)
-    print(result)
+    fm.send_message(message)
+
 
 
 reset_template = """
@@ -60,7 +60,7 @@ reset_template = """
     """
 
 
-async def event_update_notice(request: Request, event_id: str):
+def event_update_notice(request: Request, event_id: str):
     # sending email to user while the event has been updated
     # get updated event info
     updated_event = request.app.database["events"].find_one({"_id": event_id})
@@ -81,8 +81,8 @@ async def event_update_notice(request: Request, event_id: str):
         subtype="html"
     )
     fm = FastMail(conf)
-    result = await fm.send_message(message)
-    print(result)
+    fm.send_message(message)
+
 
 
 event_update_template = '''
@@ -109,7 +109,7 @@ event_update_template = '''
 '''
 
 
-async def buy_notice(request: Request, event_id: str, user_id: str):
+def buy_notice(request: Request, event_id: str, user_id: str):
     # get event
     buy_event = request.app.database["events"].find_one({"_id": event_id})
     # get buyer
@@ -123,8 +123,8 @@ async def buy_notice(request: Request, event_id: str, user_id: str):
         subtype="html"
     )
     fm = FastMail(conf)
-    result = await fm.send_message(message)
-    print(result)
+    fm.send_message(message)
+    # print(result)
 
 
 buy_template = '''
@@ -151,7 +151,7 @@ buy_template = '''
 '''
 
 
-async def cancel_book(request: Request, event_id: str, user_id: str):
+def cancel_book(request: Request, event_id: str, user_id: str):
     # get event
     event = request.app.database["events"].find_one({"_id": event_id})
     # get user
@@ -165,8 +165,8 @@ async def cancel_book(request: Request, event_id: str, user_id: str):
         subtype="html"
     )
     fm = FastMail(conf)
-    result = await fm.send_message(message)
-    print(result)
+    fm.send_message(message)
+    # print(result)
 
 
 cancel_book_template = '''
@@ -184,7 +184,7 @@ cancel_book_template = '''
 
 '''
 
-async def event_publish(request: Request, event_id: str, host_id: str):
+def event_publish(request: Request, event_id: str, host_id: str):
     # sending email to user while the event has been published
     # get event info
     event = request.app.database["events"].find_one({"_id": event_id})
@@ -205,8 +205,8 @@ async def event_publish(request: Request, event_id: str, host_id: str):
     )
     fm = FastMail(conf)
     if recipient != []:
-      result = await fm.send_message(message)
-      print(result)
+      fm.send_message(message)
+      # print(result)
 
 
 event_publish_template = '''
