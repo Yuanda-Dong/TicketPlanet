@@ -256,7 +256,7 @@ function TicketRow(props) {
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
           <Collapse in={open} timeout={'auto'} unmountOnExit>
-            <Box sx={{ margin: 1 }}>
+            <Box sx={{ margin: 1, marginLeft: '100px' }}>
               <Typography variant={'h6'} gutterBottom component="div">
                 Ticket Detail
               </Typography>
@@ -270,8 +270,8 @@ function TicketRow(props) {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {ticketRow.details.map((detail, idx) => (
-                    <TableRow key={idx}>
+                  {ticketRow.details.map((detail) => (
+                    <TableRow key={detail.id}>
                       <TableCell>
                         <Typography variant="body1" fontWeight="bold" color gutterBottom noWrap>
                           {detail.ticket_name}
@@ -306,17 +306,18 @@ function TicketRow(props) {
 
 TicketRow.propTypes = {
   ticketRow: PropTypes.shape({
-    ticket_name: PropTypes.string.isRequired,
+    details: PropTypes.array.isRequired,
+    // ticket_name: PropTypes.string.isRequired,
     event_id: PropTypes.string.isRequired,
     start_dt: PropTypes.string.isRequired,
     end_dt: PropTypes.string.isRequired,
-    price: PropTypes.number.isRequired,
-    status: PropTypes.string.isRequired,
+    // price: PropTypes.number.isRequired,
+    // status: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     category: PropTypes.string.isRequired,
     address: PropTypes.string,
     postcode: PropTypes.number.isRequired,
-    seat_number: PropTypes.string.isRequired,
+    // seat_number: PropTypes.string.isRequired,
   }).isRequired,
 };
 
