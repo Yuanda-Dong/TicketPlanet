@@ -59,9 +59,9 @@ const TicketOrders = () => {
     const { _id, title, category, address, postcode, start_dt, end_dt, ...otherEventInfo } = eventInfo;
 
     let details = matching_seats.map((seatInfo) => {
-      const { _id, status, seat, price, payment_intent, ...otherSeatInfo } = seatInfo;
+      const { _id, status, seat, payment_intent, ...otherSeatInfo } = seatInfo;
       const ticketInfo = tickets.find((ticket) => ticket._id === seatInfo.base_id);
-      const { ticket_name, ...otherTicketInfo } = ticketInfo;
+      const { ticket_name, price, ...otherTicketInfo } = ticketInfo;
       return {
         id: _id,
         ticket_name,
