@@ -14,7 +14,7 @@ import Pagination from '@mui/material/Pagination';
 import { format } from 'date-fns';
 import { Link } from 'react-router-dom';
 
-const EventTable = () => {
+const EventTable = ({ setCurrentEvent }) => {
   // get events
   const { currentUser } = useSelector((state) => state.user);
   const [events, setEvents] = useState([]);
@@ -33,7 +33,6 @@ const EventTable = () => {
 
   const handleData = usePagination(events, PER_PAGE);
   const count = Math.ceil(events?.length / PER_PAGE);
-  console.log(handleData.currentData());
 
   const handlePageChange = (e, p) => {
     setPage(p);
@@ -79,8 +78,13 @@ const EventTable = () => {
                 {format(new Date(row.end_dt), 'dd/MM/yyyy')}
               </TableCell>
               <TableCell className="tableCell" align="center">
-                <Link>
-                  <span id={row._id}>View Reports</span>
+                <Link
+                  id={row._id}
+                  onClick={(e) => {
+                    setCurrentEvent(e.target.id);
+                  }}
+                >
+                  <span>View Reports</span>
                 </Link>
               </TableCell>
             </TableRow>

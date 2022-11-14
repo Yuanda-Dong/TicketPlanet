@@ -1,40 +1,30 @@
 import React, { useEffect, useState } from 'react';
 import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
-const data = [
-  {
-    name: '<=14',
-    uv: 4000,
-    age: 2400,
-    amt: 2400,
-  },
-  {
-    name: '15-25',
-    uv: 3000,
-    age: 1398,
-    amt: 2210,
-  },
-  {
-    name: '26-35',
-    uv: 2000,
-    age: 9800,
-    amt: 2290,
-  },
-  {
-    name: '36-50',
-    uv: 2780,
-    age: 3908,
-    amt: 2000,
-  },
-  {
-    name: '>50',
-    uv: 1890,
-    age: 4800,
-    amt: 2181,
-  },
-];
+// const data = [
+//   {
+//     name: '<=14',
+//     age: 2400,
+//   },
+//   {
+//     name: '15-25',
+//     age: 1398,
+//   },
+//   {
+//     name: '26-35',
+//     age: 9800,
+//   },
+//   {
+//     name: '36-50',
+//     age: 3908,
+//   },
+//   {
+//     name: '>50',
+//     age: 4800,
+//   },
+// ];
 
-const AgeChart = () => {
+const AgeChart = ({ data }) => {
   return (
     <ResponsiveContainer width="100%" height="70%">
       <BarChart
