@@ -392,3 +392,26 @@ async def follow_host(id: str, request: Request, user: User = Depends(get_curren
         "code": 200,
         "message": "You have successfully followed the host"
     }
+
+@router.put("/unfollow/{id}")
+async def unfollow_host(id: str, request: Request, user: User = Depends(get_current_user)):
+    if (
+            existing_host := request.app.database["users"].find_one({"_id": id})
+    ) is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Host with ID {id} not found")
+
+    if existing_host["_id"] == user["_id"]:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                            detail=f"You can not followed yourself")
+
+    existing_follower_list = []
+    if existing_host.__contains__("follower") and existing_host["follower"]!= None:
+        existing_follower_list = list(existing_host["follower"])
+
+    if not existing_follower_list.__contains__(user["_id"]):
+        existing_follower_list.append(user["_id"])
+        request.app.database["users"].find_one_and_update({"_id": id}, {"$set": {"follower": existing_follower_list}})
+    return {
+        "code": 200,
+        "message": "You have successfully followed the host"
+    }
