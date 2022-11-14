@@ -96,6 +96,7 @@ const EventDetail = (props) => {
           <div className="event-detail">
             <div className="img-container">
               <img src={eventInfo.image_url} alt="Event Thumbnail" />
+              <img src={eventInfo.image_url} className="blur" alt="Event Thumbnail" />
             </div>
             <div className="info">
               <div className="event-info">
