@@ -204,8 +204,9 @@ async def event_publish(request: Request, event_id: str, host_id: str):
         subtype="html"
     )
     fm = FastMail(conf)
-    result = await fm.send_message(message)
-    print(result)
+    if recipient != []:
+      result = await fm.send_message(message)
+      print(result)
 
 
 event_publish_template = '''
