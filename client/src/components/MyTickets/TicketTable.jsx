@@ -40,6 +40,7 @@ import Grid from '@mui/material/Grid';
 import { format } from 'date-fns';
 import { Comment_Form_Popup } from '../Comment/Comments';
 import { axiosInstance } from '../../config';
+import { useSelector } from 'react-redux';
 
 const getStatusLabel = (ticketOrderStatus) => {
   const map = {
@@ -104,11 +105,18 @@ function TicketRow(props) {
   const handleLeaveReview = () => {
     setReviewOpen(true);
   };
+  const { token } = useSelector((state) => state.user);
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
 
   const handleCancelBooking = async (e) => {
-    // console.log(e.target.id);
+    console.log(e.target.id);
     const payment_intent = e.target.dataset.payment;
-    payment_intent && (await axiosInstance.post(`/payment/refund/${payment_intent}`));
+    console.log(payment_intent);
+    payment_intent && (await axiosInstance.post(`/payment/refund/${payment_intent}`, [e.target.id], config));
     setDeleteOpen(false);
   };
 
