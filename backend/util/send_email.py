@@ -13,7 +13,7 @@ conf = ConnectionConfig(
     MAIL_FROM="zyvp_dp@163.com",
     MAIL_PORT=25,  # SSL = False, Port=25 || Port=465
     MAIL_SERVER="smtp.163.com",
-    MAIL_FROM_NAME="BackendSystem",
+    MAIL_FROM_NAME="TicketPlanet.com",
     MAIL_TLS=False,
     MAIL_SSL=False,
     USE_CREDENTIALS=True,
