@@ -1,25 +1,25 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import EventCard from '../../components/EventCard/EventCard';
 import './SearchPage.css';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import {useLocation} from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Slider from '@mui/material/Slider';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import NavBar from '../../components/Navbar/NavBar';
-import { useSelector } from 'react-redux';
-import { Button, Divider } from '@mui/material';
+import {useSelector} from 'react-redux';
+import {Divider} from '@mui/material';
 import Search from '../../components/SearchBar/SearchBar';
-import { axiosInstance } from '../../config';
+import {axiosInstance} from '../../config';
 
 const SearchPage = () => {
-  const { currentUser } = useSelector((state) => state.user);
+  const {currentUser} = useSelector((state) => state.user);
   const [checkBox, setCheckBox] = useState([false, false, false]);
 
   const [events, setEvents] = useState([]);
 
-  const { state } = useLocation();
+  const {state} = useLocation();
   const [value, setValue] = useState({
     distance: 20,
     price: 20,
@@ -139,13 +139,19 @@ const SearchPage = () => {
               />
             </h4>
             <FormGroup>
-              <FormControlLabel control={<Checkbox defaultChecked />} label="Movies" onChange={(_) => cat('Movies')} />
-              <FormControlLabel control={<Checkbox />} label="Concert" onChange={(_) => cat('Concert')} />
-              <FormControlLabel control={<Checkbox />} label="Arts" onChange={(_) => cat('Arts')} />
-              <FormControlLabel control={<Checkbox />} label="Conference" onChange={(_) => cat('Conference')} />
-              <FormControlLabel control={<Checkbox />} label="Other" onChange={(_) => cat('Other')} />
+              <FormControlLabel control={<Checkbox defaultChecked/>} label="Movies" onChange={(_) => cat('Movies')}/>
+              <FormControlLabel control={<Checkbox/>} label="Concert" onChange={(_) => cat('Concert')}/>
+              <FormControlLabel control={<Checkbox/>} label="Arts" onChange={(_) => cat('Arts')}/>
+              <FormControlLabel control={<Checkbox/>} label="Conference" onChange={(_) => cat('Conference')}/>
+              <FormControlLabel control={<Checkbox/>} label="Food & Drink" onChange={(_) => cat('Food & Drink')}/>
+              <FormControlLabel control={<Checkbox/>} label="Festivals" onChange={(_) => cat('Festivals')}/>
+              <FormControlLabel control={<Checkbox/>} label="Markets" onChange={(_) => cat('Markets')}/>
+              <FormControlLabel control={<Checkbox/>} label="Sports" onChange={(_) => cat('Sports')}/>
+              <FormControlLabel control={<Checkbox/>} label="Classes & Workshops"
+                                onChange={(_) => cat('Classes & Workshops')}/>
+              <FormControlLabel control={<Checkbox/>} label="Other" onChange={(_) => cat('Other')}/>
             </FormGroup>
-            <Divider variant="middle" />
+            <Divider variant="middle"/>
             <h4>
               Price{' '}
               <Checkbox

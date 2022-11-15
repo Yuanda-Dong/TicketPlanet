@@ -158,7 +158,7 @@ def remove_from_seatplan(tickets:List[TicketInstance], request:Request):
     if (
       found_event := request.app.database["events"].find_one({"_id": tickets[0]['event_id']})        
     ) is not None:
-        if 'seat_plan' in found_event:                     
+        if 'seat_plan' in found_event and found_event['seat_plan'] != "":                     
           found_plan = request.app.database["seat_plan"].find_one(
               {"_id": found_event['seat_plan']}
           )
