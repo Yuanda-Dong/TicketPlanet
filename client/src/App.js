@@ -12,6 +12,8 @@ import Reports from './components/Dashboard/Reports';
 import Footer from './components/Footer/Footer';
 import PostPage from './pages/PostPage/PostPage';
 import EditPage from './pages/EditPage/EditPage';
+import EditTicket from './pages/EditPage/EditTicket';
+import EditSeatMap from './pages/EditPage/EditSeatMap';
 import FindPassword from './pages/FindPassword';
 import Account from './pages/Account';
 import TicketPage from './pages/PostPage/TicketPage';
@@ -67,6 +69,8 @@ function App() {
           </Route>
           <Route path="post" element={<PostPage />} />
           <Route path="edit/:id/" element={<EditPage />} />
+          <Route path="edit/ticket/:id/" element={<EditTicket />} />
+          <Route path="edit/seat_map/:id/" element={<EditSeatMap />} />
           <Route path="my-tickets" element={<MyTickets />} />
           <Route path="/tickets/:id/" element={<TicketPage />} />
           <Route path="/tickets/seat_map" element={<SeatCreationPage />} />
