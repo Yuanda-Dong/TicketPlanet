@@ -9,7 +9,7 @@ import pymongo
 from fastapi import APIRouter, Body, Request, Response, HTTPException, status, Depends
 from fastapi.encoders import jsonable_encoder
 from pymongo import ReturnDocument
-from models.event import Event, EventInDB, EventUpdate, SeatPlan, SeatPlanInDB
+from models.event import Event, EventInDB, EventUpdate, SeatPlan, SeatPlanInDB, SeatPlanUpdate
 from models.user import User
 from util.oAuth import get_current_user
 from models.filter import Filter
@@ -301,7 +301,7 @@ def get_seat_plan(id: str, request: Request):
     return found_plan
     
 @router.put("/seats/{id}", response_description="Add seating plan to event", status_code=status.HTTP_201_CREATED, response_model=SeatPlanInDB)
-def update_seat_plan(id: str, seat_plan:SeatPlan, request: Request, user: User = Depends(get_current_user)):
+def update_seat_plan(id: str, seat_plan:SeatPlanUpdate, request: Request, user: User = Depends(get_current_user)):
     if (
             found_event := request.app.database["events"].find_one({"_id": id})
             
@@ -312,14 +312,16 @@ def update_seat_plan(id: str, seat_plan:SeatPlan, request: Request, user: User =
         if found_event['published'] == True:
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
                                 detail=f"You cannot add a seat plan to an already published event")
+    
+        if 'seat_plan' not in found_event or found_event['seat_plan'] == "":
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"This event does not have a seat plan to update")
+    
     seat_plan = jsonable_encoder(seat_plan)
     seat_plan['event_id'] = id
     updated_plan = request.app.database["seat_plan"].find_one_and_update(
-        {"_id": id}, {"$set": seat_plan}
+        {"_id": found_event['seat_plan']}, {"$set": seat_plan}, return_document=ReturnDocument.AFTER
     )
-    
-    
-
     return updated_plan
     
 @router.get("/report/{event_id}", response_description="Get user's report", response_model=Report)
