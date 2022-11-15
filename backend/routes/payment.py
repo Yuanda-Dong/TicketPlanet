@@ -6,6 +6,7 @@ from fastapi import APIRouter, Body, Request, Response, HTTPException, status, D
 from pymongo import ReturnDocument
 from models.ticket import TicketStatus, TicketInstance
 from models.user import User
+from models.payment import SeatRefunds
 from util.oAuth import get_current_user
 from routes.ticket import adjust_ticket_availability
 import stripe
@@ -103,8 +104,9 @@ async def webhook(request: Request):
     return {'success':True}
     
 @router.post('/refund/{payment_intent_id}')
-async def refund_bookings(payment_intent_id:str, request: Request, pass_ids:List[str] = [], user:User = Depends(get_current_user)):
+async def refund_bookings(payment_intent_id:str, request: Request, pass_ids:SeatRefunds, user:User = Depends(get_current_user)):
     found_bookings = list(request.app.database["passes"].find({"payment_intent": payment_intent_id }))
+    pass_ids = pass_ids.seats_to_refund
     
     if found_bookings: 
         if  not user['_id'] ==  found_bookings[0]['user_id']:

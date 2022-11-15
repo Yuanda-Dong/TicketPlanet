@@ -156,3 +156,5 @@ class TicketPaymentIntent(BaseModel):
     payment_method_types: List[str] = ['card']
     metadata: TicketPayment
 
+class SeatRefunds(BaseModel):
+    seats_to_refund: List[str] = []
