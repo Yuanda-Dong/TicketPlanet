@@ -104,7 +104,6 @@ const Reports = () => {
           console.error(e);
         }
       } else if (currentUser) {
-        console.log('user');
         try {
           setReady(false);
           let res = await axiosInstance.get(`/user/report/${currentUser._id}`);

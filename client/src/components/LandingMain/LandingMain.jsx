@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { axiosInstance } from '../../config';
 import './LandingMain.css';
+import LandingSkeleton from './Skeleton';
 
 export default function LandingMain() {
   const [value, setValue] = React.useState('1');
@@ -25,6 +26,7 @@ export default function LandingMain() {
 
   const [events, setEvents] = useState([]);
   const [recEvents, setRecEvents] = useState([]);
+
   const loadRec = async (num) => {
     let res = await axiosInstance.get(`/user/${currentUser._id}/rec${num}`);
     setRecEvents(res.data);
@@ -48,9 +50,11 @@ export default function LandingMain() {
         </Box>
         <TabPanel value="1" className="upcoming_event">
           <div className="events-container">
-            {events.map((e) => (
-              <EventCard key={e._id} eventInfo={e} />
-            ))}
+            {events.length > 0
+              ? events.map((e) => <EventCard key={e._id} eventInfo={e} />)
+              : Array.from(new Array(12)).map((item, idx) => (
+                  <LandingSkeleton className="events-container" key={idx} />
+                ))}
           </div>
 
           <Link
