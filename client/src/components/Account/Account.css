@@ -23,6 +23,12 @@
   padding-top: 4rem;
 }
 
+.css-bhp9pd-MuiPaper-root-MuiCard-root {
+  background: url("../../assets/bg4.jpg") no-repeat;
+  /*background-color: #dedffc;*/
+}
+
 .css-1u48xhy-MuiButtonBase-root-MuiTab-root.Mui-selected {
   color: #660ddd;
 }
+
