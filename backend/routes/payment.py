@@ -1,4 +1,6 @@
 import json
+import threading
+
 from typing import List
 from bson.objectid import ObjectId
 from fastapi.encoders import jsonable_encoder
@@ -11,7 +13,9 @@ from util.oAuth import get_current_user
 from routes.ticket import adjust_ticket_availability
 import stripe
 import os
-
+import asyncio
+import threading
+import nest_asyncio
 from util.send_email import buy_notice, cancel_book
 
 stripe.api_key = os.getenv("STRIPE_API_KEY")
@@ -28,8 +32,6 @@ router = APIRouter()
 #          -> if (cancel) -> release locked tickets, delete physical tickets, close payment intent
 #          -> 
 ###
-
-
 
 
 @router.post('/webhook')
@@ -139,15 +141,11 @@ async def refund_bookings(payment_intent_id:str, request: Request, pass_ids:List
         print(to_refund) 
         print(f'amount to refund:{total_to_refund}')
 
-        try:
-            events = []
-            for booking in found_bookings:
-                events.append(booking['event_id'])
-            events = set(events)
-            for event in events:
-                await cancel_book(request, event, user['_id'])
-        except Exception:
-            pass
+        nest_asyncio.apply()
+        thread_loop = asyncio.new_event_loop()
+        threading.Thread(target=start_loop, args=(thread_loop,)).start()
+        mail_loop = asyncio.get_event_loop()
+        mail_loop.run_until_complete(cancel_mail_sender(found_bookings, request, user['_id'], thread_loop))
 
         return refunded
     
@@ -193,3 +191,44 @@ def remove_from_seatplan(tickets:List[TicketInstance], request:Request):
           refunded_ticket = request.app.database["passes"].update_one(
           {"_id": ObjectId(ticket['_id'])}, {"$set": {"status":"refunded"}}
           )
+
+def start_loop(thread_loop):
+    asyncio.set_event_loop(thread_loop)
+    thread_loop.run_forever()
+
+
+async def cancel_mail_sender(found_bookings, request, user, loop):
+    events = []
+    for booking in found_bookings:
+        events.append(booking['event_id'])
+    events = set(events)
+    for event in events:
+        asyncio.run_coroutine_threadsafe(cancel_book(request, event, user), loop)
+
+
+
+@router.get("/test_cancel_email/")
+async def test_cancel_email(request: Request, user: str):
+    nest_asyncio.apply()
+    found_bookings = list(request.app.database['events'].find())
+
+    thread_loop = asyncio.new_event_loop()
+    threading.Thread(target=test_start_loop, args=(thread_loop, )).start()
+    mail_loop = asyncio.get_event_loop()
+    mail_loop.run_until_complete(test_cancel_mail_sender(found_bookings, request, user, thread_loop))
+
+    return "hello!!"
+
+
+def test_start_loop(thread_loop):
+    asyncio.set_event_loop(thread_loop)
+    thread_loop.run_forever()
+
+
+async def test_cancel_mail_sender(found_bookings, request, user, loop):
+    events = []
+    for booking in found_bookings:
+        events.append(booking['_id'])
+    events = set(events)
+    for event in events:
+        asyncio.run_coroutine_threadsafe(cancel_book(request, event, user), loop)
