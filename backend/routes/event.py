@@ -1,7 +1,6 @@
 import math
 import re
 from datetime import datetime
-from tkinter import S
 # from datetime import datetime
 from typing import List
 import stripe

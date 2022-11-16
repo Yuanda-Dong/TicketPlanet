@@ -52,8 +52,12 @@ const getStatusLabel = (ticketOrderStatus) => {
       text: 'Pending',
       color: 'warning',
     },
-    canceled: {
-      text: 'Canceled',
+    refunded: {
+      text: 'Refunded',
+      color: 'success',
+    },
+    cancelled: {
+      text: 'Cancelled',
       color: 'error',
     },
   };
@@ -345,7 +349,11 @@ const TicketTable = ({ ticketOrders }) => {
       name: 'Pending',
     },
     {
-      id: 'canceled',
+      id: 'refunded',
+      name: 'Refunded',
+    },
+    {
+      id: 'cancelled',
       name: 'Cancelled',
     },
   ];

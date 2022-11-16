@@ -10,25 +10,23 @@
   background-color: white;
 }
 
-.portrait {
-  background: url("../../assets/bg4.jpg") no-repeat;
+/* .portrait {
+  background: url('../../assets/bg4.jpg') no-repeat;
   background-size: cover;
-}
+} */
 
 .accountBg {
   min-height: 100vh;
-  /*background-image: url('../../assets/bg3.jpg');*/
+  background-image: url('../../assets/bg.png');
   /*background-repeat: no-repeat;*/
   /*background-size: cover;*/
   padding-top: 4rem;
 }
 
-.css-bhp9pd-MuiPaper-root-MuiCard-root {
-  background: url("../../assets/bg4.jpg") no-repeat;
-  /*background-color: #dedffc;*/
-}
+/* .accountBg .css-bhp9pd-MuiPaper-root-MuiCard-root {
+  background: url('../../assets/bg4.jpg') no-repeat;
+} */
 
 .css-1u48xhy-MuiButtonBase-root-MuiTab-root.Mui-selected {
   color: #660ddd;
 }
-
