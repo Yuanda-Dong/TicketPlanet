@@ -16,7 +16,7 @@ from util.send_email import buy_notice, cancel_book
 
 stripe.api_key = os.getenv("STRIPE_API_KEY")
 # webhook_secret = 'whsec_49b15278a690057b4d5fcd818a85d9e1db99a3ede387e8dee41b70f5c15ab41e' #os.getenv("STRIPE_WEBHOOK") ### <--- update here to stripe cli key if you're testing locally
-webhook_secret = 'whsec_1327dfed33ae58c341341df6a461fd952f3d800f982836b151925a107c53c87f' #os.getenv("STRIPE_WEBHOOK") ### <--- update here to stripe cli key if you're testing locally
+webhook_secret = 'whsec_49b15278a690057b4d5fcd818a85d9e1db99a3ede387e8dee41b70f5c15ab41e' #os.getenv("STRIPE_WEBHOOK") ### <--- update here to stripe cli key if you're testing locally
 router = APIRouter()
 ###
 # Payment Flow
