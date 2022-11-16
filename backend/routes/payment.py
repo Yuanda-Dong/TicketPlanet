@@ -15,7 +15,6 @@ import stripe
 import os
 import asyncio
 import threading
-import nest_asyncio
 from util.send_email import buy_notice, cancel_book
 
 stripe.api_key = os.getenv("STRIPE_API_KEY")
