@@ -1,6 +1,7 @@
 from fastapi_mail import FastMail, MessageSchema, ConnectionConfig
 from typing import List
 from fastapi import Request
+from starlette.background import BackgroundTasks
 
 # from starlette.config import Config
 #
@@ -13,7 +14,7 @@ conf = ConnectionConfig(
     MAIL_FROM="zyvp_dp@163.com",
     MAIL_PORT=25,  # SSL = False, Port=25 || Port=465
     MAIL_SERVER="smtp.163.com",
-    MAIL_FROM_NAME="TicketPlanet.com",
+    MAIL_FROM_NAME="BackendSystem",
     MAIL_TLS=False,
     MAIL_SSL=False,
     USE_CREDENTIALS=True,
@@ -21,7 +22,7 @@ conf = ConnectionConfig(
 )
 
 
-def password_reset(subject: str, recipient: List, content: str):
+async def password_reset(subject: str, recipient: List, content: str):
     message = MessageSchema(
         subject=subject,
         recipients=recipient,
@@ -29,8 +30,8 @@ def password_reset(subject: str, recipient: List, content: str):
         subtype="html"
     )
     fm = FastMail(conf)
-    fm.send_message(message)
-
+    result = await fm.send_message(message)
+    print(result)
 
 
 reset_template = """
@@ -60,7 +61,7 @@ reset_template = """
     """
 
 
-def event_update_notice(request: Request, event_id: str):
+async def event_update_notice(request: Request, event_id: str):
     # sending email to user while the event has been updated
     # get updated event info
     updated_event = request.app.database["events"].find_one({"_id": event_id})
@@ -81,8 +82,8 @@ def event_update_notice(request: Request, event_id: str):
         subtype="html"
     )
     fm = FastMail(conf)
-    fm.send_message(message)
-
+    result = await fm.send_message(message)
+    print(result)
 
 
 event_update_template = '''
@@ -109,7 +110,7 @@ event_update_template = '''
 '''
 
 
-def buy_notice(request: Request, event_id: str, user_id: str):
+async def buy_notice(request: Request, event_id: str, user_id: str):
     # get event
     buy_event = request.app.database["events"].find_one({"_id": event_id})
     # get buyer
@@ -123,8 +124,8 @@ def buy_notice(request: Request, event_id: str, user_id: str):
         subtype="html"
     )
     fm = FastMail(conf)
-    fm.send_message(message)
-    # print(result)
+    result = await fm.send_message(message)
+    print(result)
 
 
 buy_template = '''
@@ -151,11 +152,12 @@ buy_template = '''
 '''
 
 
-def cancel_book(request: Request, event_id: str, user_id: str):
+async def cancel_book(request: Request, event_id: str, user_id: str):
     # get event
     event = request.app.database["events"].find_one({"_id": event_id})
     # get user
     user_email = request.app.database["users"].find_one({"_id": user_id})["email"]
+    print(user_email)
     recipient = [user_email]
     content = cancel_book_template.format(event['title'])
     message = MessageSchema(
@@ -165,8 +167,7 @@ def cancel_book(request: Request, event_id: str, user_id: str):
         subtype="html"
     )
     fm = FastMail(conf)
-    fm.send_message(message)
-    # print(result)
+    result = await fm.send_message(message)
 
 
 cancel_book_template = '''
@@ -184,7 +185,7 @@ cancel_book_template = '''
 
 '''
 
-def event_publish(request: Request, event_id: str, host_id: str):
+async def event_publish(request: Request, event_id: str, host_id: str):
     # sending email to user while the event has been published
     # get event info
     event = request.app.database["events"].find_one({"_id": event_id})
@@ -205,8 +206,8 @@ def event_publish(request: Request, event_id: str, host_id: str):
     )
     fm = FastMail(conf)
     if recipient != []:
-      fm.send_message(message)
-      # print(result)
+      result = await fm.send_message(message)
+      print(result)
 
 
 event_publish_template = '''
