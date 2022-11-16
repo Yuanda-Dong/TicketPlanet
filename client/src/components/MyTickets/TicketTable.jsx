@@ -196,31 +196,31 @@ function TicketRow(props) {
           {/*) : (*/}
         </TableCell>
         <TableCell align="right">
-          {new Date(ticketRow.end_dt) < new Date() && (
-            <div>
-              <Tooltip title="Leave Review" arrow>
-                <IconButton
-                  sx={{ '&:hover': { background: alpha('#5569ff', 0.1) }, color: '#5569ff' }}
-                  color="inherit"
-                  size="small"
-                  onClick={handleLeaveReview}
-                >
-                  <ReviewsTwoToneIcon fontSize="small" />
-                </IconButton>
-              </Tooltip>
-              <Dialog
-                open={ReviewOpen}
-                onClose={handleReviewClose}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
+          {/* {new Date(ticketRow.end_dt) < new Date() && ( */}
+          <div>
+            <Tooltip title="Leave Review" arrow>
+              <IconButton
+                sx={{ '&:hover': { background: alpha('#5569ff', 0.1) }, color: '#5569ff' }}
+                color="inherit"
+                size="small"
+                onClick={handleLeaveReview}
               >
-                <DialogTitle id="alert-dialog-title">{'Leave Your Reviews'}</DialogTitle>
-                <DialogContent>
-                  <Comment_Form_Popup eventId={ticketRow.event_id} handleReviewClose={handleReviewClose} />
-                </DialogContent>
-              </Dialog>
-            </div>
-          )}
+                <ReviewsTwoToneIcon fontSize="small" />
+              </IconButton>
+            </Tooltip>
+            <Dialog
+              open={ReviewOpen}
+              onClose={handleReviewClose}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogTitle id="alert-dialog-title">{'Leave Your Reviews'}</DialogTitle>
+              <DialogContent>
+                <Comment_Form_Popup eventId={ticketRow.event_id} handleReviewClose={handleReviewClose} />
+              </DialogContent>
+            </Dialog>
+          </div>
+          {/* )} */}
         </TableCell>
       </TableRow>
       <TableRow>
