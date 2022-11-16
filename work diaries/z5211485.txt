@@ -20,10 +20,10 @@ Week 7
 I added password and email validations, started working on the seat plan creation by the host.
 
 Week 8
-I finished the seat plan creation for the host and also finished the API integration, attended group meetings, added date-range-picker in the search omponent and fixed the code for search page to be more generalised and re-producable.
+I finished the seat plan creation for the host and also finished the API integration, attended group meetings, added date-range-picker in the search omponent and fixed the code for search page to be more generalised and re-producable. I presented the demo for our project and participated in the report writing.
 
 Week 9
 I worked on the checkout API integration and seat selection for customers, and created the page for reports, included few charts and table templates, added banner images and restyled some of the components
 
 Week 10
-I finished all the rest of API integration including ticket refund, event cancellation and user reports. Further adjusted the styles of some components
+I finished all the rest of API integration including ticket refund, event cancellation and user reports. Further adjusted the styles of some components. I worked on the final report and demo with group members
