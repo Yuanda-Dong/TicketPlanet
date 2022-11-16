@@ -6,12 +6,13 @@ from fastapi import APIRouter, Body, Request, Response, HTTPException, status, D
 from pymongo import ReturnDocument
 from models.ticket import TicketStatus, TicketInstance
 from models.user import User
+from models.payment import SeatRefunds
 from util.oAuth import get_current_user
 from routes.ticket import adjust_ticket_availability
 import stripe
 import os
 
-from util.send_email import buy_notice
+from util.send_email import buy_notice, cancel_book
 
 stripe.api_key = os.getenv("STRIPE_API_KEY")
 # webhook_secret = 'whsec_49b15278a690057b4d5fcd818a85d9e1db99a3ede387e8dee41b70f5c15ab41e' #os.getenv("STRIPE_WEBHOOK") ### <--- update here to stripe cli key if you're testing locally
@@ -137,6 +138,17 @@ async def refund_bookings(payment_intent_id:str, request: Request, pass_ids:List
         refunded = refund(payment_intent_id, total_to_refund)
         print(to_refund) 
         print(f'amount to refund:{total_to_refund}')
+
+        try:
+            events = []
+            for booking in found_bookings:
+                events.append(booking['event_id'])
+            events = set(events)
+            for event in events:
+                await cancel_book(request, event, user['_id'])
+        except Exception:
+            pass
+
         return refunded
     
     raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
@@ -158,7 +170,7 @@ def remove_from_seatplan(tickets:List[TicketInstance], request:Request):
     if (
       found_event := request.app.database["events"].find_one({"_id": tickets[0]['event_id']})        
     ) is not None:
-        if 'seat_plan' in found_event:                     
+        if 'seat_plan' in found_event and found_event['seat_plan'] != "":                     
           found_plan = request.app.database["seat_plan"].find_one(
               {"_id": found_event['seat_plan']}
           )

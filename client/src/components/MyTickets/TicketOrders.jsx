@@ -3,6 +3,7 @@ import TicketTable from './TicketTable';
 import { useEffect, useState } from 'react';
 import { axiosInstance } from '../../config.js';
 import { useSelector } from 'react-redux';
+import MyTicketSkeleton from './MyTicketSkeleton';
 
 const TicketOrders = () => {
   const { token } = useSelector((state) => state.user);
@@ -32,27 +33,6 @@ const TicketOrders = () => {
   // #########################################################
 
   const [Tickets, setTickets] = useState();
-
-  // const combineInfo = (seatInfo, ticketInfo, eventInfo) => {
-  //   const { _id, status, seat, event_id, ...otherSeatInfo } = seatInfo;
-  //   const { ticket_name, price, ...otherTicketInfo } = ticketInfo;
-  //   const { title, category, address, postcode, start_dt, end_dt, ...otherEventInfo } = eventInfo;
-  //   return {
-  //     id: _id,
-  //     event_id,
-  //     ticket_name,
-  //     start_dt,
-  //     end_dt,
-  //     price,
-  //     amount: 1,
-  //     status,
-  //     title,
-  //     category,
-  //     address,
-  //     postcode,
-  //     seat_number: seat,
-  //   };
-  // };
 
   const combineInfo = (eventInfo, tickets, seats) => {
     const matching_seats = seats.filter((seat) => seat.event_id === eventInfo._id);
@@ -92,17 +72,14 @@ const TicketOrders = () => {
       const tickets = await getTicketDetail([...new Set(ticketIds)]);
       const eventIds = seats.map(({ event_id }) => event_id);
       const events = await getEvents([...new Set(eventIds)]);
-      console.log(seats);
       return [seats, tickets, events];
     };
     getAllData().then(([seats, tickets, events]) => {
-      // console.log(seats, events);
-      // setTickets(seats.map((seatInfo, idx) => combineInfo(seatInfo, tickets[idx], events[idx])));
       setTickets(events.map((event) => combineInfo(event, tickets, seats)));
     });
   }, []);
 
-  return <Card> {Tickets && <TicketTable ticketOrders={Tickets} />}</Card>;
+  return <Card> {Tickets ? <TicketTable ticketOrders={Tickets} /> : <MyTicketSkeleton />}</Card>;
 };
 
 export default TicketOrders;

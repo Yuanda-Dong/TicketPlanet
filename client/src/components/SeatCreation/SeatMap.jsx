@@ -63,7 +63,8 @@ const SeatMapContainer = styled.div`
   overflow: scroll;
 `;
 
-const SeatMap = ({ tickets }) => {
+const SeatMap = ({ tickets, inputMapId }) => {
+  // console.log(inputMaps, tickets);
   const navigate = useNavigate();
   const { token } = useSelector((state) => state.user);
   const config = {
@@ -97,6 +98,7 @@ const SeatMap = ({ tickets }) => {
   }
 
   const [mapGrid, setMapGrid] = useState(getDefaultMap());
+
   const [seatCount, setSeatCount] = useState(defaultCount());
 
   const handleSelect = (e) => {
@@ -172,10 +174,15 @@ const SeatMap = ({ tickets }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(mapGrid);
     try {
-      const res = await axiosInstance.post(`/event/seats/${tickets[0].event_id}`, { seats: mapGrid }, config);
-      console.log(res.data);
+      if (inputMapId) {
+        const res = await axiosInstance.put(`/event/seats/${tickets[0].event_id}`, { seats: mapGrid }, config);
+        console.log(res.data);
+      } else {
+        const res = await axiosInstance.post(`/event/seats/${tickets[0].event_id}`, { seats: mapGrid }, config);
+        console.log(res.data);
+      }
+
       navigate('/dashboard/events');
     } catch (e) {
       console.error(e);
@@ -183,11 +190,15 @@ const SeatMap = ({ tickets }) => {
   };
   const handleSubmit2 = async (e) => {
     e.preventDefault();
-    console.log(mapGrid);
     try {
-      let res = await axiosInstance.post(`/event/seats/${tickets[0].event_id}`, { seats: mapGrid }, config);
-      console.log(res.data);
-      res = await axiosInstance.post(`/event/publish/${tickets[0].event_id}`, null, config);
+      if (inputMapId) {
+        const res = await axiosInstance.put(`/event/seats/${tickets[0].event_id}`, { seats: mapGrid }, config);
+        console.log(res.data);
+      } else {
+        const res = await axiosInstance.post(`/event/seats/${tickets[0].event_id}`, { seats: mapGrid }, config);
+        console.log(res.data);
+      }
+      let res = await axiosInstance.post(`/event/publish/${tickets[0].event_id}`, null, config);
       console.log(res.data);
       navigate('/dashboard/events');
     } catch (e) {
@@ -246,7 +257,8 @@ const SeatMap = ({ tickets }) => {
       >
         {ticketType.map((type, idx) => (
           <ToggleButton key={idx} value={type._id}>
-            {type.ticket_name}
+            {type.ticket_name} {' : '}
+            {seatCount[type._id]}
           </ToggleButton>
         ))}
       </ToggleButtonGroup>

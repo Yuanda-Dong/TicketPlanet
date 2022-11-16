@@ -117,7 +117,7 @@ class Seat(BaseModel):
 class SeatPlan(BaseModel):
     id: str = Field(default_factory=uuid.uuid4, alias="_id")
     seats: List[List[Seat]] #starts 0-0
-    
+        
     class Config:
         allow_population_by_field_name = True
         schema_extra = {
@@ -148,6 +148,40 @@ class SeatPlan(BaseModel):
                   ]
                 }
         }
+        
+class SeatPlanUpdate(BaseModel):
+    seats: List[List[Seat]] #starts 0-0
+    class Config:
+        allow_population_by_field_name = True
+        schema_extra = {
+            "example":{
+                  "seats": [
+                    [
+                      {
+                        "type_id": "fb158264-9ff7-43c2-8754-5902b5bf3073",
+                        "ticket_id": "",
+                        "active": True
+                      },
+                      {
+                        "type_id": "fb158264-9ff7-43c2-8754-5902b5bf3073",
+                        "ticket_id": "",
+                        "active": True
+                      },
+                      {
+                        "type_id": "fb158264-9ff7-43c2-8754-5902b5bf3073",
+                        "ticket_id": "",
+                        "active": True
+                      },
+                      {
+                        "type_id": "fb158264-9ff7-43c2-8754-5902b5bf3073",
+                        "ticket_id": "",
+                        "active": True
+                      }
+                    ]
+                  ]
+                }
+        }
+    
 class SeatPlanInDB(SeatPlan):
     event_id: str
 

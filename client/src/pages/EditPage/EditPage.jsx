@@ -32,6 +32,7 @@ import { convertFromRaw, ContentState } from 'draft-js';
 import styled from 'styled-components';
 import SeatMap from '../../components/SeatCreation/SeatMap';
 import { eventCategories } from '../../assets/constants';
+import EditTicket from './EditTicket';
 
 const NormalButton = styled(Button)`
   && {
@@ -235,21 +236,8 @@ const EditPage = () => {
       // console.log("HHHH");
 
       if (!event.published) {
-        let res = await axiosInstance.get('/ticket/e/' + params.id);
-        for (const t in res.data) {
-          axiosInstance.delete('/ticket/' + res.data[t]._id, config);
-        }
-        for (const t in ticket.tickets) {
-          axiosInstance.post(
-            '/ticket/e/' + params.id,
-            {
-              ticket_name: ticket.tickets[t].ticket_name,
-              price: ticket.tickets[t].price,
-              availability: ticket.tickets[t].availability,
-            },
-            config
-          );
-        }
+        navigate(`/edit/ticket/${params.id}`);
+        return;
       }
       navigate('/dashboard/events');
     } catch (err) {
@@ -257,85 +245,17 @@ const EditPage = () => {
     }
   };
 
-  const [ticket, setTicket] = React.useState({ t: { price: '', availability: '', ticket_name: '' }, tickets: [] });
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
-  };
-  const removeTicket = (event, idx) => {
-    const newTickets = [...ticket.tickets];
-    newTickets.splice(idx, 1);
-    setTicket({ ...ticket, tickets: newTickets });
-  };
-
-  const setName = (event) => {
-    const newT = { ...ticket.t };
-    newT.ticket_name = event.target.value;
-    setTicket({ ...ticket, t: newT });
-  };
-  const setPrice = (event) => {
-    const newT = { ...ticket.t };
-    newT.price = event.target.value;
-    setTicket({ ...ticket, t: newT });
-  };
-  const setQuantity = (event) => {
-    const newT = { ...ticket.t };
-    newT.availability = event.target.value;
-    setTicket({ ...ticket, t: newT });
-  };
-  const cancel = () => {
-    const newT = { price: '', availability: '', ticket_name: '' };
-    setTicket({ ...ticket, t: newT });
-    setOpen(false);
-  };
-  const add = () => {
-    const newTickets = ticket.tickets;
-
-    if (ticket.t.ticket_name === '') {
-      alert('Ticket must have a name');
-      return;
-    }
-    if (ticket.t.price === '') {
-      alert('Ticket must have a price');
-      return;
-    }
-
-    if (!(!isNaN(ticket.t.price) && Number(ticket.t.price) >= 0)) {
-      alert('Ticket must have a valid price');
-      return;
-    }
-    if (ticket.t.availability === '') {
-      alert('Ticket must have a quantity');
-      return;
-    }
-    const num = Number(ticket.t.availability);
-    if (!(Number.isInteger(num) && num > 0)) {
-      alert('Ticket must have a valid quantity');
-      return;
-    }
-
-    newTickets.push(ticket.t);
-    setTicket({ ...ticket, tickets: newTickets });
-
-    cancel();
-    setOpen(false);
-  };
   const params = useParams();
   React.useEffect(() => {
     async function fetchData() {
       let res = await axiosInstance.get('/event/' + params.id);
       setEvent(res.data);
-      console.log(res.data);
+      // console.log(res.data);
       // res = await axiosInstance.get("/ticket/e/"+params.id);
       // setPrice(Math.min(...(res.data.map(e=>e.price))));
       let dbState = convertFromRaw(JSON.parse(res.data.details));
       setEditorState({ editorState: EditorState.createWithContent(dbState) });
       // console.log(EditorState.createWithContent(dbState));
-      res = await axiosInstance.get('/ticket/e/' + params.id);
-      setTicket((prev) => ({ ...prev, tickets: res.data }));
     }
     fetchData();
   }, [params.id]);
@@ -469,115 +389,8 @@ const EditPage = () => {
                 onEditorStateChange={onChange}
               />
             </Grid>
-            {/* TICKETs */}
-            {event.published ? (
-              <></>
-            ) : (
-              <>
-                <Grid item xs={12}>
-                  <h3> Tickets</h3>
-                  <div>
-                    {ticket.tickets.map((e, idx) => (
-                      <Card key={idx} sx={{ minWidth: 250 }}>
-                        <CardContent>
-                          <Grid
-                            container
-                            spacing={1}
-                            direction="row"
-                            justifyContent="space-between"
-                            alignItems="flex-end"
-                          >
-                            <Grid item xs={9}>
-                              <Typography gutterBottom variant="h5" component="div">
-                                {e.ticket_name}
-                              </Typography>
-                              <Typography variant="body2" color="text.secondary">
-                                Price: ${e.price}
-                              </Typography>
-                              <Typography variant="body2" color="text.secondary">
-                                Available quantity: {e.availability}
-                              </Typography>
-                            </Grid>
-                            <Grid item xs={3}>
-                              <Button
-                                variant="outlined"
-                                component="label"
-                                color="error"
-                                startIcon={<DeleteIcon />}
-                                onClick={(event) => removeTicket(event, idx)}
-                              >
-                                Remove
-                              </Button>
-                            </Grid>
-                          </Grid>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
-
-                  <div>
-                    <OutlinedButton fullWidth variant="outlined" onClick={handleOpen}>
-                      Add Tickets
-                    </OutlinedButton>
-                    <Modal
-                      open={open}
-                      onClose={handleClose}
-                      aria-labelledby="modal-modal-title"
-                      aria-describedby="modal-modal-description"
-                    >
-                      <Box sx={style}>
-                        <Grid container spacing={2}>
-                          <Grid item xs={12}>
-                            <Typography align="center" id="modal-modal-title" variant="h6" component="h2">
-                              Add Tickets
-                            </Typography>
-                          </Grid>
-                          <Grid item xs={12}>
-                            <TextField
-                              fullWidth
-                              id="standard-basic"
-                              label="Name: "
-                              variant="standard"
-                              value={ticket.t.ticket_name}
-                              margin="normal"
-                              onChange={setName}
-                            />
-                            <TextField
-                              fullWidth
-                              id="standard-basic"
-                              label="Price: "
-                              variant="standard"
-                              value={ticket.t.price}
-                              margin="normal"
-                              onChange={setPrice}
-                            />
-                            <TextField
-                              fullWidth
-                              id="standard-basic"
-                              label="Quantity: "
-                              variant="standard"
-                              value={ticket.t.availability}
-                              margin="normal"
-                              onChange={setQuantity}
-                            />
-                          </Grid>
-                          <Grid item xs={10} mt={1}>
-                            <Button variant="contained" color="error" onClick={cancel}>
-                              Cancel
-                            </Button>
-                          </Grid>
-                          <Grid item xs={2} mt={1}>
-                            <NormalButton variant="contained" onClick={add}>
-                              Add
-                            </NormalButton>
-                          </Grid>
-                        </Grid>
-                      </Box>
-                    </Modal>
-                  </div>
-                </Grid>
-              </>
-            )}
+            {/* TICKETs
+            {!event.published && <EditTicket eventId={params.id} />} */}
 
             <Divider />
             <Grid item xs={12}>
@@ -678,7 +491,7 @@ const EditPage = () => {
             </OutlinedButton>
 
             <NormalButton sx={{ mt: '20px' }} variant="contained" onClick={goNext}>
-              Save
+              Save & Next
             </NormalButton>
           </div>
         </Paper>

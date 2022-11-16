@@ -6,6 +6,7 @@ import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import EventList from '../EventList/EventList';
 import usePagination from './usePagination';
+
 import Pagination from '@mui/material/Pagination';
 import { axiosInstance } from '../../config';
 // import { useNavigate } from 'react-router-dom';
@@ -63,12 +64,6 @@ const Events = () => {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-
-  // const yourCallback = () => {
-  //   axiosInstance.get("/event").then((res) => console.log(res));
-  // };
-
-  // useEffect(yourCallback, []);
 
   return (
     <>
