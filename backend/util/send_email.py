@@ -60,7 +60,7 @@ reset_template = """
     """
 
 
-def event_update_notice(request: Request, event_id: str):
+async def event_update_notice(request: Request, event_id: str):
     # sending email to user while the event has been updated
     # get updated event info
     updated_event = request.app.database["events"].find_one({"_id": event_id})
@@ -81,7 +81,7 @@ def event_update_notice(request: Request, event_id: str):
         subtype="html"
     )
     fm = FastMail(conf)
-    fm.send_message(message)
+    await fm.send_message(message)
 
 
 
@@ -109,7 +109,7 @@ event_update_template = '''
 '''
 
 
-def buy_notice(request: Request, event_id: str, user_id: str):
+async def buy_notice(request: Request, event_id: str, user_id: str):
     # get event
     buy_event = request.app.database["events"].find_one({"_id": event_id})
     # get buyer
@@ -123,7 +123,7 @@ def buy_notice(request: Request, event_id: str, user_id: str):
         subtype="html"
     )
     fm = FastMail(conf)
-    fm.send_message(message)
+    await fm.send_message(message)
     # print(result)
 
 
@@ -151,7 +151,7 @@ buy_template = '''
 '''
 
 
-def cancel_book(request: Request, event_id: str, user_id: str):
+async def cancel_book(request: Request, event_id: str, user_id: str):
     # get event
     event = request.app.database["events"].find_one({"_id": event_id})
     # get user
@@ -165,7 +165,7 @@ def cancel_book(request: Request, event_id: str, user_id: str):
         subtype="html"
     )
     fm = FastMail(conf)
-    fm.send_message(message)
+    await fm.send_message(message)
     # print(result)
 
 
@@ -184,7 +184,7 @@ cancel_book_template = '''
 
 '''
 
-def event_publish(request: Request, event_id: str, host_id: str):
+async def event_publish(request: Request, event_id: str, host_id: str):
     # sending email to user while the event has been published
     # get event info
     event = request.app.database["events"].find_one({"_id": event_id})
@@ -205,7 +205,7 @@ def event_publish(request: Request, event_id: str, host_id: str):
     )
     fm = FastMail(conf)
     if recipient != []:
-      fm.send_message(message)
+      await fm.send_message(message)
       # print(result)
 
 

@@ -90,7 +90,7 @@ async def webhook(request: Request):
           print(f"Ticket {ticket} has been made active")
           print(updated_ticket)
           try: 
-            buy_notice(request, found_ticket["event_id"], found_ticket["user_id"])
+            await buy_notice(request, found_ticket["event_id"], found_ticket["user_id"])
           except:
             print("skipped connection error")
             continue
