@@ -4,6 +4,7 @@ const url =
   process.env.REACT_APP_API_MODE === 'production'
     ? 'https://comp9900-production.up.railway.app'
     : 'http://127.0.0.1:8000';
+// const url = 'https://comp9900-production.up.railway.app';
 const axiosInstance = axios.create({
   baseURL: url,
 });
