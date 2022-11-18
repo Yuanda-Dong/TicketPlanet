@@ -43,7 +43,7 @@ function App() {
 
       if (decodedJwt.exp * 1000 < Date.now()) {
         dispatch(logout());
-        window.location.replace('http://localhost:3000/signin');
+        window.location.replace(`${process.env.HOME}/signin`);
       }
     }
   }, [window.location.href]);
