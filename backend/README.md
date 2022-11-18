@@ -30,8 +30,9 @@ Our backend is implemented on [Railway](https://railway.app) using a [FastAPI](h
 - Install Python requirements `pip install -r requirements.txt`
 
 ### Run FastAPI Server Locally 
-- Make sure you are in the  backend folder not the project folder
-- To run the server locally but still access the railway DB you need to use the command: `railway run python -m uvicorn main:app --reload`
+- Make sure you are in the backend folder not the project folder
+- To run the server locally but still access the railway DB you need to use the
+  command: `railway run python -m uvicorn main:app --reload`
 - Go to (http://localhost:8000/docs)
 
 ### Deploy to Railway
@@ -45,8 +46,8 @@ Our backend is implemented on [Railway](https://railway.app) using a [FastAPI](h
 ### Testing Stripe & Stripe Webhooks Locally
 - Start up the backend server on (http://localhost:8000/)
 - Download stripe CLI from (https://github.com/stripe/stripe-cli)
-- Forward events to the webhook using `stripe listen --foward-to localhost:8000/payment/webhook`
-- Update `backend/routes/payment.py` with system generated webhook password 
+- Forward events to the webhook using `stripe listen --forward-to localhost:8000/payment/webhook`
+- Update `backend/routes/payment.py` with system generated webhook password
 
 #### Simulating Events
 - You can simulate events using `stripe trigger <event>` e.g. `stripe trigger payment_intent.succeeded`
@@ -56,4 +57,4 @@ Our backend is implemented on [Railway](https://railway.app) using a [FastAPI](h
   - Enter `4242 4242 4242 4242` as the card number
   - Enter any future date for card expiry
   - Enter any 3-digit number for CVV
-   -Enter any billing postal code (`90210`)
+  - Enter any billing postal code (`90210`)

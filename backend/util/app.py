@@ -30,7 +30,8 @@ origins = [
     "http://54.88.130.237",
     "http://54.187.174.169",
     "http://54.187.205.235",
-    "http://54.187.216.72"
+    "http://54.187.216.72",
+    "https://gorgeous-sprite-cf6d19.netlify.app"
 ]
 
 app.add_middleware(

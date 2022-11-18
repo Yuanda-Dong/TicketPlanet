@@ -79,7 +79,7 @@ async def publish_event(id: str, request: Request, user:User=Depends(get_current
             {"_id": id}, {"$set": existing_event}, return_document=ReturnDocument.AFTER
     )
     # send email when the event has been published
-    event_publish(request, existing_event['_id'], user["_id"])
+    await event_publish(request, existing_event['_id'], user["_id"])
     return updated_event
     
     
@@ -220,7 +220,7 @@ async def update_event(id: str, request: Request, event: EventUpdate, user: User
             {"_id": id}, {"$set": event}, return_document=ReturnDocument.AFTER
         )
         # send email
-        event_update_notice(request, id)
+        await event_update_notice(request, id)
         return updated_result
     return existing_event
 
