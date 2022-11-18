@@ -33,3 +33,6 @@ Added new routes for publish/unpublish.
 Week 9
 Working on the follow/unfollow 
 Working on inform my customer when I cancel the events.
+
+Week 10
+Working on reports, demo and final software.

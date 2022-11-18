@@ -37,5 +37,6 @@ added front-end for recommendation
 started working on back-end for recommendation
 
 Week 10 
+Completed report routes for backend
 Finished back-end for recommendation 
 Working on reports, demo and final software 
