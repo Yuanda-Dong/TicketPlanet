@@ -44,3 +44,12 @@ Week 7
 Week 8 
 - Presented group demo and completed retroactive 
 - Beginning refunds 
+- Added more routes for seat plan
+
+Week 9 
+- Completed refunds 
+- Completed seat plan 
+
+Week 10 
+- Bug fixes
+- Presentation
