@@ -8,12 +8,12 @@
   /* border: 1px solid #3c4b69; */
 }
 
-.event-card .css-46bh2p-MuiCardContent-root {
+.event-card .MuiCardContent-root {
   display: flex;
   gap: 1em;
   /* height: 100%; */
 }
-.event-card .css-46bh2p-MuiCardContent-root .date {
+.event-card .MuiCardContent-root .date {
   display: flex;
   /* height: 100%; */
   flex-direction: column;
@@ -22,11 +22,11 @@
   gap: 0.5em;
 }
 
-.event-card .css-46bh2p-MuiCardContent-root .date .month {
+.event-card .MuiCardContent-root .date .month {
   font-size: larger;
 }
 
-.event-card .css-46bh2p-MuiCardContent-root .MuiTypography-root:nth-child(3) {
+.event-card .MuiCardContent-root .MuiTypography-root:nth-child(3) {
   display: flex;
   align-items: center;
 }

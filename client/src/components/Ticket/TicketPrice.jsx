@@ -82,8 +82,8 @@ function TicketPrice(props) {
   const handleCheckout = async () => {
     try {
       const checkout_body = getCheckout(
-        `http://localhost:3000/event/price/${eventInfo._id}`,
-        'http://localhost:3000/my-tickets',
+        `${process.env.HOME}/event/price/${eventInfo._id}`,
+        `${process.env.HOME}/my-tickets`,
         currentUser.email,
         quantities.quantity,
         quantities.cost * 100,
