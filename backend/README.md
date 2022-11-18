@@ -30,8 +30,9 @@ Our backend is implemented on [Railway](https://railway.app) using a [FastAPI](h
 - Install Python requirements `pip install -r requirements.txt`
 
 ### Run FastAPI Server Locally 
-- Make sure you are in the  backend folder not the project folder
-- To run the server locally but still access the railway DB you need to use the command: `railway run python -m uvicorn main:app --reload`
+- Make sure you are in the backend folder not the project folder
+- To run the server locally but still access the railway DB you need to use the
+  command: `railway run python -m uvicorn main:app --reload`
 - Go to (http://localhost:8000/docs)
 
 ### Deploy to Railway
@@ -56,4 +57,4 @@ Our backend is implemented on [Railway](https://railway.app) using a [FastAPI](h
   - Enter `4242 4242 4242 4242` as the card number
   - Enter any future date for card expiry
   - Enter any 3-digit number for CVV
-   -Enter any billing postal code (`90210`)
+  - Enter any billing postal code (`90210`)
