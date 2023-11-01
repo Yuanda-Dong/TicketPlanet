@@ -1,22 +1,9 @@
----
-title: TicketPlanet.com 
-description: Welcome to TicketPlanet.com, an event management platform. Please find a full explanation of how to deploy the project below. 
-tags:
-  - Python
-  - FastAPI 
-  - Railway
-  - React 
-  - MongoDB
-  - Stripe
----
+# TicketPlanet.com 
+![image10](https://github.com/Yuanda-Dong/TicketPlanet/assets/37124273/45300b08-1f3d-4c01-b282-714160882aa1)
 
 # Front End
 
 `cd client`
-## Getting Started
-
-Install `npm` package in your local machine
-
 ## Running on Local Server
 
 In the project directory, you can run:
