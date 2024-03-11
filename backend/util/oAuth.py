@@ -62,7 +62,7 @@ def create_access_token(data: dict, expires_delta: Union[timedelta, None] = None
     else:
         expire = datetime.utcnow() + timedelta(minutes=15)
     to_encode.update({"exp": expire})
-    encoded_jwt = jwt.encode(to_encode, os.getenv("TOKEN_SECRET"), algorithm=os.getenv("ALGORITHM"))
+    encoded_jwt = jwt.encode(to_encode, "8e228e265d523dc6f6658dc6254d34c0392ccd2cba2a47f67c63a512a95b4e50", algorithm="HS256")
     return encoded_jwt
     
 def get_current_user(token: str = Depends(oauth2_scheme)):
@@ -72,7 +72,7 @@ def get_current_user(token: str = Depends(oauth2_scheme)):
         headers={"WWW-Authenticate": "Bearer"},
     )
     try:
-        payload = jwt.decode(token, os.getenv("TOKEN_SECRET"), algorithms=[os.getenv("ALGORITHM")])
+        payload = jwt.decode(token, "8e228e265d523dc6f6658dc6254d34c0392ccd2cba2a47f67c63a512a95b4e50", algorithms=["HS256"])
         username: str = payload.get("sub")
         if username is None:
             raise credentials_exception

@@ -10,7 +10,7 @@ import os
 from pymongo import ReturnDocument
 import stripe
 from util.send_email import buy_notice
-stripe.api_key = os.getenv("STRIPE_API_KEY")
+stripe.api_key = "sk_test_51LreBuFu5VuteV0oDy6nwgZmtIAGhRP0ceAhU12H9LkfDgXMiQxbnh7XhXHhWYRSyIstr3o6RcDIfUKgIvRnWKMp0066xPB2nN"
 router = APIRouter()
 
 
@@ -95,7 +95,6 @@ def buy_ticket(id: str, payment: TicketPaymentSession, request: Request, user: U
     if(
         found_ticket := request.app.database["tickets"].find_one({"_id": id})
     ) is not None: 
-        print(os.getenv("STRIPE_API_KEY"))
         ## first decrement the tickets so you lock the tickets to the payment intent
         if payment.line_items[0].quantity > 15:
             raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail=f"Can only purchase 15 tickets at a time") #stripe limitations on 500 characters

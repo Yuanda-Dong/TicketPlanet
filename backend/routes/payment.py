@@ -17,7 +17,7 @@ import asyncio
 import threading
 from util.send_email import buy_notice, cancel_book
 import nest_asyncio
-stripe.api_key = os.getenv("STRIPE_API_KEY")
+stripe.api_key = "sk_test_51LreBuFu5VuteV0oDy6nwgZmtIAGhRP0ceAhU12H9LkfDgXMiQxbnh7XhXHhWYRSyIstr3o6RcDIfUKgIvRnWKMp0066xPB2nN"
 # webhook_secret = 'whsec_49b15278a690057b4d5fcd818a85d9e1db99a3ede387e8dee41b70f5c15ab41e' #os.getenv("STRIPE_WEBHOOK") ### <--- update here to stripe cli key if you're testing locally
 # webhook_secret = os.getenv("STRIPE_WEBHOOK") ### <--- update here to stripe cli key if you're testing locally
 webhook_secret = 'whsec_49b15278a690057b4d5fcd818a85d9e1db99a3ede387e8dee41b70f5c15ab41e'

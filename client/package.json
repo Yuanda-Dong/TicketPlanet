@@ -28,7 +28,7 @@
     "react-draft-wysiwyg": "^1.15.0",
     "react-redux": "^8.0.4",
     "react-router-dom": "^6.4.0",
-    "react-scripts": "5.0.1",
+    "react-scripts": "^5.0.1",
     "recharts": "^2.1.16",
     "redux-persist": "^6.0.0",
     "stripe": "^10.12.0",
