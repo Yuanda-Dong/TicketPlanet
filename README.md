@@ -20,7 +20,7 @@ TicketPlanet is a comprehensive event booking platform featuring interfaces for 
 - Install Python requirements `pip install -r requirements.txt`
 
 ### Run FastAPI Server Locally 
-- Change line 8 in app.py to a running MongoDb server. 
+- Change line 8 in `app.py` to a running MongoDb server. 
 - run `python -m uvicorn main:app --reload` in `backend`
 
 ### Testing Stripe & Stripe Webhooks Locally
