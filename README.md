@@ -1,69 +1,26 @@
 # TicketPlanet.com 
+
+TicketPlanet is a comprehensive event booking platform featuring interfaces for hosts to manage events, including ticketing and seat selection, email communication with booked users, and user-friendly browsing and search functionalities.
+
 ![image10](https://github.com/Yuanda-Dong/TicketPlanet/assets/37124273/45300b08-1f3d-4c01-b282-714160882aa1)
 
-# Front End
+# Quick Start
 
-`cd client`
-## Running on Local Server
+## Front End
 
-In the project directory, you can run:
+- In the `client` directory `npm start` runs the app in the development mode.
 
-### `npm start`
+- You can access the website hosted on https://gorgeous-sprite-cf6d19.netlify.app/ once the railway server is turned on.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Backend
+✨ Features Python, FastAPI, PyMongo, MongoDB
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-### `npm run production`
-
-Runs the app in the production mode with production API.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-## Accessing Live Website
-
-You can access the website hosted on https://gorgeous-sprite-cf6d19.netlify.app/ once the railway server is turned on.
-
-
-
-# Backend
-`cd backend`
-
-Our backend is implemented on [Railway](https://railway.app) using a [FastAPI](https://fastapi.tiangolo.com/) app server supported by [PyMongo](https://pymongo.readthedocs.io/en/stable/) on a [MongoDB](https://www.mongodb.com/) DB. 
-
-You can find an existing deployed backend here (https://comp9900-production.up.railway.app/docs)
-
-## ✨ Features
-
-- Python
-- FastAPI
-- PyMongo
-- MongoDB
-
-## 💁‍♀️ How to use
 ### Environment Set Up
-- (Optional) create a Python3 virtual environment in your desired backend location `virtualenv path/to/directory'
-- Clone repo into the environment folder
-- Sign up to [Railway](https://railway.app) using your github 
-- Install the [Railway CLI](https://docs.railway.app/develop/cli) on your OS
-- Link the Project - you can find this link on the project page in Railway under 'Set up your project locally'
-    - Use `railway link <project-link>` in your command line to link it 
+- create a Python3 virtual environment in `backend`
 - Install Python requirements `pip install -r requirements.txt`
 
 ### Run FastAPI Server Locally 
-- Make sure you are in the backend folder not the project folder
-- To run the server locally but still access the railway DB you need to use the
-  command: `railway run python -m uvicorn main:app --reload`
-- Go to (http://localhost:8000/docs)
-
-### Deploy to Railway
-- Change directory to project source
-- Use `railway up` to deploy it
-    - !!! Make sure to remove the deployment on railway after you are done to save credits !!! 
-        - Click on the COMP9900 deployment in Railway 
-        - Under the Deployments sub-heading, click the 3-dots symbol next to the deployed app 
-        - Click 'Remove Deployment' 
+- run `python -m uvicorn main:app --reload` in `backend`
 
 ### Testing Stripe & Stripe Webhooks Locally
 - Start up the backend server on (http://localhost:8000/)
