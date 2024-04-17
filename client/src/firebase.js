@@ -1,17 +1,23 @@
 // Import the functions you need from the SDKs you need
-import { initializeApp } from 'firebase/app';
-import { getAuth, GoogleAuthProvider } from 'firebase/auth';
+import { initializeApp } from "firebase/app";
+import { getAuth, GoogleAuthProvider } from "firebase/auth";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
-// Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: 'AIzaSyACIi3Dg9L9y7RSIIQINIAljUVKABX1Apw',
-  authDomain: 'project-4177137297351481009.firebaseapp.com',
-  projectId: 'project-4177137297351481009',
-  storageBucket: 'project-4177137297351481009.appspot.com',
-  messagingSenderId: '739357768397',
-  appId: '1:739357768397:web:7beb62758e291076e94784',
+	apiKey: "AIzaSyBecWfE-yHSNVU_urjiaMgnEC1V61Yd6BQ",
+
+	authDomain: "ticketplanet-7c0dc.firebaseapp.com",
+
+	projectId: "ticketplanet-7c0dc",
+
+	storageBucket: "ticketplanet-7c0dc.appspot.com",
+
+	messagingSenderId: "381936910997",
+
+	appId: "1:381936910997:web:87dec7bf14d67a9ce5119c",
+
+	measurementId: "G-45M6GL8H6D",
 };
 
 // Initialize Firebase
